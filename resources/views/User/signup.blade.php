@@ -1,13 +1,28 @@
 @extends('Layout/userauth_master')
 
-@section('title', 'Sign In')
+@section('title', 'Sign Up')
 
 @section('content')
 <style></style>
-<h1>Welcome<br>Back!</h1>
-<form action="{{route('login_post')}}" method="POST">
+<h1>Sign<br>Up!</h1>
+<form action="{{route('signup_post')}}" method="POST">
     @csrf
     <table class="login_table">
+        <tr class="login_row">
+            <td>
+                <div class="input_group">
+                    <label for="txt_login_email">Name:</label>
+                </div>
+            </td>
+        </tr>
+        <tr class="login_row">
+            <td>
+                <div class="input_group">
+                    <input type="name" id="txt_login_name" name="name" placeholder="Vickham Foo" required>
+                </div>
+            </td>
+        </tr>
+
         <tr class="login_row">
             <td>
                 <div class="input_group">
@@ -38,7 +53,7 @@
         </tr>
     </table>
     <a href="forgotpassword">Forgot Password</a><br>
-    <button type="submit" class="btn_login_sign_in">Log In</button><br>
-    <span>Don't have an account?<a href="{{route('signup')}}">{{ __('Sign Up')}}</a><span>
+    <button type="submit" class="btn_login_sign_in">Sign Up</button><br>
+    <span>Already have an account?<a href="{{route('login')}}">{{ __('Login')}}</a><span>
 </form>
 @endsection
