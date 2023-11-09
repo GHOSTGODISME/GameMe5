@@ -6,7 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Testing123</h1>
-    <a href="{{route('login')}}">{{ __('Login')}}</a>
+    <h1>This is Login</h1>
 </body>
 </html>
