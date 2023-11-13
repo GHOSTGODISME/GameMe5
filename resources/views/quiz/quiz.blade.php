@@ -6,11 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Testing123</h1>
-    <a href="{{route('login')}}">{{ __('Login')}}</a>
-    <a href="{{route('createWheel')}}">{{ __('createWheel')}}</a>
-
-    <a href="{{ route('fortune-wheel-main') }}" class="btn btn-primary">View Wheels</a>
-
+    <form action="/create-fortune-wheel" method="POST">
+        @csrf
+        @method('create-quiz')
+        <button>Create Quiz</button>
+      </form>
 </body>
 </html>

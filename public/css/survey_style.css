@@ -1,0 +1,196 @@
+body {
+    background-color: whitesmoke;
+}
+
+.header {
+    height: 125px;
+    width: 100%;
+    align-items: center;
+}
+
+@media (max-width: 768px){
+    .header .favicon-with-text{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .header .text-end{
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+}
+
+.title-style-header {
+    white-space: nowrap;
+    width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.char_count {
+    display: block;
+    text-align: end;
+    margin-top: -20px;
+}
+
+.favicon-with-text {
+    display: flex;
+    align-items: center;
+}
+
+.favicon-with-text span {
+    font-size: large;
+    margin-left: 10px;
+}
+
+.favicon-with-btn {
+    padding-right: 10px;
+}
+
+
+.input-fields {
+    width: 100%;
+    margin: 10px 0 20px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+    min-height: 50px;
+}
+
+.scale-input-fields {
+    margin: 10px 0px;
+    padding: 5px;
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.question-style {
+    /* border: 1px solid black; */
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.question-style:hover {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.selected-question {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.question-title {
+    font-weight: bold;
+}
+
+.question-input {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+    min-height: 50px;
+}
+
+.structure {
+    border: 1px solid grey;
+    margin: 0 10px;
+    padding: 10px;
+    cursor: grab;
+}
+
+.structure {
+    border: 1px solid grey;
+    margin: 0 10px;
+    padding: 10px;
+    cursor: move;
+}
+
+.structure-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0;
+}
+
+.structure-type {
+    font-size: 12px;
+    margin: 0px;
+    text-transform: capitalize;
+}
+
+.input_option {
+    width: 100%;
+    margin: 10px;
+}
+
+.input-container{
+    margin-bottom: 20px;
+}
+
+.range-slider {
+    width: 100%;
+    margin: 0 20px 0 20px;
+}
+
+.slider-container {
+    align-items: center;
+    display: flex;
+    margin-top: 50px;
+}
+
+.slider-label {
+    margin: 5px 10px;
+}
+
+#custom-handle {
+    width: 50px;
+    height: 30px;
+    top: 50%;
+    margin-top: -15px;
+    text-align: center;
+}
+
+.slider-hide .noUi-tooltip {
+    display: none;
+}
+
+.slider-hide .noUi-active .noUi-tooltip {
+    display: block;
+}
+
+.remove_duplicate_row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap buttons to the next line on small screens */
+    gap: 10px; /* Add some space between the buttons */
+    margin: 20px 0;
+}
+
+.remove_duplicate_row button {
+    width: 140px; /* Set a fixed width for both buttons */
+}
+
+#form-builder{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap buttons to the next line on small screens */
+    gap: 10px; /* Add some space between the buttons */
+}
+
+
+#form-builder button{
+    width: 140px; /* Set a fixed width for both buttons */
+}
+
+.required::after {
+    content: " *";
+    color: red;
+  }
