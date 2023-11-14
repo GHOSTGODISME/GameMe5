@@ -4,12 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>fyp</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-    <link rel="stylesheet" href="css/survey_style.css" />
+    <link rel="stylesheet" href="{{ asset('css/survey_style.css') }}">
 
 </head>
 
@@ -26,7 +29,8 @@
             </div>
             <div class="col-md-4 text-end">
                 <button class="btn btn-primary" type="button">view
-                    response&nbsp;</button><button class="btn btn-primary" type="button">Create Form</button>
+                    response&nbsp;</button>
+                    <button class="btn btn-primary" id="save-survey-form" type="button">Save Form</button>
             </div>
         </div>
     </div>
@@ -57,8 +61,7 @@
                                 <select id="visibility" name="visibility" class="input-fields"
                                     title="Survey Visibility">
                                     <option value="public">Public</option>
-                                    <option value="draft">Draft</option>
-                                    <option value="closed">Closed</option>
+                                    <option value="private">Private</option>
                                 </select>
                             </div>
                         </div>
@@ -321,6 +324,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 
         <script src="js/survey.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+            });
+            </script>
+
+        
 </body>
 
 </html>

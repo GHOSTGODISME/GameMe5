@@ -17,15 +17,16 @@ class Question extends Model
     protected $casts = [
         'options' => 'array',
         'correct_ans' => 'array',
+        //'single_ans_flag' => 'boolean',
     ];
 
     protected $attributes = [
         'title' => '',
         'type' => '',
         'options' => null,
-        'correct_ans' => [],
+        'correct_ans' => '[]',
         'answer_explanation' => null,
-        'single_ans_flag' => null,
+        //'single_ans_flag' => null,
         'points' => 0,
         'duration' => 0,
     ];

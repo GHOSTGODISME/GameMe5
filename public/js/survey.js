@@ -1,3 +1,10 @@
+// Function to generate a unique ID for unsaved questions
+function generateUniqueID() {
+    const timestamp = new Date().getTime().toString(16); // Timestamp converted to hexadecimal
+    const randomString = Math.random().toString(16).slice(2); // Random string
+    return `temp-${timestamp}-${randomString}`;
+}
+
 const QUESTION_TYPE_INT = {
     TEXT_INPUT: 0,
     MULTIPLE_CHOICE: 1,
@@ -20,11 +27,20 @@ const QUESTION_PROPERTIES = {
     2: "disabled"
 }
 
+class Survey{
+    constructor(){
+        this.id = "";
+        this.title = "";
+        this.description = "";
+        this.visibility = "";
+        this.questions = [];
+    }
+}
+
 class SurveyQuestion {
     constructor(id, type, title, description) {
-        this.index = 0; // Index in the form structure
-
-        this.id = id; // Unique question ID
+        this.id = id; 
+        this.uniqueID = generateUniqueID();
         this.type = type; // Question type (e.g., text input, multiple-choice, etc.)
         this.title = title; // Question title
         this.description = description; // Question description
@@ -36,10 +52,12 @@ class SurveyQuestion {
 
         this.scale_min_label = "";
         this.scale_max_label = "";
-        this.scale_min_value = "1"; // default min
-        this.scale_max_value = "5"; //default max
+        this.scale_min_value = ""; 
+        this.scale_max_value = ""; 
 
         this.properties = "default";
+
+        this.index = 0;
     }
 
     getFirstOption() {
@@ -79,39 +97,14 @@ class SurveyQuestion {
         this.options.splice(index, 1);
     }
 
-    // Create a static factory method to clone an existing question
-    // static cloneQuestion(newID) {
-    //     questionCount++;
-    //     //const questionID = `${idPrefix}-${lectureID}-${surveyID}-${questionCount}-${type}`;
-
-    //     const clonedQuestion = new SurveyQuestion(newID, this.type, this.title, this.description);
-
-    //     // Copy other attributes as needed
-    //     clonedQuestion.options = this.options.slice(); // Copy the options array
-
-    //     // Copy other attributes
-    //     clonedQuestion.placeholder = this.placeholder;
-    //     clonedQuestion.prefilledValue = this.prefilledValue;
-
-    //     clonedQuestion.scale_min_label = this.scale_min_label;
-    //     clonedQuestion.scale_max_label = this.scale_max_label;
-    //     clonedQuestion.scale_min_value = this.scale_min_value;
-    //     clonedQuestion.scale_max_value = this.scale_max_value;
-
-    //     return clonedQuestion;
-    // }
-
     static cloneQuestion(existingQuestion) {
         questionCount++;
         const newID = `${idPrefix}-${lectureID}-${surveyID}-${questionCount}-${existingQuestion.type}`;
 
         const clonedQuestion = new SurveyQuestion(newID, existingQuestion.type, existingQuestion.title, existingQuestion.description);
 
-        // Copy other attributes as needed
-        // clonedQuestion.options = existingQuestion.options.slice(); // Copy the options array
-        clonedQuestion.options = existingQuestion.options; // Copy the options array
+        clonedQuestion.options = existingQuestion.options;
 
-        // Copy other attributes
         clonedQuestion.placeholder = existingQuestion.placeholder;
         clonedQuestion.prefilledValue = existingQuestion.prefilledValue;
 
@@ -126,7 +119,6 @@ class SurveyQuestion {
 }
 
 const surveyQuestionContainer = document.getElementById("questions_container");
-// const surveyQuestionOptionContainer = document.getElementById("options_container");
 
 const formStructureContainer = document.getElementById("form_structure");
 const lectureID = 0;
@@ -138,11 +130,67 @@ let title = document.getElementById("survey_title").value;
 let description = document.getElementById('survey_description').value;
 
 const idPrefix = "s"
-let surveyQuestions = []
+// let surveyQuestions = []
+
+// let survey = new Survey();
+// survey.title = title;
+// survey.description = description;
+// survey.visibility = document.getElementById("visibility").value;
+// survey.questions = surveyQuestions;
 
 const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
 
+console.log(surveyFromDB);
 
+
+// Function to map fetched survey data to Survey instance
+function mapSurveyDataToInstance(fetchedSurveyData) {
+    let survey = new Survey();
+
+    // Map fetched survey data to the Survey instance
+    survey.id = fetchedSurveyData.id;
+    survey.title = fetchedSurveyData.title;
+    survey.description = fetchedSurveyData.description;
+    survey.visibility = fetchedSurveyData.visibility;
+
+    // Map questions
+    if (fetchedSurveyData.questions && Array.isArray(fetchedSurveyData.questions)) {
+        survey.questions = fetchedSurveyData.questions.map(questionData => {
+            questionCount++;
+            // Create SurveyQuestion instance for each question data
+            let surveyQuestion = new SurveyQuestion(
+                questionData.id,
+                questionData.type,
+                questionData.title,
+                questionData.description
+            );
+
+            // Map other question properties
+            surveyQuestion.uniqueID = generateUniqueID();
+            surveyQuestion.options = questionData.options || [];
+            surveyQuestion.placeholder = questionData.placeholder || "";
+            surveyQuestion.prefilledValue = questionData.prefilledValue || "";
+            surveyQuestion.scale_min_label = questionData.scale_min_label || "";
+            surveyQuestion.scale_max_label = questionData.scale_max_label || "";
+            surveyQuestion.scale_min_value = questionData.scale_min_value || "";
+            surveyQuestion.scale_max_value = questionData.scale_max_value || "";
+            surveyQuestion.properties = questionData.properties || "default";
+            surveyQuestion.index = questionData.index || 0;
+
+            return surveyQuestion;
+        });
+    }
+
+    return survey;
+}
+
+
+const survey = mapSurveyDataToInstance(surveyFromDB);
+console.log(survey);
+console.log(survey.questions);
+let surveyQuestions = survey.questions;
+
+console.log(surveyQuestions);
 // ${lectureID}-${surveyID}-${questionCount}-${QUESTION_TYPE_INT[0]}
 
 const sortable = new Sortable(formStructureContainer, {
@@ -155,7 +203,7 @@ const sortable = new Sortable(formStructureContainer, {
 
         structureElements.forEach((structure, newIndex) => {
             const questionID = structure.getAttribute('data-question-id');
-            const question = surveyQuestions.find(q => q.id === questionID);
+            const question = surveyQuestions.find(q => q.uniqueID === questionID);
 
             if (question) {
                 question.index = newIndex;
@@ -166,7 +214,7 @@ const sortable = new Sortable(formStructureContainer, {
         // Update the surveyQuestions array with the reordered questions
         surveyQuestions = newSurveyQuestions;
 
-        console.log("updated " + surveyQuestions);
+        // console.log("updated " + surveyQuestions);
         console.log(surveyQuestions);
         // Update the form preview when an item is dragged and dropped
         updateFormPreview();
@@ -175,40 +223,42 @@ const sortable = new Sortable(formStructureContainer, {
 
 function addQuestion(type) {
     questionCount++;
-    const index = questionCount;
 
     const questionID = `${idPrefix}-${lectureID}-${surveyID}-${questionCount}-${type}`;
-    const questionTitle = `${questionCount} Please enter the question`;
+    const questionTitle = `${questionCount}. Please enter the question`;
     const description = "";
 
     const question = new SurveyQuestion(questionID, type, questionTitle, description);
 
+    question.index = surveyQuestions.length +1;
+
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
+
     // questionContainer.setAttribute("data-survey-question", JSON.stringify(question));
-    questionContainer.setAttribute("data-survey-question", question.id);
+    questionContainer.setAttribute("data-survey-question", question.uniqueID);
 
     questionContainer.innerHTML = `
-    <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>
-    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>
+    <p class="question-title text-break" id="${question.uniqueID}-questionTitle">${question.title}</p>
+    <p class="form-text text-muted text-break" id="${question.uniqueID}-questionDescription" style="display: none;">${question.description}</p>
     `;
     // Create a div with the class "input-container" for grouping input elements
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
 
-    // input type="text" id="${question.id}-userInput" class="question-input" placeholder="${question.placeholder}" value="${question.prefilledValue}" />
+    // input type="text" id="${question.uniqueID}-userInput" class="question-input" placeholder="${question.placeholder}" value="${question.prefilledValue}" />
     switch (type) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
-            <label for="${question.id}-userInput" class="visually-hidden"></label>
+            <textarea id="${question.uniqueID}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <label for="${question.uniqueID}-userInput" class="visually-hidden"></label>
             `;
             break;
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
             question.options.push("Option 1");// initialize
             inputContainer.innerHTML = `
             <label class="input_option">
-                <input type="radio" id="${question.id}-option1" name="mc-question" value="${question.options[0]}">
+                <input type="radio" id="${question.uniqueID}-option1" name="mc-question" value="${question.options[0]}">
                 ${question.options[0]}
             </label>
             `;
@@ -218,14 +268,14 @@ function addQuestion(type) {
             question.options.push("Option 1");// initialize
             inputContainer.innerHTML = `
             <label class="input_option">
-                <input type="checkbox" id="${question.id}-option1" name="cb-question[]" value="${question.options[0]}">
+                <input type="checkbox" id="${question.uniqueID}-option1" name="cb-question[]" value="${question.options[0]}">
                 ${question.options[0]}
             </label>
             `;
             break;
         case QUESTION_TYPE_INT.SCALE:
             // inputContainer.innerHTML = `
-            // <input type="range" id="${question.id}-scale" name="scale-question-${questionCount}" min="1" max="5">
+            // <input type="range" id="${question.uniqueID}-scale" name="scale-question-${questionCount}" min="1" max="5">
             // `;
             //const scaleInputBlock = createRadioScale(question);
             const scaleInput = createScaleInput(question);
@@ -233,42 +283,7 @@ function addQuestion(type) {
             break;
     }
 
-    //question.index = surveyQuestions.length;
     initializeQuestionOnClick(questionContainer);
-    // Add a click event listener to open the question for editing
-    // questionContainer.addEventListener('click', () => {
-    //     // Retrieve the question class from the custom attribute.
-    //     const questionData = questionContainer.getAttribute("data-survey-question");
-    //     const question = surveyQuestions.find(q => q.id === questionData);
-
-    //     console.log("current question id: " + questionData);
-    //     // Remove the 'selected-question' class from previously selected questions
-    //     const previouslySelectedQuestion = document.querySelector(".selected-question");
-    //     if (previouslySelectedQuestion) {
-    //         previouslySelectedQuestion.classList.remove("selected-question");
-    //     }
-
-    //     // Add the 'selected-question' class to the current question
-    //     questionContainer.classList.add("selected-question");
-
-    //     // Populate the component_info section with the selected question's information
-    //     const questionTitleInput = document.getElementById("question_title");
-    //     const questionDescriptionInput = document.getElementById("question_description");
-
-    //     questionTitleInput.value = question.title;
-    //     questionDescriptionInput.value = question.description;
-
-    //     // const minLabel = document.getElementById(`${question.id}-scale-min-label`);
-    //     // const maxLabel = document.getElementById(`${question.id}-scale-max-label`);
-
-    //     // minLabel.textContent = question.options[0];
-    //     // maxLabel.textContent = question.options[question.options.length - 1];    
-
-    //     questionEditOption(question);
-    // });
-
-    surveyQuestions.push(question);
-    console.log(surveyQuestions);
 
 
     // Append the input container to the question container
@@ -276,11 +291,12 @@ function addQuestion(type) {
 
     surveyQuestionContainer.appendChild(questionContainer);
 
-    const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+    surveyQuestions.push(question);
+    const structure = createStructureElement(question.uniqueID, QUESTION_TYPE_STRING[question.type], question.title);
     formStructureContainer.appendChild(structure);
 
-    // const minLabel = document.getElementById(`${question.id}-scale-min-label`);
-    // const maxLabel = document.getElementById(`${question.id}-scale-max-label`);
+    // const minLabel = document.getElementById(`${question.uniqueID}-scale-min-label`);
+    // const maxLabel = document.getElementById(`${question.uniqueID}-scale-max-label`);
 
     // minLabel.textContent = question.options[0];
     // maxLabel.textContent = question.options[question.options.length - 1];
@@ -290,9 +306,10 @@ function initializeQuestionOnClick(questionBlock) {
     questionBlock.addEventListener('click', () => {
         // Retrieve the question class from the custom attribute.
         const questionData = questionBlock.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
+        const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
         console.log("current question id: " + questionData);
+        console.log(surveyQuestions);
         // Remove the 'selected-question' class from previously selected questions
         const previouslySelectedQuestion = document.querySelector(".selected-question");
         if (previouslySelectedQuestion) {
@@ -309,8 +326,8 @@ function initializeQuestionOnClick(questionBlock) {
         questionTitleInput.value = question.title;
         questionDescriptionInput.value = question.description;
 
-        // const minLabel = document.getElementById(`${question.id}-scale-min-label`);
-        // const maxLabel = document.getElementById(`${question.id}-scale-max-label`);
+        // const minLabel = document.getElementById(`${question.uniqueID}-scale-min-label`);
+        // const maxLabel = document.getElementById(`${question.uniqueID}-scale-max-label`);
 
         // minLabel.textContent = question.options[0];
         // maxLabel.textContent = question.options[question.options.length - 1];    
@@ -319,6 +336,8 @@ function initializeQuestionOnClick(questionBlock) {
 
         const editBlockSection = document.getElementById("edit_block_section");
         editBlockSection.style.display='block';
+
+        console.log(question.index);
     });
 }
 
@@ -326,15 +345,17 @@ function initializeQuestionOnClick(questionBlock) {
 function createScaleInput(question) {
     const scaleContainer = document.createElement("div");
     scaleContainer.className = "slider-container";
-
+    question.scale_min_value = "1";
+    question.scale_max_value = "5";
+    
     scaleContainer.innerHTML =
-        // `<span id="${question.id}-scale-min-label" class="slider-label">${question.scale_min_label}</span>
+        // `<span id="${question.uniqueID}-scale-min-label" class="slider-label">${question.scale_min_label}</span>
         `<span id="scale-min-label" class="slider-label">${question.scale_min_value}</span>
     `;
 
     // Create a range input for the scale
     const scaleInput = document.createElement("div");
-    scaleInput.id = `${question.id}-scale`;
+    scaleInput.id = `${question.uniqueID}-scale`;
     scaleInput.className = "range-slider noUi-active slider-hide";
     scaleContainer.appendChild(scaleInput);
     console.log("scaleInput.id " + scaleInput.id);
@@ -350,7 +371,7 @@ function createScaleInput(question) {
 
 function createSlider(question) {
     $(document).ready(function () {
-        var slider = document.getElementById(`${question.id}-scale`);
+        var slider = document.getElementById(`${question.uniqueID}-scale`);
 
         noUiSlider.create(slider, {
             start: 0,
@@ -433,35 +454,35 @@ function initializeScaleSlider(questionID, min, max) {
 function recreateSameQuestion(question) {
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
-    questionContainer.setAttribute("data-survey-question", question.id);
+    questionContainer.setAttribute("data-survey-question", question.uniqueID);
 
     questionContainer.innerHTML = `
-    <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>`;
+    <p class="question-title text-break" id="${question.uniqueID}-questionTitle">${question.title}</p>`;
 
 
 
     if (question.description !== "") {
-        questionContainer.innerHTML += `<p class="form-text text-muted text-break" id="${question.id}-questionDescription">${question.description}</p>`;
+        questionContainer.innerHTML += `<p class="form-text text-muted text-break" id="${question.uniqueID}-questionDescription">${question.description}</p>`;
     } else {
-        questionContainer.innerHTML += `<p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>`;
+        questionContainer.innerHTML += `<p class="form-text text-muted text-break" id="${question.uniqueID}-questionDescription" style="display: none;">${question.description}</p>`;
     }
 
     // Create a div with the class "input-container" for grouping input elements
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
 
-    switch (question.type) {
+        switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
-            <label for="${question.id}-userInput" class="visually-hidden"></label>
+            <textarea id="${question.uniqueID}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <label for="${question.uniqueID}-userInput" class="visually-hidden"></label>
             `;
             break;
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML +=
                     `<label class="input_option">
-                <input type="radio" id="${question.id}-option${index + 1}" name="${question.id}" value="${option}">
+                <input type="radio" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}" value="${option}">
                 ${option}
             </label>`;
             });
@@ -471,7 +492,7 @@ function recreateSameQuestion(question) {
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML +=
                     `<label class="input_option">
-                <input type="checkbox" id="${question.id}-option${index + 1}" name="${question.id}" value="${option}">
+                <input type="checkbox" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}" value="${option}">
                 ${option}
             </label>`;
             });
@@ -488,54 +509,53 @@ function recreateSameQuestion(question) {
     questionContainer.appendChild(inputContainer);
     surveyQuestionContainer.appendChild(questionContainer);
 
-    const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+    const structure = createStructureElement(question.uniqueID, QUESTION_TYPE_STRING[question.type], question.title);
     formStructureContainer.appendChild(structure);
 
     return questionContainer;
 }
 
-
-
 function updateQuestionPreview(question) {
 
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
-    questionContainer.setAttribute("data-survey-question", question.id);
+    questionContainer.setAttribute("data-survey-question", question.uniqueID);
+
+    
 
     questionContainer.innerHTML = `
-    <p class="question-title" id="${question.id}-questionTitle">${question.title}</p>
+    <p class="question-title" id="${question.uniqueID}-questionTitle">${question.title}</p>
     `;
 
     // if (question.description) {
     //     questionContainer.innerHTML += `
-    //         <p class="text-black-50 text-break" id="${question.id}-questionDescription">${question.description}</p>
+    //         <p class="text-black-50 text-break" id="${question.uniqueID}-questionDescription">${question.description}</p>
     //     `;
     // } else {
     //     questionContainer.innerHTML += `
-    // <p class="text-black-50 text-break" id="${question.id}-questionDescription" style="display:none;">${question.description}</p>
+    // <p class="text-black-50 text-break" id="${question.uniqueID}-questionDescription" style="display:none;">${question.description}</p>
     // `;
     // }
 
     questionContainer.innerHTML = `
-    <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>
-    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>
+    <p class="question-title text-break" id="${question.uniqueID}-questionTitle">${question.title}</p>
+    <p class="form-text text-muted text-break" id="${question.uniqueID}-questionDescription" style="display: none;">${question.description}</p>
     `;
 
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
 
-
-    switch (question.type) {
+    switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
-            <label for="${question.id}-userInput" class="visually-hidden"></label>
+            <textarea id="${question.uniqueID}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <label for="${question.uniqueID}-userInput" class="visually-hidden"></label>
             `;
             break;
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
             // inputContainer.innerHTML = `
             // <label class="input_option">
-            //     <input type="radio" id="${question.id}-option1" name="mc-question" value="Option 1">
+            //     <input type="radio" id="${question.uniqueID}-option1" name="mc-question" value="Option 1">
             //     Please enter the option(s)
             // </label>
             // `;
@@ -543,7 +563,7 @@ function updateQuestionPreview(question) {
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML += `
             <label class="input_option">
-                    <input type="radio" id="${question.id}-option${index + 1}" name="${question.id}" value="${option}">
+                    <input type="radio" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}" value="${option}">
                     ${option}
                 </label>
                 `;
@@ -553,14 +573,14 @@ function updateQuestionPreview(question) {
         case QUESTION_TYPE_INT.CHECKBOX:
             // inputContainer.innerHTML = `
             // // <label class="input_option">
-            // //     <input type="checkbox" id="${question.id}-option1" name="cb-question[]" value="Option 1">
+            // //     <input type="checkbox" id="${question.uniqueID}-option1" name="cb-question[]" value="Option 1">
             // //     Please enter the option(s)
             // // </label>
             // // `;
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML += `
                 <label class="input_option">
-                <input type="checkbox" id="${question.id}-option${index + 1}" name="${question.id}[]" value="${option}">
+                <input type="checkbox" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}[]" value="${option}">
                     ${option}
                 </label>
                 `;
@@ -570,56 +590,31 @@ function updateQuestionPreview(question) {
             const scaleInput = createScaleInput(question);
             inputContainer.append(scaleInput);
             break;
+            default:
+                console.log("none triggered");
     }
 
-    // Add a click event listener to open the question for editing
-    questionContainer.addEventListener('click', () => {
-        // Retrieve the question class from the custom attribute.
-        const questionData = questionContainer.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
 
-        // Remove the 'selected-question' class from previously selected questions
-        const previouslySelectedQuestion = document.querySelector(".selected-question");
-        if (previouslySelectedQuestion) {
-            previouslySelectedQuestion.classList.remove("selected-question");
-        }
+    initializeQuestionOnClick(questionContainer);
 
-        // Add the 'selected-question' class to the current question
-        questionContainer.classList.add("selected-question");
-
-        // Populate the component_info section with the selected question's information
-        const questionTitleInput = document.getElementById("question_title");
-        const questionDescriptionInput = document.getElementById("question_description");
-
-        questionTitleInput.value = question.title;
-        questionDescriptionInput.value = question.description;
-
-        // const minLabel = document.getElementById(`${question.id}-scale-min-label`);
-        // const maxLabel = document.getElementById(`${question.id}-scale-max-label`);
-
-        // minLabel.textContent = question.options[0];
-        // maxLabel.textContent = question.options[question.options.length - 1];    
-
-        questionEditOption(question);
-    });
-    //questionContainer.setAttribute("data-survey-question", JSON.stringify(question));
-    //questionContainer.setAttribute("data-question-id", question.id);
+    //questionContainer.setAttribute("data-question-id", question.uniqueID);
 
     // Append the input container to the question container
     questionContainer.appendChild(inputContainer);
 
+    console.log(questionContainer);
     return questionContainer;
 }
 
-function createStructureElement(questionID, QUESTION_TYPE_INT, questionString) {
+function createStructureElement(uniqueID, questionType, questionString) {
     const structure = document.createElement("div");
     structure.className = "structure";
-    structure.setAttribute("data-question-id", questionID);
-    structure.setAttribute("data-question-type", QUESTION_TYPE_INT);
+    structure.setAttribute("data-question-id", uniqueID);
+    structure.setAttribute("data-question-type", questionType);
     structure.innerHTML = `
     <!-- <i class="fas fa-bars handle m-3"> -->
-    <p class="structure-title" id="${questionID}-questionTitle">${questionString}</p>
-    <p class="structure-type">${QUESTION_TYPE_INT}</p>
+    <p class="structure-title" id="${uniqueID}-questionTitle">${questionString}</p>
+    <p class="structure-type">${questionType}</p>
     `;
     return structure;
 }
@@ -642,11 +637,24 @@ function updateFormStructure() {
 
     // Iterate through surveyQuestions and recreate the structure
     surveyQuestions.forEach(question => {
-        const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+        const structure = createStructureElement(question.uniqueID, QUESTION_TYPE_STRING[question.type], question.title);
         formStructureContainer.appendChild(structure);
         console.log("triggered");
     });
 }
+
+function populateSurveyForm() {
+    // Populate survey details
+    document.getElementById('survey_title').value = survey.title;
+    document.getElementById('survey_description').value = survey.description;
+    document.getElementById('visibility').value = survey.visibility;
+
+    updateFormPreview();
+    updateFormStructure();
+
+    // Add logic to populate other form fields based on the fetched data
+}
+
 
 
 
@@ -655,6 +663,12 @@ function updateFormStructure() {
 //==================================================================================
 
 $(document).ready(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
     // Get a reference to the "Survey Title" input field and the character limit
     const titleInput = document.getElementById('survey_title');
     const descriptionInput = document.getElementById('survey_description');
@@ -663,7 +677,10 @@ $(document).ready(function () {
     let descriptionCharLimit = 4500;
 
     titleInput.required = true;
-    titleInput.value = "Your Survey Title";
+    //titleInput.value = survey.title;
+    //descriptionInput.value = survey.description;
+
+    populateSurveyForm();
 
     titleInput.addEventListener('input', function () {
         const inputValue = titleInput.value;
@@ -671,6 +688,7 @@ $(document).ready(function () {
             titleInput.value = inputValue.substring(0, titleCharLimit);
         }
         updateTitle(titleInput, titleCharLimit);
+        survey.title = titleInput.value;
     });
 
     descriptionInput.addEventListener('input', function () {
@@ -679,6 +697,7 @@ $(document).ready(function () {
             descriptionInput.value = inputValue.substring(0, descriptionCharLimit);
         }
         updateDescription(descriptionInput, descriptionCharLimit);
+        survey.description = descriptionInput.value;
     });
 
     // Initialize title and character counter
@@ -751,7 +770,7 @@ questionPropertiesDDL.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    const question = surveyQuestions.find(q => q.id === questionData);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
     question.properties = questionProperties;
 
@@ -762,7 +781,7 @@ questionPropertiesDDL.addEventListener("input", function () {
         case QUESTION_PROPERTIES[0]:
             questionTitleElement.classList.remove("required");
 
-            switch (question.type) {
+                switch (parseInt(question.type)) {
                 case QUESTION_TYPE_INT.TEXT_INPUT:
                     questionInput.required = false;
                     questionInput.readOnly = false;
@@ -772,7 +791,7 @@ questionPropertiesDDL.addEventListener("input", function () {
             questionTitleElement.classList.add("required");
             console.log("questionTitleElement.classList " + questionTitleElement.classList);
 
-            switch (question.type) {
+                switch (parseInt(question.type)) {
                 case QUESTION_TYPE_INT.TEXT_INPUT:
                     questionInput.required = true;
                     questionInput.readOnly = false;
@@ -784,7 +803,7 @@ questionPropertiesDDL.addEventListener("input", function () {
         case QUESTION_PROPERTIES[2]:
             questionTitleElement.classList.remove("required");
 
-            switch (question.type) {
+                switch (parseInt(question.type)) {
                 case QUESTION_TYPE_INT.TEXT_INPUT:
                     questionInput.required = false;
                     questionInput.readOnly = true;
@@ -806,7 +825,7 @@ questionTitleInput.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    const question = surveyQuestions.find(q => q.id === questionData);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
     // Update the question title in the selected question container
     const questionTitleElement = selectedQuestionContainer.querySelector(".question-title");
@@ -827,7 +846,7 @@ questionDescriptionInput.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    const question = surveyQuestions.find(q => q.id === questionData);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
     // Update the question description in the selected question container
     const questionDescriptionElement = selectedQuestionContainer.querySelector(".form-text");
@@ -859,7 +878,7 @@ questionPlaceholderInput.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    const question = surveyQuestions.find(q => q.id === questionData);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
     console.log("questionData " + questionData);
     console.log("question " + question);
@@ -883,8 +902,8 @@ questionPrefiledValueInput.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    //const question = surveyQuestions.find(q => q.id === JSON.parse(questionData).id);
-    const question = surveyQuestions.find(q => q.id === questionData);
+    //const question = surveyQuestions.find(q => q.uniqueID === JSON.parse(questionData).id);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
     // Update the input field's value
     const questionInput = selectedQuestionContainer.querySelector(".question-input");
@@ -1030,8 +1049,8 @@ questionInputOptionInput.addEventListener("input", function () {
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    //const question = surveyQuestions.find(q => q.id === JSON.parse(questionData).id);
-    const question = surveyQuestions.find(q => q.id === questionData);
+    //const question = surveyQuestions.find(q => q.uniqueID === JSON.parse(questionData).id);
+    const question = surveyQuestions.find(q => q.uniqueID === questionData);
     console.log("1");
     console.log(question);
 
@@ -1041,7 +1060,7 @@ questionInputOptionInput.addEventListener("input", function () {
 
     // console.log("inputOptions " + inputOptions);
     question.updateOptions(inputOptions);
-    const index = surveyQuestions.findIndex(q => q.id === question.id);
+    const index = surveyQuestions.findIndex(q => q.uniqueID === question.uniqueID);
     if (index !== -1) {
         surveyQuestions[index] = question;
     }
@@ -1049,12 +1068,12 @@ questionInputOptionInput.addEventListener("input", function () {
     //selectedQuestionContainer.setAttribute("data-survey-question", JSON.stringify(question));
 
 
-    switch (question.type) {
+        switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
             inputOptions.forEach((option, index) => {
                 inputContainer.innerHTML += `
             <label class="input_option">
-                    <input type="radio" id="${question.id}-option${index + 1}" name="${question.id}" value="${option}">
+                    <input type="radio" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}" value="${option}">
                     ${option}
                 </label>
                 `;
@@ -1066,7 +1085,7 @@ questionInputOptionInput.addEventListener("input", function () {
             inputOptions.forEach((option, index) => {
                 inputContainer.innerHTML += `
                 <label class="input_option">
-                <input type="checkbox" id="${question.id}-option${index + 1}" name="${question.id}" value="${option}">
+                <input type="checkbox" id="${question.uniqueID}-option${index + 1}" name="${question.uniqueID}" value="${option}">
                     ${option}
                 </label>
                 `;
@@ -1109,10 +1128,10 @@ function parseInputOptions(input) {
 
 //     // Access the question object using the data-survey-question attribute
 //     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-//         const question = surveyQuestions.find(q => q.id === JSON.parse(questionData).id);
+//         const question = surveyQuestions.find(q => q.uniqueID === JSON.parse(questionData).id);
 
 //     // Update the input field's placeholder
-//     const questionInput = selectedQuestionContainer.querySelector(`#${question.id}-scale-min-label`);
+//     const questionInput = selectedQuestionContainer.querySelector(`#${question.uniqueID}-scale-min-label`);
 //     if (questionInput) {
 //         questionInput.textContent = minLabelInput;
 //     }
@@ -1132,10 +1151,10 @@ function updateLabelInput(labelInputContainer, labelType) {
 
         // Access the question object using the data-survey-question attribute
         const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
+        const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
         // Update the input field's placeholder
-        const questionInput = selectedQuestionContainer.querySelector(`#${question.id}-scale-${labelType}-label`);
+        const questionInput = selectedQuestionContainer.querySelector(`#${question.uniqueID}-scale-${labelType}-label`);
         if (questionInput) {
             questionInput.textContent = labelInput;
             console.log(labelInput);
@@ -1211,7 +1230,7 @@ function updateScaleInput(scaleInputContainer) {
 
         // Access the question object using the data-survey-question attribute
         const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
+        const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
         console.log(question);
 
@@ -1219,7 +1238,7 @@ function updateScaleInput(scaleInputContainer) {
         question.scale_max_value = maxSelect.value;
 
         // Update the existing noUiSlider with new values
-        const slider = document.getElementById(`${question.id}-scale`);
+        const slider = document.getElementById(`${question.uniqueID}-scale`);
         slider.noUiSlider.updateOptions({
             range: {
                 'min': parseInt(question.scale_min_value, 10),
@@ -1272,7 +1291,7 @@ deleteQuestionButton.addEventListener('click', function () {
     if (selectedQuestionContainer) {
         // Access the question object using the data-survey-question attribute
         const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
+        const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
         // Remove the selected question block from the DOM
         selectedQuestionContainer.parentElement.removeChild(selectedQuestionContainer);
@@ -1298,13 +1317,13 @@ duplicateQuestionButton.addEventListener('click', function () {
     if (selectedQuestionContainer) {
         // Access the question object using the data-survey-question attribute
         const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-        const question = surveyQuestions.find(q => q.id === questionData);
+        const question = surveyQuestions.find(q => q.uniqueID === questionData);
 
         //clone the question
         const clonedQuestion = SurveyQuestion.cloneQuestion(question);
 
         // Rearrange surveyQuestions array based on the new question's position
-        const originalIndex = surveyQuestions.findIndex(q => q.id === question.id);
+        const originalIndex = surveyQuestions.findIndex(q => q.uniqueID === question.uniqueID);
         surveyQuestions.splice(originalIndex + 1, 0, clonedQuestion);
 
         //console.log(surveyQuestions);
@@ -1322,4 +1341,58 @@ duplicateQuestionButton.addEventListener('click', function () {
 
         updateFormStructure();
     }
+});
+
+//==================================================================================
+//==========save form================================
+//==================================================================================
+
+
+// Function to handle saving the survey form data
+function saveSurveyForm() {
+    // Retrieve survey details (title, description, etc.)
+    //let survey = new Survey();
+
+    const surveyTitle = document.getElementById('survey_title').value;
+    const surveyDescription = document.getElementById('survey_description').value;
+    // Retrieve other survey details similarly...
+
+    survey.title = surveyTitle;
+    survey.description = surveyDescription;
+    survey.visibility = document.getElementById("visibility").value;
+    survey.questions = surveyQuestions;
+
+    const validSurvey = validateDetails(survey);
+
+    console.log(survey);
+    // Make an AJAX POST request to the backend to save the form data
+    if(validSurvey){
+        $.ajax({
+            url: '/save-survey',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(survey),
+            success: function(response) {
+                console.log('Form saved successfully:', response);
+                history.back();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error saving form:', error);
+                console.log('Response Text:', xhr.responseText);
+            }
+            
+        });
+    }
+}
+
+function validateDetails(survey){
+    if (survey.questions.length === 0) {
+        alert('Please add at least one question.');
+        return; // Stop execution if no questions are added
+    }
+    return true;
+}
+// Event listener for the "Save Form" button click
+document.getElementById('save-survey-form').addEventListener('click', function() {
+    saveSurveyForm(); // Call the function to save the survey form data
 });

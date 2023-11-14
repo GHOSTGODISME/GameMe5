@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('title')->default('');
             $table->string('type')->default('');
             $table->json('options')->nullable();
-            $table->json('correct_ans')->nullable();
+            $table->json('correct_ans');
             $table->text('answer_explanation')->nullable();
-            $table->boolean('single_ans_flag')->default(true)->nullable();
+            $table->boolean('single_ans_flag')->nullable();
             $table->integer('points')->default(0);
             $table->integer('duration')->default(0);
         });

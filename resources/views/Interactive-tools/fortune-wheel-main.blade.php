@@ -10,7 +10,7 @@
         <h1>Available Fortune Wheels</h1>
 
         <!-- Button to add a new fortune wheel -->
-        <a href="{{ route('createWheel') }}" class="btn btn-primary">Add Wheel</a>
+        <a href="{{ route('create-fortune-wheel') }}" class="btn btn-primary">Add Wheel</a>
 
         <!-- Table to display available fortune wheels -->
         @if(count($fortuneWheels) > 0)
@@ -35,7 +35,7 @@
         
                         <td>
                             <!-- Link to the detailed create wheel page -->
-                            <a href="{{ route('editFortuneWheel', ['id' => $fortuneWheel->id]) }}" class="btn btn-info">Edit</a>
+                            <a href="{{ route('edit-fortune-wheel', ['id' => $fortuneWheel->id]) }}" class="btn btn-info">Edit</a>
                             <!-- Delete button -->
                             <button class="btn btn-danger" onclick="confirmDelete({{ $fortuneWheel->id }})">X</button>
                         </td>

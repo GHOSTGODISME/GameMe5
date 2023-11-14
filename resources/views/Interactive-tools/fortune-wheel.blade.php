@@ -158,9 +158,19 @@ tdl
      </script>
 
      <script>
-         const fw = @json($fortuneWheel);
+         // class FortuneWheel{
+         //     constructor(object){
+         //         this.title = object.title;
+         //         this.entries = object.entries;
+         //         this.results = object.result;
+         //     }
+         // }
 
+         // const fw = new FortuneWheel(@json($fortuneWheel));
+
+         const fw = @json($fortuneWheel);
          console.log(fw);
+
          // Function to update entries in the UI
          function updateEntriesUI() {
              const entriesTextArea = $('#entries_contentholder');
@@ -191,32 +201,29 @@ tdl
 
                  // If the user confirms, proceed with saving the wheel
                  if (isConfirmed) {
-                     // Perform an AJAX request to update the data on the server
                      fw.title = $('#fortune-wheel-title').val();
 
                      const fortuneWheelId = $('#fortune-wheel-id').val();
-                     const url = fortuneWheelId ? `/update-fortune-wheel/${fortuneWheelId}` :
-                         '/create-fortune-wheel';
+                     //  const url = fortuneWheelId ? `/update-fortune-wheel/${fortuneWheelId}` :
+                     //      '/create-fortune-wheel';
 
-                     console.log("fortuneWheelId " + fortuneWheelId);
-                     console.log(fw);
+                     
+                     console.log(JSON.stringify(fw));
 
                      $.ajax({
-                         url: url,
+                         url: '/save-fortune-wheel',
                          method: 'POST',
-                         data: {
-                             fortuneWheel: fw,
-                             _token: $('meta[name="csrf-token"]').attr('content')
-                         },
+                         contentType: 'application/json',
+                         data: JSON.stringify(fw),
+                         //  data: {
+                         //     fortuneWheel: fw
+                         //  },
                          success: function(response) {
                              console.log('Wheel saved successfully');
-                             // You can perform additional actions or display a message on success
-                            //  location.reload(); // Reload the page
-                            history.back();
+                             history.back();
                          },
                          error: function(error) {
                              console.error('Error saving wheel:', error);
-                             // Handle the error if needed
                          }
                      });
                  } else {

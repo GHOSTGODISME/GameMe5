@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FortuneWheel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 
 class FortuneWheelController extends Controller
@@ -11,48 +12,46 @@ class FortuneWheelController extends Controller
     public function createFortuneWheel()
     {
         $fortuneWheel = new FortuneWheel();
-        $fortuneWheel->save();
-
+        //$fortuneWheel->save();
         return view('Interactive-tools.fortune-wheel', compact('fortuneWheel'));
     }
 
     // Index method that redirects to createFortuneWheel
     public function index()
     {
-        return $this->createFortuneWheel();
+        $fortuneWheels = FortuneWheel::all();
+        return view('Interactive-tools.fortune-wheel-main', ['fortuneWheels' => $fortuneWheels]);
     }
 
     public function updateFortuneWheel(Request $request)
     {
-        // Validate the request if needed
-        $request->validate([
-            'fortuneWheel' => 'required|array', // Add more validation rules if necessary
+
+        $data = $request->validate([
+            'id' =>'nullable|integer',
+            'title' => 'required|string',
+            'entries' => 'nullable|array',
+            'results' => 'nullable|array',
         ]);
 
-        // Extract the FortuneWheel data from the request
-        $fortuneWheelData = $request->input('fortuneWheel');
+        Log::info('data: ' . json_encode($data));
 
-        // Assuming your FortuneWheel model has an 'id' field for identification
-        $fortuneWheelId = $fortuneWheelData['id'];
+        if (isset($data['id'])) {
+            $fortuneWheel = FortuneWheel::find($data['id']);
+            Log::info('have id: ' . $fortuneWheel);
 
-        // Find the FortuneWheel in the database
-        $fortuneWheel = FortuneWheel::findOrFail($fortuneWheelId);
+            if ($fortuneWheel) {
+                $fortuneWheel->update($data);
+                Log::info('updated: ' . json_encode($data));
 
-        // Update the FortuneWheel attributes
-        $fortuneWheel->title = $fortuneWheelData['title'];
+                return redirect()->route('fortune-wheel-main')->with('success', 'Wheel updated successfully');
+            }
+        }else{
+            $fortuneWheel = FortuneWheel::create($data);
+            Log::info('stored: ' . json_encode($data));
 
-        // Update entries and results unconditionally
-        $fortuneWheel->entries = $fortuneWheelData['entries'] ?? [];
-        $fortuneWheel->results = $fortuneWheelData['results'] ?? [];
-        
-
+        }
         // Save the updated FortuneWheel to the database
-        $fortuneWheel->save();
-
-        // return response()->json(['message' => 'Wheel updated successfully']);
-         return redirect()->route('fortune-wheel-main')->with('success', 'Wheel updated successfully');
-
-        //return view('Interactive-tools.fortune-wheel-main')->with('success', 'Wheel updated successfully');
+        return redirect()->route('fortune-wheel-main')->with('success', 'Wheel updated successfully');
     }
 
     public function editFortuneWheel($id)
