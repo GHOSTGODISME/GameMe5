@@ -3,7 +3,8 @@
 @section('title', 'Sign In')
 
 @section('content')
-<style></style>
+<style>
+</style>
 <h1>Welcome<br>Back!</h1>
 <form action="{{route('login_post')}}" method="POST">
     @csrf
@@ -37,8 +38,8 @@
             </td>
         </tr>
     </table>
-    <a href="forgotpassword">Forgot Password</a><br>
+    <a href="{{route('forgetpassword_1')}}">Forget you password?</a><br>
     <button type="submit" class="btn_login_sign_in">Log In</button><br>
-    <span>Don't have an account?<a href="{{route('signup')}}">{{ __('Sign Up')}}</a><span>
+    <span>Don't have an account?<a href="{{route('admin_staff')}}">{{ __('admin_staff')}}</a><span>
 </form>
 @endsection
