@@ -31,9 +31,6 @@ Route::get('/', function () {
     // return view('interactive-tools/fortune-wheel');
 });
 
-Route::get('login',[UserController::class, 'login'])->name('login');
-
-
 /*User Authentication*/
 /*Login*/
 Route::get('login',[UserAuthController::class, 'login'])->name('login');
