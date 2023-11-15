@@ -98,18 +98,12 @@ Route::post('admin_destroy_staff',[AdminController::class, 'admin_destroy_staff'
 
 /////// kel
 
-// fortune wheel related routes
+// fortune wheel related 
 Route::get('/fortune-wheel-main', [FortuneWheelController::class, 'index'])->name('fortune-wheel-main');
-Route::post('/create-fortune-wheel', [FortuneWheelController::class, 'createFortuneWheel'])->name('create-fortune-wheel');
+Route::get('/create-fortune-wheel', [FortuneWheelController::class, 'createFortuneWheel'])->name('create-fortune-wheel');
 Route::get('/edit-fortune-wheel/{id}', [FortuneWheelController::class, 'editFortuneWheel'])->name('edit-fortune-wheel');
 Route::delete('/delete-fortune-wheel/{id}', [FortuneWheelController::class, 'deleteFortuneWheel'])->name('delete-fortune-wheel');
 Route::post('/save-fortune-wheel', [FortuneWheelController::class, 'updateFortuneWheel']);
-
-
-Route::resource('questions', QuestionController::class);
-Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
-Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
-Route::get('/quiz-edit', [QuestionController::class, 'showAllQuestion'])->name('quiz-edit');
 
 
 //survey related
@@ -117,8 +111,18 @@ Route::get('/survey-index', [SurveyController::class, 'index'])->name('survey-in
 Route::get('/create-survey', [SurveyController::class, 'create'])->name('create-survey');
 Route::get('/edit-survey/{id}', [SurveyController::class, 'edit'])->name('edit-survey');
 Route::delete('/delete-survey/{id}', [SurveyController::class, 'delete'])->name('delete-survey');
+
 Route::post('/save-survey', [SurveyController::class, 'store']);
 
 Route::get('get-survey/{id}', [SurveyController::class, 'getSurvey']);
 
 Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentResponse'])->name('student-view-survey');
+Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
+Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->name('show-response-survey');
+
+
+// quiz question related
+Route::resource('questions', QuestionController::class);
+Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
+Route::get('/quiz-edit', [QuestionController::class, 'showAllQuestion'])->name('quiz-edit');

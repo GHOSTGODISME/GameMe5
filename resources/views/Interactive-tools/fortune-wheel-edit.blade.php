@@ -61,6 +61,17 @@ tdl
          .menu {
              margin-right: 35px;
          }
+
+         #fortune-wheel-title{
+            /* width: 800px; */
+            margin: 20px 0;
+            font-size: 48px;
+            font-weight: bolder;
+         }
+
+         .container-style{
+            padding: 50px;
+         }
      </style>
 
 
@@ -80,18 +91,18 @@ tdl
      <!-- Add this hidden input field to store the Fortune Wheel's ID -->
      <input type="hidden" id="fortune-wheel-id" name="fortuneWheel[id]" value="{{ $fortuneWheel->id ?? '' }}">
 
-     <p class="interactive_tool_title">Fortune Wheel</p>
-     <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
-         value="{{ $fortuneWheel->title ?? '' }}" required>
 
      <div class="container">
+        <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
+        placeholder="Fortune Wheel Title" value="{{ $fortuneWheel->title ?? '' }}" required>
+
          <div class="row">
-             <div class="col-md-6 col-xl-7" style="padding: 50px;">
-                 <div id="result-box" class="box"></div>
+             <div class="col-md-6 col-xl-7 container-style">
+                 <div id="result-box" class="box">Press "Spin" to start</div>
                  <button class="btn interactive_btn" id="spin-button" type="button">Spin</button>
              </div>
 
-             <div class="col-md-6 col-xl-5" style="padding: 50px;">
+             <div class="col-md-6 col-xl-5 container-style" >
                  <div class="card fortune_wheel_card"></div>
                  <div>
                      <ul class="nav nav-tabs" role="tablist">
@@ -112,20 +123,19 @@ tdl
                              </div>
                              <form>
                                  <label for="entries_contentholder"></label>
-                                 <textarea class="contentholder" id="entries_contentholder" name="fortuneWheel[entries]">{{ implode("\n", $fortuneWheel->entries ?? []) }}</textarea>
+                                 <textarea class="contentholder form-control" id="entries_contentholder" name="fortuneWheel[entries]">{{ implode("\n", $fortuneWheel->entries ?? []) }}</textarea>
                              </form>
                          </div>
                          <div class="tab-pane fade" role="tabpanel" id="tab-2">
                              <form>
                                  <label for="results_contentholder"></label>
-                                 <textarea class="contentholder" id="results_contentholder" name="fortuneWheel[results]">{{ implode("\n", $fortuneWheel->results ?? []) }}</textarea>
+                                 <textarea class="contentholder form-control" id="results_contentholder" name="fortuneWheel[results]">{{ implode("\n", $fortuneWheel->results ?? []) }}</textarea>
                              </form>
                          </div>
                      </div>
 
 
                      <div class="input_container">
-                         <label for="excel_file_input"></label>
                          <input type="file" id="excel_file_input" accept=".xlsx"
                              title="Only XLSX files are supported">
                      </div>

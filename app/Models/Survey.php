@@ -16,6 +16,10 @@ class Survey extends Model
         return $this->hasMany(SurveyQuestion::class);
     }
 
+    public function responses(){
+        return $this->hasMany(SurveyResponse::class);
+    }
+
     protected $attributes = [
         'title' => 'Survey Title',
         'description' => null,

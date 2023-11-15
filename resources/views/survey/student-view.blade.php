@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Document</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
@@ -17,14 +18,13 @@
     <div class="row justify-content-center">
         <div class="col-10">
             <div id="form-preview">
-                <h6>Preview | View Response (tbc)</h6>
                 <form id="survey-form">
-                    <h2 id="survey_title_preview" class="text-break"></h2>
-                    <p id="survey_description_preview" class="text-break">Survey Description</p>
+                    <h2 id="survey_title_preview" class="text-break">{{ $survey['title'] }}</h2>
+                    <p id="survey_description_preview" class="text-break">{{ $survey['description'] }}</p>
                     <div>
                         <div id="questions_container"></div>
                     </div>
-                    <input type="submit" class="btn btn-primary m-auto d-block" value="Submit">
+                    <input type="submit" id="submit_survey_form" class="btn btn-primary m-auto d-block" value="Submit">
                 </form>
             </div>
         </div>
@@ -60,6 +60,8 @@
 
 
     </script>
-    {{-- <script  src="{{ asset('js/survey.js') }}"></script> --}}
+        <script  src="{{ asset('js/survey_utility.js') }}"></script>
+        <script  src="{{ asset('js/survey_form.js') }}"></script>
+        {{-- <script  src="{{ asset('js/survey_admin.js') }}"></script> --}}
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
+use App\Models\SurveyResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -25,7 +26,16 @@ class SurveyController extends Controller
     public function edit($id)
     {
         $survey = Survey::with('questions')->findOrFail($id);
-        return view('survey.edit', compact('survey'));
+        // return view('survey.edit', compact('survey'));
+
+            // Retrieve all responses for the specific survey ID along with related question responses
+            $surveyResponses = SurveyResponse::with('question_responses.survey_question')
+            ->where('survey_id', $id)
+            ->get();
+
+        // Pass the survey and its responses data to the view for rendering
+        return view('survey.edit', compact('survey', 'surveyResponses'));
+
     }
 
     public function delete($id)
@@ -90,7 +100,7 @@ class SurveyController extends Controller
                     'scale_max_label' => $questionData['scale_max_label'] ?? null,
                     'scale_min_value' => $questionData['scale_min_value'] ?? null,
                     'scale_max_value' => $questionData['scale_max_value'] ?? null,
-                    'properties' => $questionData['properties'] ?? null,
+                    // 'properties' => $questionData['properties'] ?? null,
                     'index' => $questionData['index'] ?? 0,
                 ]);
             } else {
@@ -106,7 +116,7 @@ class SurveyController extends Controller
                     'scale_max_label' => $questionData['scale_max_label'] ?? null,
                     'scale_min_value' => $questionData['scale_min_value'] ?? null,
                     'scale_max_value' => $questionData['scale_max_value'] ?? null,
-                    'properties' => $questionData['properties'] ?? null,
+                    // 'properties' => $questionData['properties'] ?? null,
                     'index' => $questionData['index'] ?? 0,
                 ]);
 
@@ -135,4 +145,56 @@ class SurveyController extends Controller
         $survey = Survey::with('questions')->findOrFail($id);
         return view('survey.student-view', ['survey' => $survey]);
     }
+
+    public function storeResponse(Request $request)
+    {
+        Log::info('Request Data: ' . json_encode($request->all()));
+        try {
+            // Validate incoming request data
+            $data = $request->validate([
+                'id' => 'nullable|integer',
+                'survey_id' => 'required|integer',
+                'user_id' => 'nullable|integer',
+                'question_response' => 'required|array',
+                'question_response.*.question_id' => 'required|integer',
+                'question_response.*.answer' => 'required', // Add necessary validation rules for the answer
+                // Include other necessary validations for form fields
+            ]);
+    
+            Log::info('data: ' . json_encode($data));
+    
+            $survey = Survey::findOrFail($data['survey_id']);
+            $response = new SurveyResponse([
+                'survey_id' => $survey->id,
+                'user_id' => $data['user_id'], // Assuming user ID is obtained from the request
+            ]);
+    
+            // Loop through each question response and save it
+            foreach ($data['question_response'] as $questionResponse) {
+                $savedResponse = $survey->responses()->save($response);
+                Log::info('questionResponse: ' . json_encode($questionResponse));
+
+                $savedResponse->question_responses()->create([
+                    'survey_question_id' => $questionResponse['question_id'],
+                    'answers' => $questionResponse['answer'],
+                ]);
+            
+            }
+            // Optionally return a success response or redirect
+            return response()->json(['message' => 'Survey response saved']);
+        } catch (\Exception $e) {
+            // Return an error response if an exception occurs
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }    
+
+    public function showResponses($id)
+    {
+        // Retrieve all responses for a specific survey ID along with related question responses
+        $surveyResponses = SurveyResponse::with('question_responses.survey_question')->where('survey_id', $id)->get();
+    
+        // Pass the $surveyResponses data to the view for rendering
+        return view('survey.show-responses', ['surveyResponses' => $surveyResponses]);
+    }
+    
 }

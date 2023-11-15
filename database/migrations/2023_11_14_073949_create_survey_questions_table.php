@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('scale_max_label')->nullable();
             $table->string('scale_min_value')->nullable();
             $table->string('scale_max_value')->nullable();
-            $table->string('properties');
+            // $table->string('properties');
             $table->string('index');
 
             $table->foreignId('survey_id')->constrained();

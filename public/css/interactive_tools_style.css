@@ -18,9 +18,14 @@ color: white;
 
 
 .box{
-  width: 80%;
-  margin: auto;
+  height: 350px;
   padding: 30px;
+  
+  /* to make the text show on center */
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  
   border: 1px solid black;
   text-align: center;
   font-weight: bold;

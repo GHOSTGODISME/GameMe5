@@ -13,14 +13,14 @@ class FortuneWheelController extends Controller
     {
         $fortuneWheel = new FortuneWheel();
         //$fortuneWheel->save();
-        return view('Interactive-tools.fortune-wheel', compact('fortuneWheel'));
+        return view('Interactive-tools.fortune-wheel-edit', compact('fortuneWheel'));
     }
 
     // Index method that redirects to createFortuneWheel
     public function index()
     {
         $fortuneWheels = FortuneWheel::all();
-        return view('Interactive-tools.fortune-wheel-main', ['fortuneWheels' => $fortuneWheels]);
+        return view('Interactive-tools.fortune-wheel-edit-index', ['fortuneWheels' => $fortuneWheels]);
     }
 
     public function updateFortuneWheel(Request $request)
@@ -43,7 +43,7 @@ class FortuneWheelController extends Controller
                 $fortuneWheel->update($data);
                 Log::info('updated: ' . json_encode($data));
 
-                return redirect()->route('fortune-wheel-main')->with('success', 'Wheel updated successfully');
+                return redirect()->route('fortune-wheel-index')->with('success', 'Wheel updated successfully');
             }
         }else{
             $fortuneWheel = FortuneWheel::create($data);
@@ -51,7 +51,7 @@ class FortuneWheelController extends Controller
 
         }
         // Save the updated FortuneWheel to the database
-        return redirect()->route('fortune-wheel-main')->with('success', 'Wheel updated successfully');
+        return redirect()->route('fortune-wheel-index')->with('success', 'Wheel updated successfully');
     }
 
     public function editFortuneWheel($id)
@@ -60,7 +60,7 @@ class FortuneWheelController extends Controller
         $fortuneWheel = FortuneWheel::findOrFail($id);
 
         // Return the createFortuneWheel view with the Fortune Wheel data
-        return view('Interactive-tools.fortune-wheel', compact('fortuneWheel'));
+        return view('Interactive-tools.fortune-wheel-edit', compact('fortuneWheel'));
     }
 
     public function deleteFortuneWheel($id)
@@ -83,6 +83,6 @@ class FortuneWheelController extends Controller
     public function showFortuneWheelMain()
     {
         $fortuneWheels = FortuneWheel::all();
-        return view('Interactive-tools.fortune-wheel-main', ['fortuneWheels' => $fortuneWheels]);
+        return view('Interactive-tools.fortune-wheel-edit-index', ['fortuneWheels' => $fortuneWheels]);
     }
 }

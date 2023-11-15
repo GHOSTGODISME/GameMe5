@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('survey_responses', function (Blueprint $table) {
+        Schema::create('survey_response_questions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
-            // Columns to capture survey responses
-            $table->foreignId('survey_id')->constrained(); // Foreign key to link to surveys table
-            $table->foreignId('user_id')->nullable()->constrained(); // If capturing user information
-            
-
+            $table->foreignId('survey_response_id')->constrained('survey_responses');
+            $table->foreignId('survey_question_id')->constrained(); // Foreign key to link to survey_questions table
+            $table->json('answers');
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('survey_responses');
+        Schema::dropIfExists('survey_response_questions');
     }
 };
