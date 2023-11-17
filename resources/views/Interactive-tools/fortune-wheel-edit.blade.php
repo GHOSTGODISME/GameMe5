@@ -78,16 +78,19 @@ tdl
  </head>
 
  <body>
-     <div class="header">
+     {{-- <div class="header">
          <div class="logo">
              <a href="#"><img src="{{ asset('img/logo_header.png') }}"alt="Logo"></a>
          </div>
          <div class="menu">
-             <a href="#"><img src="{{ asset('img/menu.png') }}" alt="Menu"></a>
-         </div>
+            <a href="#"><img src="{{ asset('img/hambager.png') }}" alt="Menu"></a>
+            <a href="#"><i class="fa-solid fa-bars"></i></a>
+        </div>
+     </div> --}}
+     @include('Layout/lect_header')
 
-         <button id="save-wheel-button" class="btn btn-primary">Save Wheel</button>
-     </div>
+     <button id="save-wheel-button" class="btn btn-primary">Save Wheel</button>
+
      <!-- Add this hidden input field to store the Fortune Wheel's ID -->
      <input type="hidden" id="fortune-wheel-id" name="fortuneWheel[id]" value="{{ $fortuneWheel->id ?? '' }}">
 
