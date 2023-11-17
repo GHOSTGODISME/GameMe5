@@ -37,13 +37,16 @@
         </div>
     </div>
 
-
+    
     <div class="tab-style">
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab"
                     href="#tab-1">Edit</a></li>
+
+                    @if(isset($survey->id))
             <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
                     href="#tab-2">Response ({{ $surveyResponses->count() }})</a></li>
+                    @endif
         </ul>
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active" role="tabpanel">
@@ -268,8 +271,10 @@
                     </div>
                 </div>
             </div>
+            @if(isset($survey->id))
             <div id="tab-2" class="tab-pane" role="tabpanel">
                 <!-- Display all survey responses in a scrollable table -->
+                @if(count($surveyResponses) > 0)
                 <div class="row justify-content-center " >
                     <p>number of response: {{ $surveyResponses->count() }}</p>
 
@@ -281,7 +286,7 @@
                                     <th>Survey ID</th>
                                     <th>User ID</th>
                                     <!-- Add columns for each question title -->
-                                    @foreach ($surveyResponses->first()->question_responses as $questionResponse)
+                                    @foreach ($surveyResponses->first()->surveyResponseQuestions as $questionResponse)
                                         <th>{{ $questionResponse->survey_question->title }}</th>
                                     @endforeach
                                     <!-- Add other headings as needed -->
@@ -294,7 +299,7 @@
                                         <td>{{ $response->survey_id }}</td>
                                         <td>{{ $response->user_id }}</td>
                                         <!-- Loop through each question response for this response -->
-                                        @foreach ($response->question_responses as $questionResponse)
+                                        @foreach ($response->surveyResponseQuestions as $questionResponse)
                                             <td>{{ $questionResponse->answers }}</td>
                                         @endforeach
                                         <!-- Add other response details as needed -->
@@ -304,7 +309,11 @@
                         </table>
                     </div>
                 </div>
+                @else
+                <p>No records found.</p>
+                @endif
             </div>
+            @endif
         </div>
     </div>
 
@@ -331,7 +340,8 @@
 
     <script>
         const surveyFromDB = @json($survey);
-    </script>
+        console.log(surveyFromDB);
+</script>
     <script src="{{ asset('js/survey_utility.js') }}"></script>
     <script src="{{ asset('js/survey_form.js') }}"></script>
     <script src="{{ asset('js/survey_admin.js') }}"></script>

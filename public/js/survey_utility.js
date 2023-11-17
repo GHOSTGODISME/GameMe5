@@ -118,7 +118,9 @@ const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
 const survey = mapSurveyDataToInstance(surveyFromDB);
 let surveyQuestions = survey.questions;
 
-
+// console.log();
+console.log(survey);
+console.log(surveyQuestions);
 
 // Function to generate a unique ID for unsaved questions
 function generateUniqueID() {
@@ -138,8 +140,8 @@ function mapSurveyDataToInstance(fetchedSurveyData) {
     survey.visibility = fetchedSurveyData.visibility;
 
     // Map questions
-    if (fetchedSurveyData.questions && Array.isArray(fetchedSurveyData.questions)) {
-        survey.questions = fetchedSurveyData.questions.map(questionData => {
+    if (fetchedSurveyData.survey_questions && Array.isArray(fetchedSurveyData.survey_questions)) {
+        survey.questions = fetchedSurveyData.survey_questions.map(questionData => {
             questionCount++;
             // Create SurveyQuestion instance for each question data
             let surveyQuestion = new SurveyQuestion(

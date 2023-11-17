@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\UserAuthController;
 
 /*
@@ -122,7 +123,15 @@ Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->n
 
 
 // quiz question related
-Route::resource('questions', QuestionController::class);
-Route::get('/questions/create', [QuestionController::class, 'create'])->name('questions.create');
+// Route::resource('questions', QuestionController::class);
+// Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
+// Route::get('/quiz-edit', [QuestionController::class, 'showAllQuestion'])->name('quiz-edit');
+// Route::post('/save-quiz', [QuizController::class, 'storeQuiz']);
+
+Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');
+Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz');
+Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
+Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
+
+Route::get('/create-question/{id}', [QuestionController::class, 'create'])->name('create-question');
 Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
-Route::get('/quiz-edit', [QuestionController::class, 'showAllQuestion'])->name('quiz-edit');

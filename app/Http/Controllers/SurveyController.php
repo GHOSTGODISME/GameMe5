@@ -25,13 +25,14 @@ class SurveyController extends Controller
 
     public function edit($id)
     {
-        $survey = Survey::with('questions')->findOrFail($id);
+        $survey = Survey::with('surveyQuestions')->findOrFail($id);
         // return view('survey.edit', compact('survey'));
+        Log::info('survey: ' . json_encode($survey->all()));
 
             // Retrieve all responses for the specific survey ID along with related question responses
-            $surveyResponses = SurveyResponse::with('question_responses.survey_question')
-            ->where('survey_id', $id)
-            ->get();
+        $surveyResponses = SurveyResponse::with('surveyResponseQuestions.surveyQuestion')
+        ->where('survey_id', $id)
+        ->get();
 
         // Pass the survey and its responses data to the view for rendering
         return view('survey.edit', compact('survey', 'surveyResponses'));
@@ -49,7 +50,7 @@ class SurveyController extends Controller
         }
 
         // Delete the fortune wheel
-        $survey->questions()->delete(); // Assuming 'questions()' defines the relationship
+        $survey->surveyQuestions()->delete(); // Assuming 'questions()' defines the relationship
 
         $survey->delete();
 
@@ -120,7 +121,7 @@ class SurveyController extends Controller
                     'index' => $questionData['index'] ?? 0,
                 ]);
 
-                $survey->questions()->save($question);
+                $survey->surveyQuestions()->save($question);
             }
         }
 
@@ -142,7 +143,7 @@ class SurveyController extends Controller
     }
 
     public function studentResponse($id){
-        $survey = Survey::with('questions')->findOrFail($id);
+        $survey = Survey::with('surveyQuestions')->findOrFail($id);
         return view('survey.student-view', ['survey' => $survey]);
     }
 
@@ -171,10 +172,10 @@ class SurveyController extends Controller
     
             // Loop through each question response and save it
             foreach ($data['question_response'] as $questionResponse) {
-                $savedResponse = $survey->responses()->save($response);
+                $savedResponse = $survey->surveyResponses()->save($response);
                 Log::info('questionResponse: ' . json_encode($questionResponse));
 
-                $savedResponse->question_responses()->create([
+                $savedResponse->surveyResponseQuestions()->create([
                     'survey_question_id' => $questionResponse['question_id'],
                     'answers' => $questionResponse['answer'],
                 ]);

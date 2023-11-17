@@ -285,6 +285,9 @@ $(document).ready(function () {
 
     initializeInputListeners();
     initializeFieldsVisibility();
+
+    initializeSurveySubmitBtn_admin();
+
 });
 
 function initializeSurveyFields(){
@@ -869,6 +872,11 @@ deleteQuestionButton.addEventListener('click', function () {
         const questionIndex = surveyQuestions.indexOf(question);
         if (questionIndex !== -1) {
             surveyQuestions.splice(questionIndex, 1);
+
+                        // Update the indices after deletion
+                        surveyQuestions.forEach((question, index) => {
+                            question.index = index + 1; // Update indices based on the new positions
+                        });
         }
 
         updateFormStructure();
@@ -917,8 +925,6 @@ duplicateQuestionButton.addEventListener('click', function () {
 // Function to handle saving the survey form data
 function saveSurveyForm() {
     // Retrieve survey details (title, description, etc.)
-
-
     survey.title = document.getElementById('survey_title').value;
     survey.description = document.getElementById('survey_description').value;
     survey.visibility = document.getElementById("visibility").value;
@@ -948,9 +954,18 @@ function saveSurveyForm() {
 }
 
 function validateDetails(survey){
+    if(!survey.title.trim()){
+        alert("Please enter a title for your survey");
+        return false;
+    }
+    if(survey.visibility === null){
+        alert("Please select the visibility of your survey");
+        return false;      
+    }
+
     if (survey.questions.length === 0) {
         alert('Please add at least one question.');
-        return; // Stop execution if no questions are added
+        return false; // Stop execution if no questions are added
     }
     return true;
 }
@@ -958,3 +973,12 @@ function validateDetails(survey){
 document.getElementById('save-survey-form').addEventListener('click', function() {
     saveSurveyForm(); // Call the function to save the survey form data
 });
+
+function initializeSurveySubmitBtn_admin(){
+    $('#survey-form').onclick = null;
+    $('#survey-form').on('submit', function (event) {
+        event.preventDefault(); 
+
+       validateSurvey();
+    });
+}

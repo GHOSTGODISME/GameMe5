@@ -23,7 +23,7 @@ class SurveyQuestionController extends Controller
             'properties' => 'string',
         ]);
 
-        $question = $survey->questions()->create($data);
+        $question = $survey->surveyQuestions()->create($data);
 
         return response()->json(['message' => 'Question created successfully', 'question' => $question]);
     }

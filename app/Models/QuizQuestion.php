@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Question extends Model
+class QuizQuestion extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title', 'type', 'options', 'correct_ans', 'answer_explanation',
-        'single_ans_flag', 'points', 'duration'
+        'single_ans_flag', 'points', 'duration','quiz_id'
     ];
 
     protected $casts = [
         'options' => 'array',
         'correct_ans' => 'array',
-        //'single_ans_flag' => 'boolean',
     ];
 
     protected $attributes = [
@@ -26,9 +25,13 @@ class Question extends Model
         'options' => null,
         'correct_ans' => '[]',
         'answer_explanation' => null,
-        //'single_ans_flag' => null,
+        'single_ans_flag' => null,
         'points' => 0,
         'duration' => 0,
     ];
     
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
+    }
 }

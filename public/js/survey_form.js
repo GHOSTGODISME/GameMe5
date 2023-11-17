@@ -28,7 +28,7 @@ $(document).ready(function () {
     });
 
     populateSurveyForm();
-    initializeSurveySubmitBtn();
+    initializeSurveySubmitBtn_student();
 });
 
 function populateSurveyForm() {
@@ -224,7 +224,7 @@ function validateSurvey() {
                 }
                 break;
             case QUESTION_TYPE_INT.SCALE:
-                // Add validation for scale input if needed
+                // scale have default value
                 break;
             default:
                 console.log("None triggered");
@@ -234,7 +234,7 @@ function validateSurvey() {
     return allQuestionsAnswered;
 }
 
-function initializeSurveySubmitBtn(){
+function initializeSurveySubmitBtn_student(){
     $('#survey-form').on('submit', function (event) {
         event.preventDefault(); 
 
@@ -258,8 +258,6 @@ function initializeSurveySubmitBtn(){
                 }
                 
             });
-
-
             console.log(surveyResponse);
         }else{
             alert('Please answer all questions before submitting the survey.');

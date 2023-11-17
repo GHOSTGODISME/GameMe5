@@ -12,6 +12,7 @@
 
     <a href="{{ route('fortune-wheel-main') }}" class="btn btn-primary">View Wheels</a>
     <a href="{{ route('quiz-edit') }}" class="btn btn-primary">quiz-edit</a>
+    <a href="{{ route('quiz-index') }}" class="btn btn-primary">quiz-index</a>
     <a href="{{ route('survey-index') }}" class="btn btn-primary">surveys</a>
 
 </body>

@@ -11,18 +11,18 @@ class Survey extends Model
 
     protected $fillable = ['title', 'description', 'visibility'];
 
-    public function questions()
-    {
-        return $this->hasMany(SurveyQuestion::class);
-    }
-
-    public function responses(){
-        return $this->hasMany(SurveyResponse::class);
-    }
-
     protected $attributes = [
         'title' => 'Survey Title',
         'description' => null,
         'visibility' => 'public'
     ];
+
+    public function surveyQuestions()
+    {
+        return $this->hasMany(SurveyQuestion::class);
+    }
+
+    public function surveyResponses(){
+        return $this->hasMany(SurveyResponse::class);
+    }
 }

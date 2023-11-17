@@ -18,12 +18,12 @@ class SurveyResponseQuestion extends Model
         'answers' => 'json',
     ];
 
-    public function survey_question()
+    public function surveyQuestion()
     {
         return $this->belongsTo(SurveyQuestion::class, 'survey_question_id');
     }
     
-    public function survey_responses()
+    public function surveyResponse()
     {
         return $this->belongsTo(SurveyResponse::class);
     }
