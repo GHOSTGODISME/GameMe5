@@ -7,28 +7,90 @@
     .title_bar{
     display: flex;
     flex-direction: row;
+    width:100%;
+    justify-content: space-between;
     }
     .add_icon{
         width:30px;
         height:30px;
         align-self: center;
     }
+
+    .sub_cont{
+    display: flex;
+    flex-direction: row;   
+    justify-content: space-between;
+    align-items: center;
+    width:200px; 
+    }
+
+    .add_link{
+        padding: 0;
+        margin:0;
+    }
+
+    .search-form {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Style for the search icon */
+    .search_icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px; /* Adjust the width as needed */
+        height: 20px; /* Adjust the height as needed */
+    }
+
+    /* Style for the input */
+    .search-input {
+        padding: 10px 40px; /* Adjust padding to accommodate the icon */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    /* Style for the button */
+    .search-button {
+        padding: 10px 15px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    .staff-page a {
+    text-decoration: underline;
+    /* Add any other styles for the current page link */
+    }
+
+
+
+
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<div class = title_bar>
-<h1>Staff</h1>
-<a href="{{ route('admin_add_staffs') }}">
-    <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
-</a>
-<form action="{{ route('admin_staff_search') }}" method="GET">
-    <input type="text" name="search" placeholder="Search by name">
-    <button type="submit" class="search-button">Search</button>
-</form>
+<div class = "title_bar">
+    <div class="sub_cont">
+        <h1 class="admin_subtitle3">Staff</h1>
+        <a class="add_link" href="{{ route('admin_add_staffs') }}">
+            <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
+        </a>
+    </div>
+    <form action="{{ route('admin_staff_search') }}" method="GET" class="search-form">
+        <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
+        <input type="text" name="search" class="search-input" placeholder="Search">
+        <button type="submit" class="search-button">Search</button>
+    </form>
 </div>
 
 <!-- In your Blade view (resources/views/admin/students/index.blade.php) -->
-<table class="report-table">
+<table class="admin_table">
     <thead>
         <tr>
             <th class="bordered">No</th>
@@ -36,7 +98,7 @@
             <th class="bordered">Staff Name</th>
             <th class="bordered">Gender</th>
             <th class="bordered">Email</th>
-           
+            <th class="bordered">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -47,10 +109,15 @@
                 <td class="bordered">{{ $staff->name }}</td>
                 <td class="bordered">{{ $staff->gender}}</td>
                 <td class="bordered">{{ $staff->email }}</td>
-                <td class="button-container" style="border:none; padding:0; margin:0;">
-                    <a href="{{ route('admin_edit_staff', ['staff' => $staff->id]) }}" class="update-button">Update</a>
-                    <button onclick="confirmAndSubmit({{ $staff->id }})">Remove</button>
-                </td>
+                <td class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this)">
+                      <img src="img/threedot_icon.png" alt="three_dot"> <!-- Unicode character for three dots -->
+                    </div>
+                    <div class="action-menu">
+                      <a href="{{ route('admin_edit_staff', ['staff' => $staff->id]) }}">Update</a>
+                      <a href="#" onclick="confirmAndSubmit({{ $staff->id }})">Remove</a>
+                    </div>
+                  </td>
             </tr>
         @endforeach
         <!-- Add more rows as needed -->

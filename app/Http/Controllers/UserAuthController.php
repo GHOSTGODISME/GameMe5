@@ -114,7 +114,6 @@ class UserAuthController extends Controller{
 
         // Create user with all data
         $user = User::create($data);
-
         // Check account type and handle additional steps if needed
          if ($data['accountType'] == 'lecturer') {
             $lecturerData = $request->session()->get('lecturer_data');
@@ -126,7 +125,11 @@ class UserAuthController extends Controller{
         // Clear session data
         $request->session()->forget(['signup_1', 'signup_2']);
 
-    return redirect(route('login'))->with("success", "You have signed up successfully, now you can login to your account.");
+    return view('User/successful_signup');
+    }
+
+    function successful_signup(){
+        return redirect(route('login'));
     }
 
     function forgetpassword_1(){
@@ -215,7 +218,6 @@ class UserAuthController extends Controller{
         return view('User/login')->with('success', 'Password reset successful. You can now login with your new password.');
     }
 
-    
     function logout(){
         Session::flush();
         Auth::logout();

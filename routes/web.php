@@ -35,6 +35,8 @@ Route::post('signup_1',[UserAuthController::class, 'signup_1'])->name('signup_1'
 Route::post('signup_2',[UserAuthController::class, 'signup_2'])->name('signup_2');
 Route::post('signup_lecturer', [UserAuthController::class, 'signup_lecturer'])->name('signup_lecturer');
 Route::post('signup_3',[UserAuthController::class, 'signup_post'])->name('signup_post');
+Route::get('successful_signup',[UserAuthController::class, 'successful_signup'])->name('successful_signup');
+
 
 /*Forgot Password*/
 Route::get('forgetpassword_1', [UserAuthController::class, 'forgetpassword_1'])->name('forgetpassword_1');
@@ -87,3 +89,6 @@ Route::post('admin_update_staff/{staff}',[AdminController::class, 'admin_update_
 
 Route::post('admin_destroy_student',[AdminController::class, 'admin_destroy_student'])->name('admin_destroy_student');
 Route::post('admin_destroy_staff',[AdminController::class, 'admin_destroy_staff'])->name('admin_destroy_staff');
+
+/**Game Session */
+Route::post('game_session',[UserAuthController::class, 'login'])->name('game_session');

@@ -5,62 +5,80 @@
 @section('content')
 <style>
 .profile_picture{
-width:300px;
-height:300px;
-
+width:70px;
+height:70px;
+border-radius: 50%;
+border:2px white solid;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<h1>Profile</h1>
-<u><p>Edit Profile</p></u>
+<h1 class="stud_title">Profile</h1>
+<u><p class="stud_subtitle">Edit Profile</p></u>
+<div class="profile-big-container">
 <div class="profile-container">
-    <div class="profile-data">
-        <label class="profile-label">Profile Picture:</label>
-        <!-- Display profile picture -->
+    <div class="profile-data_top" onclick="editProfile('profile_picture')">
+        <div class="profile-label">
         <img class= profile_picture src="{{ $student->profile_picture ? url($student->profile_picture) : asset('path_to_default_image') }}" alt="Profile Picture" data-field="profile_picture">
-        <button class="edit-button" onclick="editProfile('profile_picture')">Edit</button>
+        {{-- <label class="profile-label">Profile Picture</label> --}}
+        <!-- Display profile picture -->
+        </div>
+        <div class= "profile_output">
+            <p class=profile_txt>Change Profile Picture</p>
+            <button class="edit-button"></button>
+        </div>
     </div>
     
 
     
    <!-- Add an identifier (e.g., data-field="email") to each profile data span -->
 <div class="profile-data">
-    <label class="profile-label">Email:</label>
+    <label class="profile-label">Email</label>
+    <div class= "profile_output_email">
     <span data-field="email">{{ $student->email }}</span>
+    </div>
 </div>
 
 
-    <div class="profile-data">
-        <label class="profile-label">Name:</label>
+    <div class="profile-data" onclick="editProfile('name')">
+        <label class="profile-label">Name</label>
+        <div class= "profile_output">
         <span data-field="name">{{ $student->name }}</span>
-        <button class="edit-button" onclick="editProfile('name')">Edit</button>
+        <button class="edit-button"></button>
+        </div>
     </div>
 
 
-    <div class="profile-data">
-        <label class="profile-label">Gender:</label>
+    <div class="profile-data" onclick="editProfile('gender')">
+        <label class="profile-label">Gender</label>
+        <div class= "profile_output">
         <span data-field="gender">{{ $student->gender }}</span>
-        <button class="edit-button" onclick="editProfile('gender')">Edit</button>
+        <button class="edit-button"></button>
+        </div>
     </div>
 
-    <div class="profile-data">
-        <label class="profile-label">Date of Birth:</label>
+    <div class="profile-data" onclick="editProfile('dob')">
+        <label class="profile-label">Date of Birth</label>
+        <div class= "profile_output">
         <span data-field="dob">{{ $student->dob }}</span>
-        <button class="edit-button" onclick="editProfile('dob')">Edit</button>
+        <button class="edit-button"></button>
+        </div>
     </div>
 
-    <div class="profile-data">
-        <label class="profile-label">Password:</label>
+    <div class="profile-data_low" onclick="editPassword()">
+        <label class="profile-label">Password</label>
+        <div class= "profile_output">
         <span data-field="password">Change New Password</span>
-        <button class="edit-button" onclick="editPassword()">Edit</button>
+        <button class="edit-button"></button>
+        </div>
     </div>
-    
-    <div class="profile-data">
-        <button class="logout-button" onclick="logout()">Logout</button>
-    </div>
-
     <!-- Add more fields as needed -->
 
+</div>
+
+<div class="profile-data_logout" onclick="confirmLogout()">
+        <label class="profile-label_logout">Log Out</label>
+        <button class="logout-button"></button>
+</div>
 </div>
 
 <script>
@@ -197,6 +215,12 @@ height:300px;
         });
     }
 }
+
+function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            logout();
+        }
+    }
 
 function logout() {
         // Make an AJAX request to logout

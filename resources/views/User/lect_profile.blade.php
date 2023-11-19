@@ -5,62 +5,81 @@
 @section('content')
 <style>
 .profile_picture{
-width:300px;
-height:300px;
-
+width:70px;
+height:70px;
+border-radius: 50%;
+border:2px white solid;
 }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<h1>Profile</h1>
-<u><p>Edit Profile</p></u>
+<h1 class="lect_title">Profile</h1>
+<u><p class="lect_subtitle">Edit Profile</p></u>
+<div class="profile-big-container">
 <div class="profile-container">
-    <div class="profile-data">
-        <label class="profile-label">Profile Picture:</label>
+    <div class="profile-data_top"  onclick="editProfile('profile_picture')">
+        <div class="profile-label">
         <!-- Display profile picture -->
         <img class= profile_picture src="{{ $lecturer->user->profile_picture ? url($lecturer->user->profile_picture) : asset('path_to_default_image') }}" alt="Profile Picture" data-field="profile_picture">
-        <button class="edit-button" onclick="editProfile('profile_picture')">Edit</button>
+        </div>
+        <div class= "profile_output">
+            <p class=profile_txt>Change Profile Picture</p>
+            <button class="edit-button"></button>
+        </div>
     </div>
     
    <!-- Add an identifier (e.g., data-field="email") to each profile data span -->
 <div class="profile-data">
-    <label class="profile-label">Email:</label>
-    <span data-field="email">{{ $lecturer->user->email }}</span>
+    <label class="profile-label">Email</label>
+    <div class= "profile_output_email">
+        <span data-field="email">{{ $lecturer->user->email }}</span>
+    </div>
+</div>
+
+<div class="profile-data" onclick="editProfile('name')">
+    <label class="profile-label">Name</label>
+    <div class= "profile_output">
+        <span data-field="name">{{ $lecturer->user->name }}</span>
+        <button class="edit-button"></button>
+    </div>
 </div>
 
 
-    <div class="profile-data">
-        <label class="profile-label">Name:</label>
-        <span data-field="name">{{ $lecturer->user->name }}</span>
-        <button class="edit-button" onclick="editProfile('name')">Edit</button>
+    <div class="profile-data" onclick="editProfile('gender')">
+        <label class="profile-label">Gender</label>
+        <div class= "profile_output">
+            <span data-field="gender">{{ $lecturer->user->gender }}</span>
+            <button class="edit-button"></button>
+        </div>
     </div>
 
-
-    <div class="profile-data">
-        <label class="profile-label">Gender:</label>
-        <span data-field="gender">{{ $lecturer->user->gender }}</span>
-        <button class="edit-button" onclick="editProfile('gender')">Edit</button>
+    <div class="profile-data" onclick="editProfile('dob')">
+        <label class="profile-label">Date of Birth</label>
+        <div class= "profile_output">
+            <span data-field="dob">{{ $lecturer->user->dob }}</span>
+            <button class="edit-button"></button>
+        </div>
     </div>
 
-    <div class="profile-data">
-        <label class="profile-label">Date of Birth:</label>
-        <span data-field="dob">{{ $lecturer->user->dob }}</span>
-        <button class="edit-button" onclick="editProfile('dob')">Edit</button>
-    </div>
-
-    <div class="profile-data">
-        <label class="profile-label">Password:</label>
-        <span data-field="password">Change New Password</span>
-        <button class="edit-button" onclick="editPassword()">Edit</button>
+    <div class="profile-data" onclick="editPassword()">
+        <label class="profile-label">Password</label>
+        <div class= "profile_output">
+            <span data-field="password">Change New Password</span>
+            <button class="edit-button"></button>
+        </div>
     </div>
     
-    <div class="profile-data">
-        <label class="profile-label">Position:</label>
-        <span data-field="position">{{ $lecturer->position }}</span>
-        <button onclick="updateLecturerPosition('New Position')">Edit</button>
+    <div class="profile-data_low" onclick="updateLecturerPosition('New Position')">
+        <label class="profile-label">Position</label>
+        <div class= "profile_output">
+            <span data-field="position">{{ $lecturer->position }}</span>
+            <button class="edit-button"></button>
+        </div>
     </div>
 
-    <div class="profile-data">
-        <button class="logout-button" onclick="logout()">Logout</button>
+</div>
+    <div class="profile-data_logout" onclick="confirmLogout()">
+        <label class="profile-label_logout">Log Out</label>
+        <button class="logout-button"></button>
     </div>
 
     <!-- Add more fields as needed -->
@@ -228,6 +247,11 @@ function updateLecturerPosition(newPosition) {
     });
 }
 
+function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            logout();
+        }
+    }
 
 function logout() {
         // Make an AJAX request to logout

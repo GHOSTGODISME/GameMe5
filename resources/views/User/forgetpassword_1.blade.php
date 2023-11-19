@@ -5,28 +5,21 @@
 @section('content')
 <style>
 </style>
-<h1>Forgot Your Password?</h1>
-<p>We'll email you a verification code to reset the password</p><br>
+<h1 class="header">Forgot Your Password?</h1>
+<p class=fp_desc>We'll email you a verification code to reset the password</p><br>
 <form action="{{ route('forgetpassword_1_post') }}" method="POST">
     @csrf
-    <table class="forgetpassword_table">
-        <tr class="forgetpassword_row">
-            <td>
-                <div class="input_group">
-                    <label for="txt_forgetpassword_email">Email:</label>
+
+                <div class="input_label">
+                    <div class="input_label_small">
+                    <label for="forget_email">Email</label>
+                    </div>
                 </div>
-            </td>
-        </tr>
-        <tr class="forgetpassword_row">
-            <td>
-                <div class="input_group">
-                    <input type="email" id="txt_forgetpassword_email" name="email" placeholder="xxxxx@student.tarc.edu.my" required>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <button type="submit" class="btn_get_verification_code">Get Verification Code</button><br>
-    <span>Back to Log In <a href="{{ route('login') }}">{{ __('Login') }}</a></span>
+                <input type="email" id="txt_forgetpassword_email" name="email" placeholder="xxxxx@student.tarc.edu.my" required><br>
+           
+ 
+    <button type="submit" class="button_general">Get Verification Code</button><br>
+    <span class="help_txt"><a href="{{ route('login') }}">{{ __('Back to Login') }}</a></span>
 </form>
 
 
