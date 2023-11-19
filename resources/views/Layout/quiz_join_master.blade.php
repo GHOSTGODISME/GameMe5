@@ -12,13 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/play-quiz-style.css') }}">
 
 </head>
-{{-- <style>
-    /* html,body{
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    } */
-</style> --}}
+
 <body>
 @include('Layout/quiz_join_header')
 <div class="content">

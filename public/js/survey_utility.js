@@ -218,7 +218,7 @@ function createQuestionTypeBlock(type, question, inputContainer){
     switch (type) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <textarea id="${question.id}-userInput" class="question-input form form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;
@@ -256,7 +256,7 @@ function recreateQuestionTypeBlock(question, inputContainer){
     switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <textarea id="${question.id}-userInput" class="question-input form form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;

@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('survey_response_id')->constrained('survey_responses');
-            $table->foreignId('survey_question_id')->constrained(); // Foreign key to link to survey_questions table
+            $table->foreignId('survey_response_id')->constrained('survey_responses')->onDelete('cascade');
+            $table->foreignId('survey_question_id')->constrained('survey_questions')->onDelete('cascade'); // Foreign key to link to survey_questions table
             $table->json('answers');
-        });
+
+      });
+
+        
     }
 
     /**
@@ -27,5 +30,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('survey_response_questions');
+
+        Schema::table('survey_response_questions', function (Blueprint $table) {
+            $table->dropForeign(['survey_question_id']);
+        });
     }
 };

@@ -1,24 +1,4 @@
- {{-- <!-- 
-
-interaction tools - fortune wheel
-- spin function - done
-- crud entries - done
-- crud results - done
-- remove selected entry to result tab - done
-- add data via excel - done
-- shuffle function - done
-- sort function (sort in alphabetical and anti) - done
-- shuffle and sort ui - done
-- help feature - done **maybe keep updated to latest update
-- add data via direct copy - done
-
-tdl
-- spin visual - pending // did simple, pending for better, try to do wheel version due to name
-- utilize php code - pending
-- better ui (i guess?? - pending
- -->  --}}
-
- <!DOCTYPE html>
+ <!-- <!DOCTYPE html>
  <html lang="en">
 
  <head>
@@ -36,73 +16,44 @@ tdl
      <link rel="stylesheet" href="{{ asset('css/interactive_tools_style.css') }}">
 
 
-     <!-- import ROBOTO font -->
      <style>
-         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-     </style>
-
-     <!-- import xlsx library to process input data from excel -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
-
-     <style>
-         .header {
-             height: 125px;
-             background: url("{{ asset('img/staff_header.png') }}");
-             display: flex;
-             align-items: center;
-             justify-content: space-between;
-             background-size: cover;
-         }
-
-         .logo {
-             margin-left: 35px;
-         }
-
-         .menu {
-             margin-right: 35px;
-         }
-
-         #fortune-wheel-title{
-            /* width: 800px; */
-            margin: 20px 0;
-            font-size: 48px;
-            font-weight: bolder;
-         }
-
-         .container-style{
-            padding: 50px;
-         }
-     </style>
+       
+    </style>
 
 
- </head>
+ </head> -->
 
- <body>
-     {{-- <div class="header">
-         <div class="logo">
-             <a href="#"><img src="{{ asset('img/logo_header.png') }}"alt="Logo"></a>
-         </div>
-         <div class="menu">
-            <a href="#"><img src="{{ asset('img/hambager.png') }}" alt="Menu"></a>
-            <a href="#"><i class="fa-solid fa-bars"></i></a>
-        </div>
-     </div> --}}
-     @include('Layout/lect_header')
+@extends('Layout/interactive_tools_master')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-     <button id="save-wheel-button" class="btn btn-primary">Save Wheel</button>
+@section('content')
+
+
+     <div class="save-btn-container">
+        <button id="save-wheel-button" class="btn btn-dark">Save Wheel</button>
+    </div>
 
      <!-- Add this hidden input field to store the Fortune Wheel's ID -->
      <input type="hidden" id="fortune-wheel-id" name="fortuneWheel[id]" value="{{ $fortuneWheel->id ?? '' }}">
 
 
      <div class="container">
-        <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
-        placeholder="Fortune Wheel Title" value="{{ $fortuneWheel->title ?? '' }}" required>
+<div class="input-group">
+            <span class="edit-icon" style="cursor: pointer;">
+                <div style="display: flex; align-items: center; justify-content: center; gap:20px;">
+                    <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
+                        placeholder="Fortune Wheel Title" value="{{ $fortuneWheel->title ?? '' }}" readonly required>
+                    <button class="btn btn-dark" style="font-size: 18px; padding: 10px" type="button"
+                        data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa fa-edit"></i></button>
+                </div>
+            </span>
+        </div>
 
          <div class="row">
              <div class="col-md-6 col-xl-7 container-style">
                  <div id="result-box" class="box">Press "Spin" to start</div>
-                 <button class="btn interactive_btn" id="spin-button" type="button">Spin</button>
+                <button class="btn btn-dark interactive_btn" id="spin-button" type="button"
+                    style="padding: 10px 50px;">Spin</button>
              </div>
 
              <div class="col-md-6 col-xl-5 container-style" >
@@ -139,7 +90,7 @@ tdl
 
 
                      <div class="input_container">
-                         <input type="file" id="excel_file_input" accept=".xlsx"
+                        <input type="file" id="excel_file_input" class="form-control" accept=".xlsx"
                              title="Only XLSX files are supported">
                      </div>
 
@@ -159,18 +110,63 @@ tdl
                      </div>
 
                  </div>
-                 <button id="import-button" class="btn interactive_btn" type="button">
-                     <i class="fas fa-upload" style="margin-right: 20px;"></i>Import Data</button>
+                 <button id="import-button" class="btn btn-dark interactive_btn" type="button">
+                    <i class="fas fa-upload" style="margin-right: 20px;"></i>Import Data</button>
              </div>
          </div>
      </div>
 
-     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
-     </script>
+
+     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="padding: 25px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Fortune Wheel Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="m-0"><b class="required">Title</b></p>
+                    <input type="text" class="form-control" id="editFortuneWheelTitle"
+                        placeholder="Fortune Wheel Title">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
+    </script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
 
      <script>
+        $(document).ready(function () {
+            $('.edit-icon').click(function () {
+                $('#editFortuneWheelTitle').val($('#fortune-wheel-title').val());
+                $('#editModal').modal('show');
+            });
+
+            $('#saveChanges').click(function () {
+                var editedTitle = $('#editFortuneWheelTitle').val();
+                if (editedTitle.trim() === '') {
+                    alert('Title cannot be empty. Please enter a title.');
+                    return; // Prevents the modal from closing if the title is empty
+                }
+
+                $('#fortune-wheel-title').val(editedTitle);
+                $('#editModal').modal('hide');
+            });
+
+            $('#editModal').on('click', '[data-dismiss="modal"]', function () {
+                $('#editModal').modal('hide');
+            });
+        });
+
          // class FortuneWheel{
          //     constructor(object){
          //         this.title = object.title;
@@ -449,6 +445,4 @@ tdl
          //// tdl: if user directly paste the name, need check with delimiters [ , | ] 
      </script>
 
- </body>
-
- </html>
+     @endsection

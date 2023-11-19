@@ -11,9 +11,24 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <link rel="stylesheet" href="{{ asset('css/survey_style.css') }}">
+<style>
+#form-preview{
+    width: 80%;
+    padding: 50px 80px;
+    margin: 50px auto;
+    border-radius: 10px;
+}
 
+.not-receive-response-text{
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    margin:30px;
+}
+
+    </style>
 </head>
-<body>
+<body style="background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);">
 
     <div class="row justify-content-center">
         <div class="col-10">
@@ -29,11 +44,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
@@ -57,6 +67,21 @@
 
         console.log(surveyFromDB);
         //console.log(survey123);
+
+        $(document).ready(function() {
+            const surveyFromDB = @json($survey);
+
+            if (surveyFromDB.visibility === 'public') {
+                // Survey is public, display the form
+                $('#survey-form').show();
+            } else {
+                // Survey is not public, show a message or hide the form
+                $('#survey-form').hide();
+                // Show a message indicating the survey is not receiving responses
+                $('#form-preview').append('<p class="not-receive-response-text">This survey is not receiving responses. </p> <p style="text-align:center;">Please consult with your lecturer for further action.</p>');
+            }
+        });
+
 
 
     </script>

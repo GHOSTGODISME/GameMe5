@@ -20,6 +20,7 @@
 }
 
 .title-style-header {
+display: inline-flex;
     white-space: nowrap;
     width: 350px;
     overflow: hidden;
@@ -68,7 +69,7 @@
     /* border: 1px solid black; */
     padding: 20px;
     margin-bottom: 20px;
-    background-color: white;
+    background-color: #f4f4f4;
     border-radius: 10px;
 }
 
@@ -217,9 +218,9 @@
 }
 
 #form-preview {
-    background-color: whitesmoke;
+    background-color: white;
     padding: 20px;
-
+    border-radius: 10px;
     /* to remain sticky on same place */
     position: sticky;
     top: 20px; /* Adjust top position as needed */

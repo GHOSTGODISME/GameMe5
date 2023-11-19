@@ -46,11 +46,6 @@ body{
     font-size: 22px;
 }
 
-.join-quiz-details-input:hover{
-    border: 3px solid #CA0000;
-    background: #FFEDED;
-}
-
 .input-fails-text{
     color: red;
     text-align: start;

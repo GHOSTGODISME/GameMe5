@@ -163,7 +163,7 @@ function recreateSameQuestion(question) {
         switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
-            <textarea id="${question.id}-userInput" class="question-input " placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
+            <textarea id="${question.id}-userInput" class="question-input form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;
@@ -294,37 +294,39 @@ function initializeSurveyFields(){
     document.getElementById('survey_title').value = survey.title;
     document.getElementById('survey_description').value = survey.description;
     document.getElementById('visibility').value = survey.visibility;
+
+    $('.survey-title-input').val(survey.title);
+    $('.survey-title-text').text(survey.title);
+    $('.survey-description-input').val(survey.description);
+    $('.survey-description-text').text(survey.description);
+    $('.survey_visibility_input').val(survey.visibility ?? "public");
+
 }
 
 function initializeInputListeners() {
-    const titleInput = document.getElementById('survey_title');
-    const descriptionInput = document.getElementById('survey_description');
+    const titleInput = $(".survey-title-input");
+    const descriptionInput = $(".survey-description-input");
 
     const titleCharLimit = 80;
     const descriptionCharLimit = 4500;
 
     titleInput.required = true;
-    titleInput.value = survey.title;
-    descriptionInput.value = survey.description;
-
-    titleInput.required = true;
-
-    titleInput.addEventListener('input', function () {
-        const inputValue = titleInput.value;
+    
+    titleInput.on('input', function () {
+        const inputValue = $(this).val(); // Using jQuery's val() to get the input value
         if (inputValue.length > titleCharLimit) {
-            titleInput.value = inputValue.substring(0, titleCharLimit);
+            $(this).val(inputValue.substring(0, titleCharLimit)); // Setting value using jQuery's val()
         }
-        updateTitle(titleInput, titleCharLimit);
-        survey.title = titleInput.value;
+        updateTitle($(this), titleCharLimit); // Pass $(this) to jQuery function for updateTitle
+        survey.title = $(this).val(); // Update survey title using jQuery's val()
     });
 
-    descriptionInput.addEventListener('input', function () {
-        const inputValue = descriptionInput.value;
-        if (inputValue.length > descriptionCharLimit) {
-            descriptionInput.value = inputValue.substring(0, descriptionCharLimit);
+    descriptionInput.on('input', function () {
+        const inputValue = $(this).val(); // Using jQuery's val() to get the input value
+        if (inputValue.length > titleCharLimit) {
+            $(this).val(inputValue.substring(0, titleCharLimit)); // Setting value using jQuery's val()
         }
-        updateDescription(descriptionInput, descriptionCharLimit);
-        survey.description = descriptionInput.value;
+        updateDescription($(this), titleCharLimit); // Pass $(this) to jQuery function for updateTitle
     });
 
         // Initialize title and character counter
@@ -345,31 +347,36 @@ function initializeFieldsVisibility(){
 }
 
 function updateTitle(input, maxCharLimit) {
-    let titleHeader = document.getElementById('survey_title_header');
-    let titlePreview = document.getElementById('survey_title_preview');
-    let titleCharCounter = document.getElementById('title_char_counter');
-
-    let inputValue = input.value;
+    let inputValue = input.val(); // Use jQuery's val() method to get the value
 
     if (inputValue.length > maxCharLimit - 1) {
-        input.value = inputValue.substring(0, maxCharLimit - 1);
+        inputValue = inputValue.substring(0, maxCharLimit - 1);
+    input.val(inputValue); // Set the updated value using jQuery's val()
     }
-    titleHeader.textContent = inputValue.substring(0, maxCharLimit - 1) || 'Your Survey Title';
-    titlePreview.textContent = inputValue.substring(0, maxCharLimit - 1) || 'Your Survey Title';
-    titleCharCounter.textContent = `${inputValue.length}/${maxCharLimit - inputValue.length}`;
+
+    const title = inputValue || 'Your Survey Title';
+    const cc = `${inputValue.length}/${maxCharLimit - inputValue.length}`;
+
+    $('.title_cc').text(cc);
+
+    $('.survey-title-input').val(title);
+    $('.survey-title-text').text(title);
 }
 
 function updateDescription(input, maxCharLimit) {
-    let descriptionPreview = document.getElementById('survey_description_preview');
-    let descriptionCharCounter = document.getElementById('description_char_counter');
-
-    let inputValue = input.value;
+    let inputValue = input.val(); // Use jQuery's val() method to get the value
     if (inputValue.length > maxCharLimit - 1) {
-        input.value = inputValue.substring(0, maxCharLimit - 1);
+        inputValue = inputValue.substring(0, maxCharLimit - 1);
+    input.val(inputValue); // Set the updated value using jQuery's val()
     }
 
-    descriptionPreview.textContent = inputValue.substring(0, maxCharLimit - 1) || '';
-    descriptionCharCounter.textContent = `${inputValue.length}/${maxCharLimit - inputValue.length}`;
+    const description = inputValue || '';
+    const cc = `${inputValue.length}/${maxCharLimit - inputValue.length}`;
+
+    $('.description_cc').text(cc);
+
+    $('.survey-description-input').val(description);
+    $('.survey-description-text').text(description);
 }
 
 //==================================================================================
@@ -878,6 +885,7 @@ deleteQuestionButton.addEventListener('click', function () {
                             question.index = index + 1; // Update indices based on the new positions
                         });
         }
+        console.log(surveyQuestions);
 
         updateFormStructure();
     }
@@ -928,6 +936,7 @@ function saveSurveyForm() {
     survey.title = document.getElementById('survey_title').value;
     survey.description = document.getElementById('survey_description').value;
     survey.visibility = document.getElementById("visibility").value;
+    
     survey.questions = surveyQuestions;
 
     const validSurvey = validateDetails(survey);
@@ -941,8 +950,8 @@ function saveSurveyForm() {
             contentType: 'application/json',
             data: JSON.stringify(survey),
             success: function(response) {
-                console.log('Form saved successfully:', response);
-                history.back();
+                // console.log('Form saved successfully:', response);
+                // history.back();
             },
             error: function(xhr, status, error) {
                 console.error('Error saving form:', error);

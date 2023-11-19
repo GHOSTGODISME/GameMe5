@@ -30,11 +30,26 @@ class QuizController extends Controller
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
         return view('quiz.quiz-edit', compact('quiz', 'questions'));
+    }
 
+    public function joinQuiz(){
+        return view("join_quiz");
+    }
 
-        // Pass the survey and its responses data to the view for rendering
-        // return view('survey.edit', compact('survey', 'surveyResponses'));
+    public function show($id)
+    {
+        // Logic for fetching and displaying the Play Quiz Screen
+        // Fetch questions, options, etc., based on $quiz_id
+        $quiz = Quiz::with('quiz_questions')->findOrFail($id);
 
+        return view('play_quiz', ['quizData' => $quiz]);
+    }
+
+    public function submitAnswer(Request $request)
+    {
+        // Logic to process submitted answers and move to the next stage
+        // Validate answers, calculate scores, etc.
+        // Return JSON response or redirect as needed
     }
 
 }

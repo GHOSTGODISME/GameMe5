@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('index');
 
             $table->foreignId('survey_id')->constrained();
+            
         });
     }
 

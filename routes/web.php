@@ -22,15 +22,23 @@ use App\Http\Controllers\UserAuthController;
 |
 */
 
+// Route::any('{slug}', function(){
+//     return view('home');
+// });
+
 /*Homepage*/
 Route::get('/', function () {
-    return view('home');
-        //return view('survey/survey-main');
-    // return view('quiz/quiz-edit');
-    //return view('Interactive-tools/fortune-wheel-main');
-    // return view('survey/survey');
-    // return view('interactive-tools/fortune-wheel');
+    // return view('home');
+    return view('quiz.spa');
 });
+
+// Route::get('/{pathMatch}', function(){
+//     return view('quiz.spa');
+// }) ->where ('pathMatch',".*");
+
+Route::get('/{vue_capture?}', function() {
+    return view('quiz.spa');
+})->where('vue_capture', '[\/\w\.-]*');
 
 /*User Authentication*/
 /*Login*/
@@ -99,8 +107,8 @@ Route::post('admin_destroy_staff',[AdminController::class, 'admin_destroy_staff'
 
 /////// kel
 
-// fortune wheel related 
-Route::get('/fortune-wheel-main', [FortuneWheelController::class, 'index'])->name('fortune-wheel-main');
+// fortune wheel related
+Route::get('/fortune-wheel-main', [FortuneWheelController::class, 'index'])->name('fortune-wheel-index');
 Route::get('/create-fortune-wheel', [FortuneWheelController::class, 'createFortuneWheel'])->name('create-fortune-wheel');
 Route::get('/edit-fortune-wheel/{id}', [FortuneWheelController::class, 'editFortuneWheel'])->name('edit-fortune-wheel');
 Route::delete('/delete-fortune-wheel/{id}', [FortuneWheelController::class, 'deleteFortuneWheel'])->name('delete-fortune-wheel');
@@ -118,6 +126,7 @@ Route::post('/save-survey', [SurveyController::class, 'store']);
 Route::get('get-survey/{id}', [SurveyController::class, 'getSurvey']);
 
 Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentResponse'])->name('student-view-survey');
+Route::get('/get_survey_response/{id}', [SurveyController::class, 'studentResponse'])->name('get_survey_response');
 Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
 Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->name('show-response-survey');
 

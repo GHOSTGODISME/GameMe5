@@ -20,12 +20,11 @@ class FortuneWheelController extends Controller
     public function index()
     {
         $fortuneWheels = FortuneWheel::all();
-        return view('Interactive-tools.fortune-wheel-edit-index', ['fortuneWheels' => $fortuneWheels]);
+        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
     }
 
     public function updateFortuneWheel(Request $request)
     {
-
         $data = $request->validate([
             'id' =>'nullable|integer',
             'title' => 'required|string',
