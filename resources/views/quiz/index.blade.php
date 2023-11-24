@@ -11,54 +11,130 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <style scoped>
+        .lecturer-index-body {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        .search-container label {
+            display: grid;
+            grid-template: 1fr / auto 1fr;
+            gap: 12px;
+            border: 1px solid #CFD5DB;
+            border-radius: 5px;
+            background: #fafafa;
+            padding: 12px;
+            color: #6C757D;
+            cursor: text;
+            align-items: center;
+            width: 250px;
+
+        }
+
+        .search-container label:focus-within {
+            border: 1px solid #000;
+        }
+
+        .search-container label>input {
+            outline: none;
+            border: none;
+            background: transparent;
+        }
+
+        .add-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            padding: 10px 20px;
+            gap: 10px;
+        }
+
+        .search-top-container {
+            margin: 20px;
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .edit-delete-btn {
+            margin: 3px;
+            padding: 10px;           
+        }
+
+        .lecturer-index-table-container p:last-child {
+            text-align: center;
+            font-size: 24px;
+            color: #b0b0b0;
+            margin: 30px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Available Quizs</h1>
+    @include('Layout/lect_header')
 
-        <!-- Button to add a new quiz -->
-        <a href="{{ route('create-quiz') }}" class="btn btn-primary">Create quiz</a>
+    <div class="lecturer-index-body">
+        <h1>Available Quizzes</h1>
 
-        <!-- Table to display available quizs -->
-        @if(count($quizzes) > 0)
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Visibility</th>
-                    <th>Created At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($quizzes as $quiz)
+
+        <div class="search-top-container">
+            <div class="search-container">
+                <label>
+                    <span class="fa fa-search"></span>
+                    <input type="search" placeholder="Search">
+                </label>
+            </div>
+
+                <a href="{{ route('create-quiz') }}" class="btn btn-dark add-btn"><i
+                    class="fa-solid fa-plus"></i>Add Quiz</a>
+        </div>
+
+        <div class="table-responsive lecturer-index-table-container">
+            @if(count($quizzes) > 0)
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th width="10%">No.</th>
+                        <th width="45%">Title</th>
+                        <th width="15%">Visibility</th>
+                        <th width="15%">Modified Date</th>
+                        <th width="15%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($quizzes as $quiz)
                     <tr>
                         <td>{{ $quiz->id }}</td>
                         <td>{{ $quiz->title }}</td>
-                        <td>{{ $quiz->description }}</td>
                         <td>{{ $quiz->visibility }}</td>
-                        <td>{{ $quiz->created_at->format('Y-m-d H:i:s') }}</td>
-        
-                        <td>
-                            <!-- Link to the detailed quiz page -->
-                            
-                            {{-- <a href="{{ route('student-view-quiz', ['id' => $quiz->id]) }}" class="btn btn-info">Response</a> --}}
-                            
-                            {{-- <a href="{{ route('show-response-quiz', ['id' => $quiz->id]) }}" class="btn btn-info">Show Response</a> --}}
+                        <td>{{ $quiz->updated_at->format('Y-m-d H:i:s') }}</td>
 
-                            <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-info">Edit</a>
-                            <!-- Delete button -->
-                            <button class="btn btn-danger" onclick="confirmDelete({{ $quiz->id }})">Delete</button>
+                        <td>
+                            {{-- <a href="{{ route('student-view-quiz', ['id' => $quiz->id]) }}"
+                                class="btn btn-info edit-delete-btn">Response</a> 
+    
+                             <a href="{{ route('show-response-quiz', ['id' => $quiz->id]) }}" 
+                                class="btn btn-info edit-delete-btn">Show
+                                Response</a> --}}
+
+                            <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}"
+                                class="btn btn-info edit-delete-btn">
+                                <i class="fa fa-edit"></i></a>
+                            <a class="btn btn-danger edit-delete-btn" onclick="confirmDelete({{ $quiz->id }})">
+                                <i class="fa fa-trash"></i></a>
                         </td>
+
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    @else
-        <p>No records found.</p>
-    @endif
+                    @endforeach
+                </tbody>
+            </table>
+            @else
+            <p>No records found.</p>
+            @endif
+        </div>
     </div>
 
     <!-- Add this in the head section of your HTML file -->

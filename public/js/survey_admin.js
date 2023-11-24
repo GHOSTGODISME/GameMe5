@@ -31,11 +31,11 @@ const sortable = new Sortable(formStructureContainer, {
 
         structureElements.forEach((structure, newIndex) => {
             const questionID = structure.getAttribute('data-question-id');
-            const question = surveyQuestions.find(q => q.id.toString() === questionID);
+            const foundQuestion = surveyQuestions.find(q => q.id.toString() === questionID);
 
-            if (question) {
-                question.index = newIndex;
-                newSurveyQuestions.push(question);
+            if (foundQuestion) {
+                foundQuestion.index = newIndex;
+                newSurveyQuestions.push(foundQuestion);
             }
         });
 

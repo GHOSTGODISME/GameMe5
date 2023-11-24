@@ -54,7 +54,7 @@ class QuestionController extends Controller
         $question = new QuizQuestion($validatedData);
     // Save the question to the database and associate it with the related quiz
         $quiz = Quiz::findOrFail($validatedData['quiz_id']); // Retrieve the quiz using the provided quiz_id
-        $quiz->quiz_questions()->save($question);
+        $quiz->quizQuestions()->save($question);
 
         // Save the question to the database
         // $question->save();

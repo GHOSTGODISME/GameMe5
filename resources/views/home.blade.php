@@ -15,5 +15,11 @@
     <a href="{{ route('quiz-index') }}" class="btn btn-primary">quiz-index</a>
     <a href="{{ route('survey-index') }}" class="btn btn-primary">surveys</a>
 
+    <form method="GET" action="{{ route('join-quiz') }}">
+        <input type="text" name="code">
+        <button type="submit">Confirm</button>
+    </form>
+
+    @vite('resources/js/app.js')
 </body>
 </html>

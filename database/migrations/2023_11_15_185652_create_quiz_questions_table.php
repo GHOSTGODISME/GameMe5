@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('single_ans_flag')->nullable();
             $table->integer('points')->default(0);
             $table->integer('duration')->default(0);
+            $table->string('index');
 
             $table->foreignId('quiz_id')->constrained();
         });

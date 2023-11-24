@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/interactive_tools_style.css') }}">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap'); */
     </style>
     
 </head>

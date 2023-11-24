@@ -11,7 +11,7 @@ class QuizQuestion extends Model
 
     protected $fillable = [
         'title', 'type', 'options', 'correct_ans', 'answer_explanation',
-        'single_ans_flag', 'points', 'duration','quiz_id'
+        'single_ans_flag', 'points', 'duration','quiz_id', 'index'
     ];
 
     protected $casts = [

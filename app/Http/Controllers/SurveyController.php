@@ -21,13 +21,22 @@ class SurveyController extends Controller
     public function create()
     {
         $survey = new Survey();
-        return view('survey.edit', compact('survey'));
+        $mode = 'create';
+        return view('survey.edit', compact('survey','mode'));
     }
+
+    public function view($id)
+    {
+        $survey = Survey::with('surveyQuestions')->findOrFail($id);
+        $mode = 'view';
+        return view('survey.edit', compact('survey','mode'));
+    }
+
 
     public function edit($id)
     {
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
-        // return view('survey.edit', compact('survey'));
+        $mode = 'edit';
         Log::info('survey: ' . json_encode($survey->all()));
 
         // Retrieve all responses for the specific survey ID along with related question responses
@@ -42,7 +51,7 @@ class SurveyController extends Controller
         $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
 
         // Pass the survey and its responses data to the view for rendering
-        return view('survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions'));
+        return view('survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions', 'mode'));
     }
 
     public function delete($id)
@@ -62,87 +71,6 @@ class SurveyController extends Controller
 
         return response()->json(['message' => 'Survey deleted successfully.']);
     }
-
-    // public function store(Request $request)
-    // {
-    //     Log::info('Request Data: ' . json_encode($request->all()));
-
-    //     // Validate incoming request data
-    //     $data = $request->validate([
-    //         'id'=> 'nullable|integer',
-    //         'title' => 'required|string',
-    //         'description' => 'nullable|string',
-    //         'visibility' => 'required|string',
-    //         // Include other necessary validations for form fields
-    //     ]);
-
-    //     Log::info('data: ' . json_encode($data));
-
-    //     if (isset($data['id'])) {
-    //         $survey = Survey::find($data['id']);
-    //         $survey->update($data);
-    //         Log::info('updated: ' . $survey);
-
-    //     } else {
-    //         $survey = Survey::create($data);
-    //         Log::info('created: ' . $survey);
-    //     }
-
-    //     // Get the questions data from the request
-    //     $questionsData = $request->input('questions');
-    //     Log::info('questionsData: ' . json_encode($questionsData));
-
-    //     $existingQuestionIds = [];
-
-    //     foreach ($questionsData as $questionData) {
-    //         $existingQuestion = SurveyQuestion::find($questionData['id']);
-
-    //         if ($existingQuestion) {
-    //             Log::info('existing: ');
-    //             // Update the existing question
-    //             $existingQuestion->update([
-    //                 'title' => $questionData['title'],
-    //                 'type' => $questionData['type'],
-    //                 'description' => $questionData['description'] ?? null,
-    //                 'options' => $questionData['options'] ?? null,
-    //                 'placeholder' => $questionData['placeholder'] ?? null,
-    //                 'prefilled_value' => $questionData['prefilled_value'] ?? null,
-    //                 'scale_min_label' => $questionData['scale_min_label'] ?? null,
-    //                 'scale_max_label' => $questionData['scale_max_label'] ?? null,
-    //                 'scale_min_value' => $questionData['scale_min_value'] ?? null,
-    //                 'scale_max_value' => $questionData['scale_max_value'] ?? null,
-    //                 'index' => $questionData['index'] ?? 0,
-    //             ]);
-
-    //             $existingQuestionIds[] = $existingQuestion->id;
-    //         } else {
-    //             Log::info('not existing: ' );
-    //             // Create a new question
-    //             $question = new SurveyQuestion([
-    //                 'title' => $questionData['title'],
-    //                 'type' => $questionData['type'],
-    //                 'description' => $questionData['description'] ?? null,
-    //                 'options' => $questionData['options'] ?? null,
-    //                 'placeholder' => $questionData['placeholder'] ?? null,
-    //                 'prefilled_value' => $questionData['prefilled_value'] ?? null,
-    //                 'scale_min_label' => $questionData['scale_min_label'] ?? null,
-    //                 'scale_max_label' => $questionData['scale_max_label'] ?? null,
-    //                 'scale_min_value' => $questionData['scale_min_value'] ?? null,
-    //                 'scale_max_value' => $questionData['scale_max_value'] ?? null,
-    //                 'index' => $questionData['index'] ?? 0,
-    //             ]);
-    //             Log::info('question: ' . json_encode($question));
-
-    //             $survey->surveyQuestions()->save($question);
-    //         }
-    //     }
-
-    //     // Delete questions that were not part of the updated request
-    //     $survey->surveyQuestions()->whereNotIn('id', $existingQuestionIds)->delete();
-
-    //     // Return a response indicating success or failure
-    //     return response()->json(['message' => 'Survey created or updated successfully', 'survey' => $survey]);
-    // }
 
     public function store(Request $request)
     {

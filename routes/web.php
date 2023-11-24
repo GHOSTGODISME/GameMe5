@@ -28,17 +28,18 @@ use App\Http\Controllers\UserAuthController;
 
 /*Homepage*/
 Route::get('/', function () {
-    // return view('home');
-    return view('quiz.spa');
+    return view('home');
+    // return view('quiz.spa');
 });
+
 
 // Route::get('/{pathMatch}', function(){
 //     return view('quiz.spa');
 // }) ->where ('pathMatch',".*");
 
-Route::get('/{vue_capture?}', function() {
-    return view('quiz.spa');
-})->where('vue_capture', '[\/\w\.-]*');
+// Route::get('/{vue_capture?}', function() {
+//     return view('quiz.spa');
+// })->where('vue_capture', '[\/\w\.-]*');
 
 /*User Authentication*/
 /*Login*/
@@ -142,5 +143,11 @@ Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz
 Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
 Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
 
-Route::get('/create-question/{id}', [QuestionController::class, 'create'])->name('create-question');
-Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
+Route::post('/save-quiz', [QuizController::class, 'store']);
+
+
+Route::get('/join-quiz-layout', [QuizController::class, 'joinQuiz'])->name('join-quiz');
+
+
+Route::get('/quiz/details/{code}', [QuizController::class, 'getQuizDetails']);
+Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);

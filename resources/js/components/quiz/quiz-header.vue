@@ -1,14 +1,16 @@
 <template>
     <div class="header-container">
         <img src="img/logo_header.png" alt="Logo">
-        <span class="header-quiz-title">Basic Math</span>
+        <span class="header-quiz-title">{{quizTitle}}</span>
         <a class="header-setting"><i class="fa-solid fa-gear"></i></a>
     </div>
 </template>
 
 <script>
 export default{
-
+    props: {
+        quizTitle: String
+    }
 }
 </script>
 

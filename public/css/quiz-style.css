@@ -85,7 +85,11 @@
 }
 
 .button-container {
-    text-align: right;
+    display: flex;
+    gap: 10px;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .horizontal-line-with-text {
@@ -105,6 +109,8 @@
 .question-container-footer {
     display: flex;
     justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .container-space {
