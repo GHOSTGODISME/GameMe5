@@ -9,6 +9,10 @@
             <div class="header-small-block-style">
                 <span class="num-ques-remaining">{{ questionsRemaining }}</span>
             </div>
+
+            <div class="header-small-block-style">
+                <span class="totalScore">{{ score }}</span>
+            </div>
         </div>
 
         <div class="header-quiz-title">
@@ -45,8 +49,12 @@
             progressBarValue: {
                 type: Number,
                 default: 0
-            }
-        }
+            },
+            score:{
+                type:Number,
+                default: 0
+            },
+        },
     };
 </script>
 

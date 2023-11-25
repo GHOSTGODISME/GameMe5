@@ -52,17 +52,18 @@
             border-radius: 10px;
         }
 
-        .quiz-details-button{
+        .quiz-details-button {
             background: white;
             margin-top: 15px;
             padding: 30px;
-            display:flex;
+            display: flex;
             flex-wrap: wrap;
             justify-content: space-evenly;
             align-items: center;
             gap: 10px;
         }
-        .quiz-details-button button{
+
+        .quiz-details-button button {
             width: 200px;
             padding: 10px 0;
         }
@@ -99,15 +100,21 @@
             <div class="" id="quizDetailsContainer">
                 <span id="quizDetailsTrigger" style="cursor: pointer;">
                     <!-- Added this span for styling and cursor -->
-                    <span id="quizDetailsTitle"
-                        style="cursor: pointer;display: inline;text-align: center;"
+                    <span id="quizDetailsTitle" style="cursor: pointer;display: inline;text-align: center;"
                         class="title-style-header h2 quiz-title-display" id="quiz_title_header">Quiz Title</span>
                     <a><i class="fa-regular fa-pen-to-square" style="font-size: 22px; margin-left: 10px;"></i></a>
                 </span>
             </div>
         </div>
 
-        <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button">Save Quiz</button>
+        @if ($mode == 'edit' || $mode == 'create')
+            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button">Save Quiz</button>
+        @else
+            <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
+                Edit</a>
+            {{-- <button class="btn btn-dark header-edit-btn" id="edit-quiz-btn" type="button">Edit</button> --}}
+        @endif
+
     </div>
 
     <div class="container edit-quiz-page-body">
@@ -126,13 +133,14 @@
                                 <small class="text-black-50"><span class="num-of-plays">0</span> plays</small>
                             @endif
                         </div>
-
-                        <div class="quiz-details-button">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#liveSessionModal">Start
-                                Live Session </button>
-                            <button class="btn btn-primary">Assign To Class </button>
-                        </div>
-
+                        @if ($mode == 'view')
+                            <div class="quiz-details-button">
+                                <button class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#liveSessionModal">Start
+                                    Live Session </button>
+                                <button class="btn btn-primary">Assign To Class </button>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="col-md-7 col-lg-7 col-xl-8">
@@ -140,9 +148,12 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <p class="m-0"><b>Questions (<span id="num_of_question">0</span>)</b></p>
 
-                            <button type="button" class="btn btn-primary" id="openQuestionModal" data-bs-toggle="modal" data-bs-target="#questionModal">
-                                <i class="fa-solid fa-plus" style="margin-right: 10px;" ></i>Add Question
-                            </button>
+                            @if ($mode == 'edit')
+                                <button type="button" class="btn btn-primary" id="openQuestionModal"
+                                    data-bs-toggle="modal" data-bs-target="#questionModal">
+                                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question
+                                </button>
+                            @endif
                         </div>
 
 
@@ -171,21 +182,21 @@
                         <p class="m-0"><b class="required">Title</b></p>
                         <label for="quiz_title_modal"></label>
                         <input id="quiz_title_modal" class="input-fields form-control" type="text" title="Quiz Title"
-                            value="{{ $quiz->title }}" />
+                            value="{{ $quiz->title }}" @if ($mode === 'view') disabled @endif />
                         <!-- <span id="title_char_counter_modal" class="char_count">0/0</span> -->
                     </div>
                     <div>
                         <p class="m-0"><b>Description</b></p>
                         <label for="quiz_description_modal"></label>
                         <textarea id="quiz_description_modal" class="input-fields form-control" title="Quiz Description"
-                            placeholder="(Optional)">{{ $quiz->description }}</textarea>
-                        <span id="description_char_counter_modal" class="char_count">0/0</span>
+                            placeholder="(Optional)" style="height:max-content;"@if ($mode === 'view') disabled @endif>{{ $quiz->description }}</textarea>
+                        {{-- <span id="description_char_counter_modal" class="char_count">0/0</span> --}}
                     </div>
                     <div>
                         <p class="m-0"><b>Visibility</b></p>
                         <label for="visibility_modal"></label>
                         <select id="visibility_modal" name="visibility_modal" class="input-fields form-control"
-                            title="Quiz Visibility">
+                            title="Quiz Visibility" @if ($mode === 'view') disabled @endif>
                             <option value="public" {{ $quiz->visibility === 'public' ? 'selected' : '' }}>Public
                             </option>
                             <option value="private" {{ $quiz->visibility === 'private' ? 'selected' : '' }}>Private
@@ -203,7 +214,8 @@
     </div>
 
     <!-- modal for quiz question creation and edition -->
-    <div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel" aria-hidden="true">
+    <div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="questionModalLabel"
+        aria-hidden="true">
         <!-- Modal content -->
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" style="padding: 25px;">
@@ -308,58 +320,60 @@
         </div>
     </div>
 
-        <!-- live session Modal -->
-        <div class="modal fade" id="liveSessionModal" tabindex="-1" aria-labelledby="liveSessionModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" style="padding: 25px;">
-        
-                    <div class="modal-header">
-                        <h5 class="modal-title">Initiate Live Session for</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- live session Modal -->
+    <div class="modal fade" id="liveSessionModal" tabindex="-1" aria-labelledby="liveSessionModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="padding: 25px;">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Initiate Live Session for</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="live-session-section-style">
+                        <div>Details</div>
+                        <hr>
+                        <p><b>Title: </b><span id="session-title">{{ $quiz->title }}</span></p>
+                        <p><small><b>Number of Questions: </b><span id="question-count">10</span></small>
+                        </p>
                     </div>
-        
-                    <div class="modal-body">
-        
-                        <div class="live-session-section-style">
-                            <div>Details</div>
-                            <hr>
-                            <p><b>Title: </b><span id="session-title">{{ $quiz->title}}</span></p>
-                            <p><small ><b>Number of Questions: </b><span id="question-count">10</span></small>
-                            </p>
-                            </div>
-        
-                        <div class="live-session-section-style">
-                            <div>Question and Answer</div>
-                            <hr>
-                            <div class="live-session-setting-style">
-                                <label class="form-check-label" for="shuffleSwitch">Shuffle Questions & Options</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="shuffleSwitch">
-                                </div>
-                            </div>
-                        </div>
-        
-                        <div class="live-session-section-style">
-                            <div>Gamification</div>
-                            <hr>
-                            <div class="live-session-setting-style">
-                                <label class="form-check-label" for="leaderboardSwitch">Shuffle Questions & Options</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="leaderboardSwitch">
-                                </div>
+
+                    <div class="live-session-section-style">
+                        <div>Question and Answer</div>
+                        <hr>
+                        <div class="live-session-setting-style">
+                            <label class="form-check-label" for="shuffleSwitch">Shuffle Questions & Options</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="shuffleSwitch">
                             </div>
                         </div>
-        
-        
                     </div>
-        
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="continueBtn">Continue</button>
+
+                    <div class="live-session-section-style">
+                        <div>Gamification</div>
+                        <hr>
+                        <div class="live-session-setting-style">
+                            <label class="form-check-label" for="leaderboardSwitch">Show Leaderboard</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="leaderboardSwitch" checked>
+                            </div>
+                        </div>
                     </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="continueBtn">Continue</button>
                 </div>
             </div>
-            </div>
+        </div>
+    </div>
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
@@ -372,11 +386,58 @@
     </script>
 
     <script>
-        quizFromDB = @json($quiz);
-        quizQuestionFromDB = @json($questions);
+        class QuizSessionSetting {
+            constructor() {
+                this.shuffleQuestion = false;
+                this.showLeaderboard = true;
+            }
+        }
 
+        const quizFromDB = @json($quiz);
+        const quizQuestionFromDB = @json($questions);
+        const mode = @json($mode);
         console.log(quizFromDB);
         console.log(quizQuestionFromDB);
+
+        $(document).ready(function() {
+            $('#continueBtn').click(function() {
+                // Get settings from the checkboxes
+                const quizSessionSetting = new QuizSessionSetting();
+                quizSessionSetting.shuffleOption = $('#shuffleSwitch').is(':checked');
+                QuizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked');
+
+                const quizId = quizFromDB.id;
+                // AJAX request to store the new quiz session
+                $.ajax({
+                    url: '/create-quiz-session', // Replace with your backend route
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        quizSessionSetting,
+                        quizId
+                    }),
+                    success: function(response) {
+                        // Handle success, e.g., display a success message or redirect
+                        console.log('Quiz session created successfully!');
+                        // Assuming you have the URL stored in a variable called 'redirectUrl'
+                        console.log(response.sessionCode);
+                        if (response.sessionCode) {
+                            // Redirect to the specified URL with the sessionCode as a query parameter
+                            window.location.href =
+                                "{{ route('quiz-session-lecturer', ['sessionCode' => ':sessionCode']) }}"
+                                .replace(':sessionCode', response.sessionCode);
+                        } else {
+                            // Handle the case when sessionCode is missing or invalid
+                            console.error('Session code is missing or invalid.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error
+                        console.error(error);
+                    }
+                });
+            });
+        });
     </script>
 
     <script src="{{ asset('js/quiz.js') }}"></script>

@@ -10,7 +10,7 @@ class QuizQuestion extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'type', 'options', 'correct_ans', 'answer_explanation',
+        'title', 'type', 'options', 'correct_ans', 'answer_explaination',
         'single_ans_flag', 'points', 'duration','quiz_id', 'index'
     ];
 
@@ -24,7 +24,7 @@ class QuizQuestion extends Model
         'type' => '',
         'options' => null,
         'correct_ans' => '[]',
-        'answer_explanation' => null,
+        'answer_explaination' => null,
         'single_ans_flag' => null,
         'points' => 0,
         'duration' => 0,

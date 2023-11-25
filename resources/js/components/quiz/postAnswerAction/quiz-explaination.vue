@@ -5,7 +5,7 @@
 
     <div id="answer-explaination-container">
         <h2 style="margin:10px 0 20px 0;">Answer Explaination</h2>
-        <p>{{ question.answer_explanation }}</p>
+        <p>{{ question.answer_explaination }}</p>
     </div>
 
     <!-- <ForwardBackwardBtn /> -->
@@ -48,22 +48,16 @@ import QuizHeaderWithProgressBar from '../quiz-header-with-progress-bar.vue';
     },
     methods: {
         startTimer() {
-            //const store = useQuizStore();
-            //const currentQuestion = store.questions[store.currentQuestionIndex];
-
             this.timeRemaining = 5;
             this.progressBarValue = 100;
 
             this.timerInterval = setInterval(() => {
                 if (this.timeRemaining > 0) {
                     this.timeRemaining--; // Decrement timeRemaining by 1 every second
-                    this.progressBarValue = (this.timeRemaining / 10) * 100; // Update progress bar value accordingly
+                    this.progressBarValue = (this.timeRemaining / 5) * 100; // Update progress bar value accordingly
                 } else {
-                    // Time is up, perform necessary actions or stop the timer
                     clearInterval(this.timerInterval);
                     this.$router.push('/quiz-leaderboard');
-                    // For example, emit an event or perform a specific action when the time is up
-                    // this.$emit('timeUp');
                 }
             }, 1000); // Update every second (1000 milliseconds)
         },

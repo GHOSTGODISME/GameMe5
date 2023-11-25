@@ -70,7 +70,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.type = questionData.type || "";
             question.options = questionData.options || [];
             question.correct_ans = questionData.correct_ans || [];
-            question.answer_explanation = questionData.answer_explanation || [];
+            question.answer_explaination = questionData.answer_explaination || [];
             question.single_ans_flag = questionData.single_ans_flag !== undefined ? questionData.single_ans_flag : true;
             question.points = questionData.points !== undefined ? questionData.points : 0;
             question.duration = questionData.duration !== undefined ? questionData.duration : 0;
@@ -131,7 +131,7 @@ $(document).ready(function () {
     initializeEventListeners();
     initializeOptions();
 
-    populateQuiz(allQuiz);
+    populateQuiz(allQuiz, mode);
 });
 
 function generateUniqueID() {
@@ -165,7 +165,7 @@ function initializeEventListeners() {
         $('#quiz_title').val(''); // Clear quiz title input
         $("#quiz-duration").val('10').change();
         $("#quiz-points").val('10').change();
-        $('#quiz_answer_explaination').val(''); // Clear answer explanation input
+        $('#quiz_answer_explaination').val(''); // Clear answer explaination input
 
         // Initialize default options
         initializeOptions();
@@ -213,7 +213,7 @@ function initializeEventListeners() {
 
             console.log(allQuiz);
             // Update UI or perform necessary actions
-            populateQuiz(allQuiz);
+            populateQuiz(allQuiz, mode);
             $('#questionModal').modal('hide');
         }
 
@@ -554,7 +554,7 @@ function variableAssignment(uniqueID) {
 
     console.log("quiz.durationquiz.duration " + quiz.duration);
     console.log("quiz.pointsquiz.points " + quiz.points);
-    // Update answer explanation, assign null if empty
+    // Update answer explaination, assign null if empty
     quiz.answer_explaination = $("#quiz_answer_explaination").val();
     if (quiz.answer_explaination === "") {
         quiz.answer_explaination = null;
@@ -773,7 +773,7 @@ function loadQuestionDataIntoModal(uniqueID) {
     }
 }
 
-function populateQuiz(questions) {
+function populateQuiz(questions, mode) {
     const quizQuestionsContainer = document.getElementById("all_quiz_questions_container");
     // Clear existing content
     quizQuestionsContainer.innerHTML = '';
@@ -782,7 +782,7 @@ function populateQuiz(questions) {
     questions.sort((a, b) => a.index - b.index);
     // Iterate over each question and append its HTML
     questions.forEach((question, index) => {
-        const questionHTML = generateQuestionHTML(question, index);
+        const questionHTML = generateQuestionHTML(question, index, mode);
         quizQuestionsContainer.insertAdjacentHTML('beforeend', questionHTML);
         question.index = index;
 
@@ -801,7 +801,7 @@ function populateQuiz(questions) {
     }
 }
 
-function generateQuestionHTML(question, index) {
+function generateQuestionHTML(question, index, mode) {
     // Construct HTML for the question
     let questionHTML = `
 <div class="question-container" data-question-id="${question.uniqueID}">
@@ -809,18 +809,23 @@ function generateQuestionHTML(question, index) {
         <div class="question-counter">
             <span>Question ${index + 1}</span>
             <span> - ${QUESTION_TYPE_STRING[question.type]} Question</span>
-        </div>
-        <div class="button-container">
+        </div>`
+
+        if(mode !== 'view'){
+            questionHTML += `        <div class="button-container">
             <button class="btn btn-primary edit-btn" data-question-id="${question.uniqueID}">Edit</button>
             <button class="btn btn-info duplicate-btn" data-question-id="${question.uniqueID}">Duplicate</button>
             <button class="btn btn-danger remove-btn" data-question-id="${question.uniqueID}">Remove</button>
-        </div>
-    </div>
-    <hr>
-    <div class="question-title-container">
-        <p>${question.title}</p>
-    </div>
-`;
+        </div>`;
+        }
+
+        questionHTML += 
+        `  </div>
+            <hr>
+            <div class="question-title-container">
+                <p>${question.title}</p>
+            </div>
+        `;
 
     if (question.options && question.options.length > 0) {
         questionHTML += `
@@ -873,12 +878,12 @@ function generateQuestionHTML(question, index) {
         `;
         }
     }
-    // Checking and appending answer explanation if available
+    // Checking and appending answer explaination if available
     if (question.answer_explaination) {
         questionHTML += `
     <div class="answer-explaination-container container-space">
         <div class="horizontal-line-with-text">
-            <span> Answer Explanation </span>
+            <span> Answer explaination </span>
         </div>
         <p>${question.answer_explaination}</p>
     </div>
@@ -933,7 +938,7 @@ function deleteQuestion(uniqueID) {
             allQuiz.forEach((question, index) => {
                 question.index = index + 1; // Update indices based on the new positions
             });
-            populateQuiz(allQuiz); // Assuming populateQuiz function updates the UI
+            populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
         }
     } else {
         console.log('Question not found.');
@@ -944,7 +949,7 @@ function duplicateQuestion(uniqueID) {
     const indexToDuplicate = allQuiz.findIndex(q => q.uniqueID === uniqueID);
     if (indexToDuplicate !== -1) {
         const originalQuestion = allQuiz[indexToDuplicate];
-        const duplicatedQuestion = { ...originalQuestion }; // Create a shallow copy of the original question
+        const duplicatedQuestion = JSON.parse(JSON.stringify(originalQuestion));
 
         // Optionally, modify properties if needed (e.g., change uniqueID, reset some values)
         duplicatedQuestion.uniqueID = generateUniqueID(); // Change uniqueID for the duplicated question
@@ -953,8 +958,10 @@ function duplicateQuestion(uniqueID) {
         // Insert the duplicated question right after the original one
         allQuiz.splice(indexToDuplicate + 1, 0, duplicatedQuestion);
 
+        console.log(originalQuestion);
+        console.log(duplicatedQuestion);
         // Update the UI or perform any other necessary actions
-        populateQuiz(allQuiz); // Assuming populateQuiz function updates the UI
+        populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
     } else {
         console.log('Question not found.');
     }
@@ -980,7 +987,7 @@ const sortable = new Sortable(questionsContainer, {
         });
         allQuiz = updatedAllQuiz;
         console.log(allQuiz);
-        populateQuiz(allQuiz);
+        populateQuiz(allQuiz, mode);
     }
 
 });

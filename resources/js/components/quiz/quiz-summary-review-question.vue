@@ -1,76 +1,256 @@
 <template>
-<div id="review-question-container">
-            <p class="review-question-title">Review Questions</p>
-
-            <div class="review-question-container-single">
-                <div id="question-title-details" class="container-style incorrect-ans-title-bg">
-                    1. How much is 2 + 3 equals to?
+    <div id="review-question-container">
+        <p class="review-question-title">Review Questions</p>
+        <div id="quiz-container">
+            <div
+                class="review-question-container-single"
+                v-for="(question, index) in questionsData"
+                :key="question.id"
+            >
+                <div
+                    :class="{
+                        'container-style': true,
+                        'correct-ans-title-bg': correctness[question.id],
+                        'incorrect-ans-title-bg': !correctness[question.id],
+                    }"
+                >
+                    {{ index + 1 }}. {{ question.title }}
                 </div>
-                <div id="question-option-details" class="container-style incorrect-ans-options-bg">
-                    <p class="radio-text"><i class="fas fa-circle radio-icon checked incorrect"></i> 3 <span
-                            class="review-answer incorrect-ans"> Your Answer</span></p>
-                    <p class="radio-text"><i class="fas fa-circle radio-icon default"></i> 4 </p>
-                    <p class="radio-text"><i class="fas fa-circle radio-icon checked correct"></i> 5 <span
-                            class="review-answer correct-ans"> Correct Answer</span></p>
-                </div>
-            </div>
-
-
-            <div class="review-question-container-single">
-                <div id="question-title-details" class="container-style correct-ans-title-bg">
-                    1. How much is 2 + 3 equals to?
-                </div>
-                <div id="question-option-details" class="container-style correct-ans-options-bg">
-                    <p ><i class="fas fa-check-square checkbox-icon checked correct"></i> 3 <span
-                            class="review-answer correct-ans"> Your Answer</span></p>
-                            <p ><i class="fas fa-square checkbox-icon default"></i> 4 </p>
-                            <p ><i class="fas fa-square checkbox-icon checked incorrect"></i> 4 </p>
-                        </div>
-            </div>
-
-            <div class="review-question-container-single">
-                <div id="question-title-details" class="container-style correct-ans-title-bg">
-                    1. How much is 2 + 3 equals to?
-                </div>
-                <div id="question-option-details" class="container-style correct-ans-options-bg">
-                    <p>random text input <span class="review-answer correct-ans"> Your Answer</span></p>
-
-                    <!-- if incorrect answer answer -->
-                    <p>random text input <span class="review-answer incorrect-ans"> Your Answer</span></p>
-
-                    <hr>
-                    <span class="correct-ans">Correct Answer: </span>
-                    <p>Random correct answer</p>
+                <div
+                    :class="{
+                        'container-style': true,
+                        'correct-ans-options-bg': correctness[question.id],
+                        'incorrect-ans-options-bg': !correctness[question.id],
+                    }"
+                >
+                    <!-- Render different HTML based on the question type -->
+                    <template
+                        v-if="question.type === '0' || question.type === '1'"
+                    >
+                        <p
+                            v-for="(option, optionIndex) in question.options"
+                            :key="optionIndex"
+                            class="radio-text"
+                        >
+                            <i
+                                :class="{
+                                    fas: true,
+                                    'fa-check-square':
+                                        !question.single_ans_flag &&
+                                        userResponses[question.id].includes(
+                                            option
+                                        ),
+                                        'fa-check-square':
+                                        !question.single_ans_flag &&
+                                        userResponses[question.id].includes(
+                                            option
+                                        ),
+                                    'fa-circle':
+                                        question.single_ans_flag &&
+                                        userResponses[question.id].includes(
+                                            option
+                                        ),
+                                    'icon-style': true,
+                                    checked:
+                                        userResponses[question.id].includes(
+                                            option
+                                        ),
+                                    correct:
+                                        question.correct_ans.includes(option),
+                                    'incorrect-ans':
+                                        !question.correct_ans.includes(option),
+                                }"
+                            ></i>
+                            {{ option }}
+                            <span
+                                v-if="
+                                    userResponses[question.id].includes(option)
+                                "
+                                :class="{
+                                    'review-answer': true,
+                                    'correct-ans':
+                                        question.correct_ans.includes(option),
+                                    'incorrect-ans':
+                                        !question.correct_ans.includes(option),
+                                }"
+                                >Your Answer</span
+                            >
+                            <span
+                                v-else-if="
+                                    !userResponses[question.id].includes(
+                                        option
+                                    ) && question.correct_ans.includes(option)
+                                "
+                                class="review-answer correct-ans"
+                                >Correct Answer</span
+                            >
+                        </p>
+                    </template>
+                    <template v-else-if="question.type === '2'">
+                        <!-- For text input type questions -->
+                        <p
+                            v-if="
+                                userResponses[question.id][0] !== undefined &&
+                                userResponses[question.id][0].trim() !== ''
+                            "
+                        >
+                            {{ userResponses[question.id][0] }}
+                            <span
+                                v-if="
+                                    userResponses[
+                                        question.id
+                                    ][0].toLowerCase() ===
+                                    question.correct_ans[0].toLowerCase()
+                                "
+                                class="review-answer correct-ans"
+                                >Your Answer</span
+                            >
+                            <span v-else class="review-answer incorrect-ans"
+                                >Your Answer</span
+                            >
+                        </p>
+                        <p v-else>No answer provided</p>
+                        <hr v-if="!correctness[question.id]" />
+                        <span
+                            v-if="!correctness[question.id]"
+                            class="correct-ans"
+                            >Correct Answer: {{ question.correct_ans[0] }}</span
+                        >
+                    </template>
                 </div>
             </div>
         </div>
+    </div>
 </template>
 
-
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-            // Get all radio buttons and their respective spans
-            const radioButtons = document.querySelectorAll('input[type="radio"]');
-            const spans = document.querySelectorAll('.review-answer');
-            // Loop through each span
-            spans.forEach((span, index) => {
-                // Check if the span contains the 'incorrect-ans' class
-                if (span.classList.contains('incorrect-ans')) {
-                    // Apply the 'incorrect' class to the radio button's parent element
-                    radioButtons[index].parentNode.classList.add('incorrect');
-                    radioButtons[index].classList.add("incorrect");
-                }
-                // Check if the span contains the 'correct-ans' class
-                if (span.classList.contains('correct-ans')) {
-                    // Apply the 'correct' class to the radio button's parent element
-                    radioButtons[index].parentNode.classList.add('correct');
-                    radioButtons[index].classList.add("correct");
-                }
-            });
-        });
+export default {
+    props: {
+        questionsData: {
+            type: Array,
+            default: () => [],
+        },
+        userResponses: {
+            type: Object,
+            default: () => ({}),
+        },
+        correctness: {
+            type: Object,
+            default: () => ({}),
+        },
+    },
+};
 </script>
 
-
 <style>
+#review-question-container {
+    width: 90%;
+    background: white;
+    margin: auto;
+    margin-top: 30px;
+}
 
+.review-question-title {
+    font-size: 24px;
+}
+
+.review-question-container-single {
+    margin: 15px;
+}
+
+.container-style {
+    padding: 10px 20px;
+    word-break: break-all;
+}
+
+.review-answer {
+    margin-left: 30px;
+}
+
+.correct-ans {
+    color: #35a32b;
+}
+
+.correct-ans-title-bg {
+    border-radius: 10px 10px 0 0;
+    background: #85ffb6;
+}
+
+.correct-ans-options-bg {
+    border-radius: 0 0 10px 10px;
+    background: #dcffe4;
+}
+
+.incorrect-ans {
+    color: #b90000;
+}
+
+.incorrect-ans-title-bg {
+    border-radius: 10px 10px 0 0;
+    background: #ff9191;
+}
+
+.incorrect-ans-options-bg {
+    border-radius: 0 0 10px 10px;
+    background: #ffc7c7;
+}
+
+.horizontal-line-with-text {
+    margin: auto;
+    width: 70%;
+    height: 8px;
+    border-bottom: 1px solid black;
+    text-align: center;
+    margin-bottom: 50px;
+    margin-top: 30px;
+}
+
+.horizontal-line-with-text span {
+    font-size: 14px;
+    background-color: white;
+    padding: 0 15px;
+}
+
+.radio-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+/* Styling for the custom circular icons */
+.icon-style {
+    margin-right: 10px;
+    margin-top: 3px;
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.default {
+    color: rgb(132, 132, 132);
+    /* Style for unchecked */
+}
+
+.correct {
+    color: green;
+    /* Style for correct answer */
+}
+
+.incorrect {
+    color: red;
+    /* Style for incorrect answer */
+}
+
+.submit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.button-style {
+    font-size: 16px;
+    padding: 10px 40px;
+    display: flex;
+    background: #123956;
+}
 </style>

@@ -7,20 +7,32 @@ export const useQuizStore = defineStore('quiz', {
     questions: [],
     userResponses: {},
     correctness: {},
-    userRank: null,
+    
     questionTimes: {},
+    questionPoints: {},
     navigationHistory: [],
-    questionPoints: 0,
+    // questionPoints: 0,
+    
+
+    userRank: null,
     totalPoints: 0,
 
     quizTitle: '',
     quizState: 'notStarted',
     quizTimer: 0,
-    quizQuestions: [],
+    quizTotalQuestion: 0,
 
     sessionCode: '',
     username: '',
-    userId: '',
+
+    userId: 0,
+    sessionId:0,
+    quizId: 0,
+
+    quizAccuracy: 0, 
+    correctAnswersCount: 0, 
+    incorrectAnswersCount: 0, 
+    averageTime:0,
   }),
   actions: {
     setCurrentQuestionIndex(index) {
@@ -40,6 +52,11 @@ export const useQuizStore = defineStore('quiz', {
         ...this.correctness,
         [questionId]: isCorrect,
       };
+      if(isCorrect){
+        this.incrementCorrectAnswersCount();
+      }else{
+        this.incrementIncorrectAnswersCount();
+      }
     },
     storeQuestionTime(questionId, timeTaken) {
       this.questionTimes = {
@@ -49,8 +66,8 @@ export const useQuizStore = defineStore('quiz', {
     },
     storeQuestionPoints(questionId) {
       const question = this.questions.find(question => question.id === questionId);
-      this.questionTimes = {
-        ...this.questionTimes,
+      this.questionPoints = {
+        ...this.questionPoints,
         [questionId]: question.points,
       };
       this.setTotalQuizPoints(this.totalPoints + question.points);
@@ -88,16 +105,12 @@ export const useQuizStore = defineStore('quiz', {
     setQuizQuestions(questions) {
       this.quizQuestions = questions;
     },
-
-    
-
-    calculateAndSetRank({ state, commit }, userScore) {
-      const otherParticipantScores = [/* Array of scores of other participants */];
-      otherParticipantScores.push(userScore);
-      otherParticipantScores.sort((a, b) => b - a); // Sort scores in descending order
-      const userRank = otherParticipantScores.indexOf(userScore) + 1; // Find the user's rank
-      this.setUserRank(userRank);
-    },
+    incrementCorrectAnswersCount() {
+          this.correctAnswersCount++;
+        },
+        incrementIncorrectAnswersCount() {
+          this.incorrectAnswersCount++;
+        },
     setQuestionTime(state, { questionId, timeTaken }) {
       this.questionTimes[questionId] = timeTaken;
       console.log(questionTimes);
@@ -130,6 +143,15 @@ export const useQuizStore = defineStore('quiz', {
         this.navigateBackward(prevQuestionId);
       }
     },
+    updateUserRank(leaderboard) {
+      const userIndex = leaderboard.findIndex((player) => player.id === this.userId);
+      if (userIndex !== -1) {
+        const userRank = userIndex + 1;
+        this.userRank = userRank;
+      } else {
+        this.userRank = null;
+      }
+    },
     // async fetchQuizDetails(code) {
     //   try {
     //     const response = await fetch(`/quiz/details/${code}`);
@@ -147,8 +169,11 @@ export const useQuizStore = defineStore('quiz', {
     
         console.log('Fetched details:', details);
     
-        if (details && details.title) {
-          this.setQuizTitle(details.title); // Update quizTitle using setQuizTitle action
+        if (details && details.quiz.title) {
+          this.setQuizTitle(details.quiz.title); // Update quizTitle using setQuizTitle action
+          this.quizId = details.quiz.id;
+          this.sessionId = details.session_id;
+          console.log("this.sessionId " + this.sessionId);
           console.log('Updated quizTitle:', this.quizTitle);
         } else {
           console.error('Quiz details or title is empty.');
@@ -160,24 +185,88 @@ export const useQuizStore = defineStore('quiz', {
     
     async fetchQuizQuestions() {
       try {
-        const response = await fetch(`/quiz/questions/${this.sessionCode}`);
+        const response = await fetch(`/quiz/questions/${this.quizId}`);
         const questions = await response.json();
         this.setQuestions(questions);
+        this.quizTotalQuestion = questions.length;
         console.log('Fetched questions:', this.questions);
             } catch (error) {
               console.error('Failed to fetch questions:', error);
                   }
+    },
+    calculateQuizAccuracy() {
+      const totalQuestions = Object.keys(this.correctness).length;
+      if (totalQuestions === 0) {
+        this.quizAccuracy = 0;
+        return;
+      }
+
+      const correctAnswers = Object.values(this.correctness).filter(isCorrect => isCorrect).length;
+      this.correctAnswersCount = correctAnswers;
+      this.incorrectAnswersCount = totalQuestions - correctAnswers;
+
+      this.quizAccuracy = (correctAnswers / totalQuestions) * 100;
+    },
+
+    calculateAverageTime() {
+      const totalQuestions = Object.keys(this.questionTimes).length;
+      if (totalQuestions === 0) {
+        this.averageTime = 0;
+        return;
+      }
+
+      const totalTime = Object.values(this.questionTimes).reduce((acc, time) => acc + time, 0);
+      this.totalQuestionTime = totalTime;
+      this.averageTime = totalTime / totalQuestions;
     },
     startQuiz() {
       this.setQuizState('started');
       this.setQuizTimer(0);
       this.fetchQuizDetails(123);
     },
+    async storeIndividualResponse(payload) {
+      try {
+        const response = await fetch('/api/store-individual-response', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to store individual response');
+        }
+
+        const responseData = await response.json();
+        // Handle successful response from the backend if needed
+        console.log('Response from backend:', responseData);
+      } catch (error) {
+        console.error('Error storing individual response:', error);
+        // Handle error
+      }
+    },
+    setRandomUserId() {
+      // Generate a random user ID between 1 and 1000 (for example)
+      const randomUserId = Math.floor(Math.random() * 1000) + 1;
+      this.userId = randomUserId;
+    },
+    
   },
   getters: {
-    // Define getters to access state
-    // You can define getters to access and derive state variables here
-  },
+    getQuizAccuracy() {
+      this.calculateQuizAccuracy();
+      return this.quizAccuracy.toFixed(1); // Display accuracy up to 2 decimals
+    },
+
+    getAverageTime() {
+      this.calculateAverageTime();
+      return this.averageTime.toFixed(1); // Display average time up to 2 decimals
+    },  },
+
+    getQuizTitle() {
+      return this.quizTitle;
+    },
 });
 
 

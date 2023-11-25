@@ -20,7 +20,7 @@
                 <p class="h3 " style="color: #76C893;">Suggested Answer</p>
                 <hr>
                 <div class="text-input-div">
-                    <input v-for="(char, index) in correctAnswer.toUpperCase()" :key="index" type="text"
+                    <input v-for="(char, index) in correctAnswer[0].toUpperCase()" :key="index" type="text"
                         class="text-input text-input-correct" maxlength="1" :value="char" disabled />
                 </div>
             </div>
@@ -39,13 +39,17 @@ export default {
     emits: ['returnValues'],
     props: {
         correctAnswer: {
-            type: String,
+            type: Array,
             required: true,
-        }
+        },
+        timeRemaining: {
+            type: Number,
+            required: true,
+        },
     },
     data() {
         return {
-            inputValues: Array(this.correctAnswer.length).fill(''), // Array based on the length of correct answer
+            inputValues: Array(this.correctAnswer[0].length).fill(''), // Array based on the length of correct answer
             submitted: false, // Flag to track submission status
             answeredCorrectly: false, // Flag to track if the user's answer is correct or not
         };
@@ -84,24 +88,21 @@ export default {
             this.submitted = true;
             const combinedText = this.inputValues.join('');
             this.answeredCorrectly = this.checkAnswer(combinedText);
-            this.$emit('submit-text', {
+            this.$emit('returnValues', {
                 submitedAns: combinedText,
                 answeredCorrectly: this.answeredCorrectly
             }
             ); // Emit event with combined text
         },
         checkAnswer(combinedText) {
-            return combinedText.toUpperCase() === this.correctAnswer.toUpperCase();
+            return (combinedText !== null) && 
+            (combinedText.toUpperCase() === this.correctAnswer[0].toUpperCase());
         },
     },
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
-                this.submitted = true;
-                this.$emit('returnValues', {
-                    selectedOptions: [], // Empty selected options
-                    answeredCorrectly: false, // Assume incorrect since no submission
-                });
+                this.submitInput();
             }
         }
     }

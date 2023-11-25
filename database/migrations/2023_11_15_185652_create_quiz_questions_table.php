@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('quiz_questions', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
 
             $table->string('title')->default('');
             $table->string('type')->default('');
             $table->json('options')->nullable();
             $table->json('correct_ans')->required();
-            $table->text('answer_explanation')->nullable();
+            $table->text('answer_explaination')->nullable();
             $table->boolean('single_ans_flag')->nullable();
             $table->integer('points')->default(0);
             $table->integer('duration')->default(0);
             $table->string('index');
+            $table->timestamps();
 
-            $table->foreignId('quiz_id')->constrained();
+            $table->foreignId('quiz_id')->constrained()->onDelete('cascade');            
         });
     }
 

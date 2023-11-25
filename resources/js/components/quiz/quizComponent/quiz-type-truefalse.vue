@@ -63,17 +63,13 @@ export default {
             });
         },
         checkAnswer() {
-            return this.selectedOption.toLowerCase() === this.correctAnswer[0].toLowerCase();
+            return (this.selectedOption !== null) && (this.selectedOption.toLowerCase() === this.correctAnswer[0].toLowerCase());
         },
     },
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
-                this.submitted = true;
-                this.$emit('returnValues', {
-                    selectedOptions: [], // Empty selected options
-                    answeredCorrectly: false, // Assume incorrect since no submission
-                });
+                this.submitInput();
             }
         }
     }

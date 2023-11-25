@@ -120,6 +120,9 @@
                                 class="btn btn-info edit-delete-btn">Show
                                 Response</a> --}}
 
+                                <a href="{{ route('view-quiz', ['id' => $quiz->id]) }}"
+                                    class="btn btn-info edit-delete-btn">
+                                    View</a>
                             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}"
                                 class="btn btn-info edit-delete-btn">
                                 <i class="fa fa-edit"></i></a>

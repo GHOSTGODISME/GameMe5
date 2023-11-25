@@ -908,6 +908,7 @@ duplicateQuestionButton.addEventListener('click', function () {
         const originalIndex = surveyQuestions.findIndex(q => q.id.toString() === question.id);
         surveyQuestions.splice(originalIndex + 1, 0, clonedQuestion);
 
+        
         //console.log(surveyQuestions);
 
         // Clone the selected question container

@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizSessionController;
 use App\Http\Controllers\UserAuthController;
 
 /*
@@ -29,6 +30,7 @@ use App\Http\Controllers\UserAuthController;
 /*Homepage*/
 Route::get('/', function () {
     return view('home');
+    // return view('chat');
     // return view('quiz.spa');
 });
 
@@ -141,6 +143,7 @@ Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->n
 Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');
 Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz');
 Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
+Route::get('/view-quiz/{id}', [QuizController::class, 'view'])->name('view-quiz');
 Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
 
 Route::post('/save-quiz', [QuizController::class, 'store']);
@@ -151,3 +154,13 @@ Route::get('/join-quiz-layout', [QuizController::class, 'joinQuiz'])->name('join
 
 Route::get('/quiz/details/{code}', [QuizController::class, 'getQuizDetails']);
 Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
+
+
+Route::post('/create-quiz-session', [QuizSessionController::class,'createQuizSession']);
+Route::get('/quiz-session-lecturer/{sessionCode}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
+Route::get('/quiz-session-lecturer', [QuizSessionController::class, 'startSession1'])->name('quiz-session-lecturer1');
+Route::get('/leaderboard-lecturer', [QuizSessionController::class, 'getLeaderboard'])->name('leaderboard-lecturer');
+
+// Route::get('/quiz-summary', [QuizController::class, 'showQuizSummary']);
+Route::get('/quiz-summary/{userId}/{sessionId}/{quizId}', [QuizController::class, 'showQuizSummary']);
+Route::get('/user/{userId}/session/{sessionId}/quiz/{quizId}/details', [QuizController::class, 'fetchData']);

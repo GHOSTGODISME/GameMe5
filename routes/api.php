@@ -24,3 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
 
 
+Route::post('/register-name', [QuizController::class, 'registerUsername']);
+Route::post('/store-individual-response', [QuizController::class, 'storeIndividualResponse']);
+
+Route::post('/store-quiz-response', [QuizController::class, 'storeQuizResponse']);
+Route::post('/store-full-responses', [QuizController::class, 'storeFullResponses']);
+// routes/api.php

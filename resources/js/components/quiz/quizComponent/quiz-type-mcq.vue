@@ -87,11 +87,7 @@ export default {
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
-                this.submitted = true;
-                this.$emit('returnValues', {
-                    selectedOptions: [], // Empty selected options
-                    answeredCorrectly: false, // Assume incorrect since no submission
-                });
+                this.submitInput();
             }
         }
     }

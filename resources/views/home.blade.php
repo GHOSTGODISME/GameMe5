@@ -22,4 +22,14 @@
 
     @vite('resources/js/app.js')
 </body>
+<script>
+    // Check for error message in session
+    let errorMessage = "{{ session('error') }}";
+
+    // Display alert if error message exists
+    if (errorMessage) {
+        alert(errorMessage);
+    }
+</script>
+
 </html>

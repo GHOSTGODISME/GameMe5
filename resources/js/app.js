@@ -27,6 +27,7 @@ import QuizLeaderboard from './components/quiz/postAnswerAction/quiz-leaderboard
 import ForwardBackwardBtn from './components/quiz/postAnswerAction/forward-backward-btn.vue';
 
 import QuizClosure from './components/quiz/quiz-closure.vue';
+// import QuizSummary from './components/quiz/quiz-summary.vue';
 import QuizSummaryBlock1 from './components/quiz/quiz-summary-block1.vue';
 import QuizSummaryBlock2 from './components/quiz/quiz-summary-block2.vue';
 import QuizSummaryReviewQuestion from './components/quiz/quiz-summary-review-question.vue';
@@ -34,7 +35,7 @@ import QuizSummaryReviewQuestion from './components/quiz/quiz-summary-review-que
 const routes = [
   { path: '/join-quiz-layout', component: JoinQuizLayout },
   { path: '/quiz-page-layout', component: QuizPageLayout, name: 'quiz-page' },
-  { path: '/quiz-summary', component: QuizSummaryLayout },
+  { path: '/quiz-summary-layout', component: QuizSummaryLayout },
 
   { path: '/join-quiz-joined-participants', component: JoinQuizJoinedParticipants },
   { path: '/join-quiz-username', component: JoinQuizUsername },
@@ -47,14 +48,21 @@ const routes = [
   { path: '/quiz-type-text', component: QuizTypeText },
   { path: '/quiz-type-truefalse', component: QuizTypeTrueFalse },
 
-  { path: '/quiz-explanation', component: QuizExplaination },
+  { path: '/quiz-explaination', component: QuizExplaination },
   { path: '/quiz-leaderboard', component: QuizLeaderboard},
   { path: '/forward-backward-btn', component: ForwardBackwardBtn },
 
   { path: '/quiz-closure', component: QuizClosure },
+  // { path: '/quiz-summary', component: QuizSummary },
   { path: '/quiz-summary-block1', component: QuizSummaryBlock1 },
   { path: '/quiz-summary-block2', component: QuizSummaryBlock2 },
   { path: '/quiz-summary-review-question', component: QuizSummaryReviewQuestion },
+  // {
+  //   path: '/quiz-summary/:userId/:sessionId/:quizId',
+  //   name: 'quiz-summary',
+  //   component: QuizSummary,
+  //   props: true,
+  // },
 ];
 
 const router = createRouter({

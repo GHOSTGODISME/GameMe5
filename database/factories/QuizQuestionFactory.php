@@ -37,7 +37,7 @@ class QuizQuestionFactory extends Factory
             'type' => $type,
             'options' => $options,
             'correct_ans' => $correctAns,
-            'answer_explanation' => $this->faker->paragraph,
+            'answer_explaination' => $this->faker->paragraph,
             'single_ans_flag' => $this->getSingleAnswerFlag($type),
             'points' => $this->faker->randomElement([10, 15, 30]),
             'duration' => $this->faker->randomElement([10, 15, 30]),
@@ -72,7 +72,8 @@ class QuizQuestionFactory extends Factory
             case 1: // True/False
                 return ['True']; // For true/false, set 'True' as the correct answer
             case 2: // Text Input
-                return []; // No specific correct answer for text input
+                $randomWord = $this->generateRandomWord(6); // Generate a random word with 6 characters
+                return [$randomWord];
             default:
                 return null;
         }
@@ -98,5 +99,17 @@ class QuizQuestionFactory extends Factory
             $this->currentIndex = 0; // Reset currentIndex for new quizzes
         }
         return $this->currentIndex++;
+    }
+
+    //generete random words in defined length
+    function generateRandomWord($length)
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyz';
+        $charactersLength = strlen($characters);
+        $randomWord = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomWord .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomWord;
     }
 }
