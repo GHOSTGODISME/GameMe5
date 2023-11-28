@@ -68,7 +68,7 @@ border:2px white solid;
         </div>
     </div>
     
-    <div class="profile-data_low" onclick="updateLecturerPosition('New Position')">
+    <div class="profile-data_low" onclick="updateLecturerPosition('new position')">
         <label class="profile-label">Position</label>
         <div class= "profile_output">
             <span data-field="position">{{ $lecturer->position }}</span>
@@ -220,8 +220,8 @@ border:2px white solid;
     }
 }
 function updateLecturerPosition(newPosition) {
-    var newValue = prompt('Enter new ' + newPosition + ':');
-    
+    var newValue = prompt('Enter ' + newPosition + ':');
+    if (newValue !== null) {
     $.ajax({
         url: "{{ route('update_lecturer_position') }}",
         method: 'POST',
@@ -245,6 +245,8 @@ function updateLecturerPosition(newPosition) {
             alert('Error updating profile');
         }
     });
+
+}
 }
 
 function confirmLogout() {

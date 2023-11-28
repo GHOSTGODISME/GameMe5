@@ -326,7 +326,6 @@
         <a href="{{ route('admin_staff') }}">Staff</a>
     </h3>
     
-    
 </div>
     <!-- Page Content -->
     @yield('content')

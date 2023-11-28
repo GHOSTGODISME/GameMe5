@@ -66,7 +66,7 @@ margin-bottom:20px;
 
     .eye-icon {
     position: absolute;
-    right: 50px;
+    right: 15px;
     top: 30%;
     transform: translateY(-50%);
     cursor: pointer;

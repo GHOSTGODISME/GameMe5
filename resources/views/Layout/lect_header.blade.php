@@ -70,49 +70,43 @@
 </style>
     <div class="header_container">
         <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
-        <img class="hamburger" src ="img/hamburger.png" alt="favicon"  onclick="toggleNavigation()">
+        <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()">
+    </div>
+    <div class="navigation-panel">
+        <div class="nav_row">
+            <img src="{{ asset('img/close_icon.png') }}" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
+            <a href="{{ route('stud_profile') }}" class="nav-link">Profile</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
+            <a href="#" class="nav-link">Quiz</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
+            <a href="#" class="nav-link">Classroom</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
+            <a href="#" class="nav-link">Feedback</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
+            <a href="#" class="nav-link">Session</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
+            <a href="#" class="nav-link">Tools</a>
+        </div>
+        <div class="nav_row">
+            <img src="{{ asset('img/report_icon.png') }}" alt="report_icon">
+            <a href="#" class="nav-link">Report</a>
+        </div>
+        <!-- Add more navigation links as needed -->
     </div>
     
-<div class="navigation-panel">
-    <div class="nav_row">
-    <img src="img/close_icon.png" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
-    </div>
-    <div class="nav_row">
-    <img src="img/profile_icon.png" alt="profile_icon">
-    <a href="{{route('stud_profile')}}" class="nav-link">Profile</a>
-    </div>
-    <div class="nav_row">
-    <img src="img/quiz_icon.png" alt="quiz_icon">
-    <a href="#" class="nav-link">Quiz</a>
-    </div>
-    <div class="nav_row">
-    <img src="img/classroom_icon.png" alt="classroom_icon">
-    <a href="#" class="nav-link">Classroom</a>
-    </div>
-
-    <div class="nav_row">
-        <img src="img/feedback_icon.png" alt="feedback_icon">
-        <a href="#" class="nav-link">Feedback</a>
-    </div>
-
-    <div class="nav_row">
-        <img src="img/session_icon.png" alt="session_icon">
-        <a href="#" class="nav-link">Session</a>
-    </div>
-
-    <div class="nav_row">
-        <img src="img/tools_icon.png" alt="tools_icon">
-        <a href="#" class="nav-link">Tools</a>
-    </div>
-
-    <div class="nav_row">
-        <img src="img/report_icon.png" alt="report_icon">
-        <a href="#" class="nav-link">Report</a>
-    </div>
-
-
-    <!-- Add more navigation links as needed -->
-</div>
 
 <script>
     function toggleNavigation() {

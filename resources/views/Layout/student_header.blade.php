@@ -68,28 +68,29 @@
 </style>
 
 <div class="header_container">
-    <a href="{{route('stud_homepage')}}"><img class="logo" src ="img/logo_header.png" alt="Logo"></a>
-    <img class="hamburger" src ="img/hamburger.png" alt="favicon"  onclick="toggleNavigation()">
+    <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
+    <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()">
 </div>
 
 <div class="navigation-panel">
     <div class="nav_row">
-    <img src="img/close_icon.png" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
+        <img src="{{ asset('img/close_icon.png') }}" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
     </div>
     <div class="nav_row">
-    <img src="img/profile_icon.png" alt="profile_icon">
-    <a href="{{route('stud_profile')}}" class="nav-link">Profile</a>
+        <img src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
+        <a href="{{ route('stud_profile') }}" class="nav-link">Profile</a>
     </div>
     <div class="nav_row">
-    <img src="img/quiz_icon.png" alt="profile_icon">
-    <a href="#" class="nav-link">Quiz</a>
+        <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
+        <a href="#" class="nav-link">Quiz</a>
     </div>
     <div class="nav_row">
-    <img src="img/classroom_icon.png" alt="profile_icon">
-    <a href="#" class="nav-link">Classroom</a>
+        <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
+        <a href="#" class="nav-link">Classroom</a>
     </div>
     <!-- Add more navigation links as needed -->
 </div>
+
 
 <script>
     function toggleNavigation() {

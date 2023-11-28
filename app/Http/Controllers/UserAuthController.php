@@ -118,7 +118,7 @@ class UserAuthController extends Controller{
          if ($data['accountType'] == 'lecturer') {
             $lecturerData = $request->session()->get('lecturer_data');
             // Save lecturer-specific data to the Lecturer model or perform any additional steps
-            Lecturer::create(array_merge(['id' => $user->id], $lecturerData));
+            Lecturer::create(array_merge(['iduser' => $user->id], $lecturerData));
             $request->session()->forget('lecturer_data');
         }
 

@@ -3,7 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Student;
 use App\Models\Lecturer;
+use App\Models\Announcement;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,6 +56,16 @@ class User extends Authenticatable
     public function lecturer()
     {
         return $this->hasOne(Lecturer::class,'id');
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class,'id');
+    }
+
+    public function announcement()
+    {
+        return $this->hasOne(Announcement::class,'id');
     }
 
 

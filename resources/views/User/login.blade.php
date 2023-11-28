@@ -18,7 +18,8 @@ text-decoration-line: underline;
 .forget_pass_container{
 width: 300px;
 display: flex;
-justify-content: right;    
+justify-content: right;   
+margin-top:10px; 
 }
 
 
