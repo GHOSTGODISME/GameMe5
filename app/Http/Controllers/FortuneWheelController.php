@@ -84,4 +84,15 @@ class FortuneWheelController extends Controller
         $fortuneWheels = FortuneWheel::all();
         return view('Interactive-tools.fortune-wheel-edit-index', ['fortuneWheels' => $fortuneWheels]);
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $fortuneWheels = FortuneWheel::when($search, function ($query) use ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->get();
+
+        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
+    }
 }

@@ -81,8 +81,10 @@
     <div class="main-body">
         <div class="session-body-header">
             <div>
-                <h1>Session - {{ $title }}</h1>
+                <span class="h2">Session - {{ $title }}<span> <small>(<span
+                                id="concurrentUser">0</span>)</small>
             </div>
+            <div><a id="leaveBtn" class="btn btn-dark">Leave Session</a></div>
         </div>
 
         <div class="container">
@@ -112,7 +114,7 @@
             </div>
         </div>
     </div>
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
@@ -134,18 +136,36 @@
         const username = "student name";
 
         console.log(sessionCode);
-        socket.emit("joinInteractiveSession", {sessionCode,id,username});
+        socket.emit("joinInteractiveSession", {
+            sessionCode,
+            id,
+            username
+        });
 
         socket.on('chatMessageReceived', (data) => {
-            const {id,username, message,time} = data;
+            const {
+                id,
+                username,
+                message,
+                time
+            } = data;
             console.log(data);
             displayMessage(id, username, message, time);
         });
 
         socket.on('newPollCreated', (data) => {
-            const {pollId,pollTitle,options} = data;
+            const {
+                pollId,
+                pollTitle,
+                options
+            } = data;
             console.log("newPollCreated received");
             generatePollContainer(pollId, pollTitle, options);
+        });
+
+        socket.on('is-participants-length', (data) => {
+            const concurrentUser = document.getElementById('concurrentUser');
+            concurrentUser.innerText = data;
         });
 
         function sendMessage() {
@@ -196,7 +216,12 @@
                     voteButton.style.display = 'none';
                 }
 
-                socket.emit('voteForPoll', {sessionCode,pollId,optionSelected, userId: id});
+                socket.emit('voteForPoll', {
+                    sessionCode,
+                    pollId,
+                    optionSelected,
+                    userId: id
+                });
             }
         }
 
@@ -209,22 +234,29 @@
             <hr>
             <form id="pollForm-${pollId}">
                 ${options.map((option, index) => `
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
-                            <label class="form-check-label" for="option${index + 1}-${pollId}">
-                                ${option}
-                            </label>
-                        </div>`).join('')}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
+                                <label class="form-check-label" for="option${index + 1}-${pollId}">
+                                    ${option}
+                                </label>
+                            </div>`).join('')}
                 <div style="text-align: end; margin-top: 10px;">
                     <a class="btn btn-primary" onclick="submitVote('${pollId}')">Vote</a>
                 </div>
             </form>
         </div>
     `;
-    
-        document.querySelector('.big-polls-container')
-        .appendChild(container);
+
+            document.querySelector('.big-polls-container')
+                .appendChild(container);
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const leaveBtn = document.getElementById('leaveBtn');
+            leaveBtn.addEventListener('click', function() {
+                window.location.href = '/'; // Redirect to the root route
+            });
+        });
     </script>
 
 

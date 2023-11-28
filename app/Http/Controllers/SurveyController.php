@@ -228,4 +228,15 @@ class SurveyController extends Controller
         // Pass the $surveyResponses data to the view for rendering
         return view('survey.show-responses', ['surveyResponses' => $surveyResponses]);
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $surveys = Survey::when($search, function ($query) use ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->get();
+
+        return view('survey.index', ['surveys' => $surveys]);
+    }
 }

@@ -97,7 +97,7 @@
     <div class="main-body">
         <div class="session-body-header">
             <div>
-                <h1>Session - {{ $title }}</h1>
+                <span class="h2">Session - {{ $title }}<span> <small>(<span id="concurrentUser">0</span>)</small>
             </div>
             <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
         </div>
@@ -218,7 +218,8 @@
         });
 
         socket.on('is-participants-length', (data)=>{
-            console.log("this " + data);
+            const concurrentUser = document.getElementById('concurrentUser');
+            concurrentUser.innerText = data;
         });
 
 

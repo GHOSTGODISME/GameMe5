@@ -158,8 +158,7 @@ function handleSession(socket) {
     if (!interactiveSessions[sessionCode]) {
       console.log(sessionCode + " - interactive session created");
       initializeInteractiveSessionData(sessionCode);
-      io.to(sessionCode).emit('interactiveSessionCreated', sessionCode);
-
+      broadcastAllIS(sessionCode);
     }
     socket.join(sessionCode);
     console.log(sessionCode + " - interactive session joined");
@@ -233,6 +232,12 @@ function initializeConnection(sessionCode) {
   io.to(sessionCode).emit('session status', sessionStatus);
 }
 
+function broadcastAllIS(sessionCode) {
+  const participants = interactiveSessions[sessionCode].participants;
+
+  io.to(sessionCode).emit('is-participants-length', participants.length);
+}
+
 function handleJoinEvents(socket) {
   socket.on('join', (data) => {
     const { sessionCode, id, username } = data;
@@ -286,14 +291,13 @@ function handleJoinEvents(socket) {
 
       if (!existingUser) {
         participants.push({ id, username });
-
-        io.to(sessionCode).emit('is-user-joined', { id, username });
-        io.to(sessionCode).emit('is-participants-length', participants.length);
+        broadcastAllIS(sessionCode);
       }
 
       console.log("start " + sessionCode);
       console.log(participants);
       console.log("end " + sessionCode);
+      
 
 
     } else {
@@ -370,13 +374,28 @@ function handleLeaderboardEvents(socket) {
 function handleDisconnect(socket) {
   socket.on('disconnect', () => {
     console.log('A user disconnected');
-    // // totalParticipants--;
-    // console.log('Total Participants:', totalParticipants);
-    // participants = participants.filter((participant) => participant.id !== socket.id);
-    // io.emit('participant left', socket.id);
-    // io.emit('update leaderboard', Object.values(leaderboard));
+    // Remove the participant from the list
+    let sessionCodes = Object.keys(sessions);
+    sessionCodes.forEach((sessionCode) => {
+      const participants = sessions[sessionCode].participants;
+      sessions[sessionCode].participants = participants.filter((participant) => participant.id !== socket.id);
+      const leaderboard = sessions[sessionCode].leaderboard;
+      delete leaderboard[socket.id]; // Remove the participant from the leaderboard
+      io.to(sessionCode).emit('participant left', socket.id);
+      io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));
+    });
+
+    // Check if the user is in any interactive session
+    sessionCodes = Object.keys(interactiveSessions);
+    sessionCodes.forEach((sessionCode) => {
+      const participants = interactiveSessions[sessionCode].participants;
+      interactiveSessions[sessionCode].participants = participants.filter((participant) => participant.id !== socket.id);
+      io.to(sessionCode).emit('participant left', socket.id);
+      broadcastAllIS(sessionCode);
+    });
   });
 }
+
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);

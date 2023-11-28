@@ -118,18 +118,17 @@ Route::get('/create-fortune-wheel', [FortuneWheelController::class, 'createFortu
 Route::get('/edit-fortune-wheel/{id}', [FortuneWheelController::class, 'editFortuneWheel'])->name('edit-fortune-wheel');
 Route::delete('/delete-fortune-wheel/{id}', [FortuneWheelController::class, 'deleteFortuneWheel'])->name('delete-fortune-wheel');
 Route::post('/save-fortune-wheel', [FortuneWheelController::class, 'updateFortuneWheel']);
+Route::get('/search-fortune-wheels', [FortuneWheelController::class, 'search'])->name('search-fortune-wheel');
 
 
 //survey related
 Route::get('/survey-index', [SurveyController::class, 'index'])->name('survey-index');
+Route::get('/search-survey', [SurveyController::class, 'search'])->name('search-survey');
 Route::get('/create-survey', [SurveyController::class, 'create'])->name('create-survey');
 Route::get('/edit-survey/{id}', [SurveyController::class, 'edit'])->name('edit-survey');
 Route::delete('/delete-survey/{id}', [SurveyController::class, 'delete'])->name('delete-survey');
-
 Route::post('/save-survey', [SurveyController::class, 'store']);
-
 Route::get('get-survey/{id}', [SurveyController::class, 'getSurvey']);
-
 Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentResponse'])->name('student-view-survey');
 Route::get('/get_survey_response/{id}', [SurveyController::class, 'studentResponse'])->name('get_survey_response');
 Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
@@ -142,34 +141,25 @@ Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz
 Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
 Route::get('/view-quiz/{id}', [QuizController::class, 'view'])->name('view-quiz');
 Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
-
 Route::post('/save-quiz', [QuizController::class, 'store']);
+Route::get('/find-quiz', [QuizController::class, 'search'])->name('find-quiz');
 
 
-// Route::get('/join-quiz-layout', [QuizController::class, 'joinQuiz'])->name('join-quiz');
-Route::get('/join-quiz', [QuizController::class, 'joinQuiz'])->name('join-quiz');
-
-
-Route::get('/quiz/details/{code}', [QuizController::class, 'getQuizDetails']);
-Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
+Route::get('/join-quiz', [QuizSessionController::class, 'joinQuiz'])->name('join-quiz');
+Route::get('/quiz/details/{code}', [QuizSessionController::class, 'getQuizDetails']);
+Route::get('/quiz/questions/{code}', [QuizSessionController::class, 'getQuizQuestions']);
 Route::get('/quiz/settings/{sessionId}', [QuizSessionController::class, 'getQuizSessionSettings']);
-
-
 Route::post('/create-quiz-session', [QuizSessionController::class,'createQuizSession']);
-// Route::get('/quiz-session-lecturer/{sessionCode}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
 Route::get('/quiz-session-lecturer/{sessionId}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
 Route::get('/leaderboard-lecturer', [QuizSessionController::class, 'getLeaderboard'])->name('leaderboard-lecturer');
 Route::put('/end-session/{sessionId}', [QuizSessionController::class, 'endSession'])->name('endSession');
-
-// Route::get('/quiz-summary', [QuizController::class, 'showQuizSummary']);
-Route::get('/quiz-summary/{userId}/{sessionId}/{quizId}', [QuizController::class, 'showQuizSummary']);
-Route::get('/user/{userId}/session/{sessionId}/quiz/{quizId}/details', [QuizController::class, 'fetchData']);
-
-Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizController::class, 'sendEmail']);
-Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizController::class, 'generatePDF'])->name("generate-pdf");
-
+Route::get('/quiz-summary/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'showQuizSummary']);
+Route::get('/user/{userId}/session/{sessionId}/quiz/{quizId}/details', [QuizSessionController::class, 'fetchData']);
+Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'sendEmail']);
+Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'generatePDF'])->name("generate-pdf");
 Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class, 'getQuizQuestionsBySessionId']);
 Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
+
 
 Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
 Route::get('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");

@@ -19,11 +19,15 @@
 
         <div class="search-top-container">
             <div class="search-container">
-                <label>
-                    <span class="fa fa-search"></span>
-                    <input type="search" placeholder="Search">
-                </label>
+                <form action="{{ route('search-fortune-wheel') }}" method="GET">
+                    <label>
+                        <span class="fa fa-search"></span>
+                        <input type="search" placeholder="Search" name="search" value="{{ request()->input('search') }}">
+                    </label>
+                    <button type="submit" class="btn btn-dark"><span class="fa fa-search"></span> Search</button>
+                </form>
             </div>
+            
 
             <a href="{{ route('create-fortune-wheel') }}" class="btn btn-dark add-btn"><i class="fa-solid fa-plus"></i>Add
                 Wheel</a>
