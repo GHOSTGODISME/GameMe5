@@ -31,17 +31,18 @@
     <!-- progress bar -->
     <div class="progress">
         <div id="time-progress" class="progress-bar progress-bar-striped bg-black" role="progressbar"
-            :style="{ width: progressBarValue + '%', transition: 'width 0.5s'}" :aria-valuenow="progressBarValue" aria-valuemin="0"
-            aria-valuemax="100"></div>
+            :style="{ width: progressBarValue + '%', transition: 'width 0.5s' }" :aria-valuenow="progressBarValue"
+            aria-valuemin="0" aria-valuemax="100"></div>
     </div>
 </template>
 
 <script>
+    import {
+        useQuizStore
+    } from "../../store.js";
+
     export default {
         props: {
-            ranking: String,
-            questionsRemaining: String,
-            quizTitle: String,
             timeRemaining: {
                 type: Number,
                 default: 0
@@ -50,16 +51,33 @@
                 type: Number,
                 default: 0
             },
-            score:{
-                type:Number,
-                default: 0
+        },
+        data() {
+            return {
+                quizTitle: '',
+                questionsRemaining: '',
+                score: 0,
+                ranking: ''
+            };
+        },
+        mounted() {
+            this.fetchQuizData();
+        },
+        methods: {
+            fetchQuizData() {
+                const store = useQuizStore();
+                this.quizTitle = store.quizTitle;
+                this.questionsRemaining = `${store.currentQuestionIndex + 1}/${store.quizTotalQuestion}`;
+                this.score = store.totalPoints;
+                this.ranking = store.ranking;
             },
         },
     };
 </script>
 
 <style scoped>
-.progress-bar {
-  transition: width 0.5s ease; /* Use a transition effect on width change */
-}
+    .progress-bar {
+        transition: width 0.5s ease;
+        /* Use a transition effect on width change */
+    }
 </style>

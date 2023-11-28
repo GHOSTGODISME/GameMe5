@@ -9,7 +9,7 @@ class Session extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'lecture_id', 'start_time', 'end_time', 'status'];
+    protected $fillable = ['code', 'lecture_id', 'start_time', 'end_time', 'status','quiz_id'];
 
     public static function retrieveSessionIdFromDatabase($quizCode)
     {
@@ -30,17 +30,17 @@ class Session extends Model
     }
 
 
-    public function joinSessions()
-    {
-        return $this->hasMany(JoinSession::class);
-    }
+    // public function joinSessions()
+    // {
+    //     return $this->hasMany(JoinSession::class);
+    // }
 
     
     public function quizResponses()
     {
         return $this->hasMany(QuizResponse::class);
     }
-    public function sessionSetting()
+    public function quizSessionSetting()
     {
         return $this->hasOne(QuizSessionSetting::class);
     }

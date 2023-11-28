@@ -2,7 +2,7 @@
   <div class="joined-participants-container">
     <p class="joined-participants-text">
       Joined Participants <i class="fa-solid fa-person"></i><i class="fa-solid fa-person-dress"></i>
-      ({{participants.length}})
+      ({{ participants.length }})
     </p>
 
     <transition-group name="fade">

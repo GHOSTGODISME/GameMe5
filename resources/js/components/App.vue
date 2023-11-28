@@ -13,9 +13,6 @@ export default {
       }
     },
     methods: {
-    // goToQuiz() {
-    //   this.$router.push({ name: 'join-quiz' }); // Navigate to the quiz page defined in Vue Router
-    // }
   }
 }
 </script>

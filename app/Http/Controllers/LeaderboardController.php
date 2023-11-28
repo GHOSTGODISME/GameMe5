@@ -29,7 +29,22 @@ class LeaderboardController extends Controller
      */
     public function store(StoreLeaderboardRequest $request)
     {
-        //
+        // Validate incoming request data, adjust as needed
+        $validatedData = $request->validate([
+            'session_id' => 'required',
+            'user_id' => 'required',
+            'username' => 'required',
+            'rank' => 'required',
+            'score' => 'required',
+        ]);
+
+        try {
+            $leaderboard = Leaderboard::create($validatedData);
+
+            return response()->json(['message' => 'Leaderboard details stored successfully', 'data' => $leaderboard], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to store leaderboard details', 'error' => $e->getMessage()], 500);
+        }
     }
 
     /**

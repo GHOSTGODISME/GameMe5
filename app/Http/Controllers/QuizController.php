@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Mail\Mailable;
 use App\Events\ParticipantJoined;
+use App\Jobs\SendQuizSummaryEmail;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizResponse;
@@ -10,10 +12,15 @@ use App\Models\QuizResponseDetails;
 use App\Models\QuizSession;
 use App\Models\Session;
 use App\Models\User;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session as LaravelSession;
+use App\Models\QuizSummaryEmail;
 
 class QuizController extends Controller
 {
@@ -158,6 +165,7 @@ class QuizController extends Controller
         $validatedData = $request->validate([
             'username' => 'required|string|max:255', // Validation rules for username
             'sessionId' => 'required|exists:sessions,id', // Validation for session existence
+            'userId' => 'required'
             // Add more validation rules if needed
         ]);
 
@@ -171,7 +179,7 @@ class QuizController extends Controller
             'incorrect_answer_count' => null,
             'total_points' => null,
             'average_time' => null,
-            'user_id' => null,
+            'user_id' => $validatedData['userId'],
             // Add other fields as needed
         ]);
 
@@ -180,10 +188,16 @@ class QuizController extends Controller
 
     public function getQuizDetails($code)
     {
-        $session = Session::where('code', $code)->with('quiz')->first();
+        
+        $session = Session::where('code', $code)
+            ->with('quiz')
+            ->first();
 
+        Log::info('Request Data: ' . $session);
+        
         if ($session && $session->quiz) {
-            return response()->json(['session_id' => $session->id, 'quiz' => $session->quiz]); // Return quiz details as JSON
+            return response()->json(['session_id' => $session->id, 
+            'quiz' => $session->quiz]); // Return quiz details as JSON
         }
 
         return response()->json(['error' => 'Quiz details not found'], 404);
@@ -256,7 +270,7 @@ class QuizController extends Controller
         } else {
             QuizResponse::create([
                 'session_id' => $sessionId,
-                'username' =>  $request->input('username'),
+                'username' => $request->input('username'),
                 'user_id' => $userId,
                 'accuracy' => $request->input('accuracy'),
                 'correct_answer_count' => $request->input('correct_answer_count'),
@@ -269,10 +283,8 @@ class QuizController extends Controller
         }
     }
 
-
     public function storeFullResponses(Request $request)
     {
-
         Log::info('Request Data: ' . json_encode($request->all()));
 
         $data = $request->all();
@@ -282,14 +294,11 @@ class QuizController extends Controller
             $userId = $data['userId'];
             $responses = $data['responses'];
 
-
             // Find or create a quiz response record based on session and user
             $session = Session::findOrFail($sessionId);
             $quizResponse = $session->quizResponses()->firstOrCreate(['user_id' => $userId]);
 
-
             foreach ($responses as $response) {
-
                 $userResponse = $response['user_response'];
                 $userResponseData = $userResponse ? json_encode($userResponse) : null;
 
@@ -323,24 +332,22 @@ class QuizController extends Controller
     public function fetchData(Request $request, $userId, $sessionId, $quizId)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($quizId);
-        
-            // Fetch the quiz responses for the given session
-            $quizResponses = QuizResponse::where('session_id', $sessionId)->get();
 
-            // Calculate the rank based on total points for the given session
-            $sortedQuizResponses = $quizResponses->sortByDesc('total_points')->values();
-            $rank = $sortedQuizResponses->search(function ($item) use ($userId) {
-                return $item->user_id == $userId;
-            });
+        // Fetch the quiz responses for the given session
+        $quizResponses = QuizResponse::where('session_id', $sessionId)->get();
+
+        // Calculate the rank based on total points for the given session
+        $sortedQuizResponses = $quizResponses->sortByDesc('total_points')->values();
+        $rank = $sortedQuizResponses->search(function ($item) use ($userId) {
+            return $item->user_id == $userId;
+        });
 
         $quizResponse = QuizResponse::with('quizResponseDetails')
             ->where('user_id', $userId)
             ->where('session_id', $sessionId)
             ->first();
-            
 
-            $totalParticipants = QuizResponse::where('session_id', $sessionId)->count();
-
+        $totalParticipants = QuizResponse::where('session_id', $sessionId)->count();
 
         // If the quizResponse is found, return it with associated details
         if ($quizResponse) {
@@ -352,7 +359,6 @@ class QuizController extends Controller
             ]);
         }
 
-        
         // If no data is found, return an empty response or appropriate message
         return response()->json(['message' => 'No data found for the given user and session.'], 404);
     }
@@ -362,4 +368,48 @@ class QuizController extends Controller
         return view('quiz.quiz-summary', compact('userId', 'sessionId', 'quizId'));
     }
 
+    public function generatePDF($userId, $sessionId, $quizId)
+    {
+        $response = $this->fetchData(request(), $userId, $sessionId, $quizId);
+        $data = json_decode($response->getContent());
+
+        $generatedDate = Carbon::now()->format('Y-m-d H:i:s');
+
+        // Create an instance of the Dompdf class
+        $dompdf = new Dompdf();
+
+        // (Optional) Setup the options
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('enable_javascript', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf->setOptions($options);
+
+        // Load HTML content (replace this with your HTML)
+        $html = view('Pdf.quiz-summary-pdf-template', compact('data', 'generatedDate'))->render();
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+
+        // (Optional) Set paper size and orientation
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render PDF (generates the PDF)
+        $dompdf->render();
+
+        // Output PDF
+        return $dompdf->stream("quiz_summary_{$generatedDate}.pdf");
+        // return $dompdf;
+        }
+
+    public function sendEmail($userId, $sessionId, $quizId)
+    {
+        $pdfContent = $this->fetchData(request(), $userId, $sessionId, $quizId);
+        // $user = User::findOrFail($userId);
+    
+        // if ($user) {
+        //     SendQuizSummaryEmail::dispatch($user->email, $pdfContent);
+        // }
+
+        SendQuizSummaryEmail::dispatch("ming.fai2002@gmail.com", $pdfContent);
+    }
 }

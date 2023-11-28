@@ -58,7 +58,7 @@ function addQuestion(type) {
 
     const question = new SurveyQuestion(questionID, type, questionTitle, description);
 
-    question.index = surveyQuestions.length +1;
+    question.index = surveyQuestions.length + 1;
 
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
@@ -74,7 +74,7 @@ function addQuestion(type) {
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
 
-    createQuestionTypeBlock(type, question,inputContainer);
+    createQuestionTypeBlock(type, question, inputContainer);
 
     initializeQuestionOnClick_admin(questionContainer);
 
@@ -86,7 +86,7 @@ function addQuestion(type) {
     surveyQuestions.push(question);
     const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
     formStructureContainer.appendChild(structure);
-    
+
 }
 
 function initializeQuestionOnClick_admin(questionBlock) {
@@ -122,16 +122,16 @@ function initializeQuestionOnClick_admin(questionBlock) {
         questionEditOption(question);
 
         const editBlockSection = document.getElementById("edit_block_section");
-        editBlockSection.style.display='block';
+        editBlockSection.style.display = 'block';
 
         console.log(question.index);
 
         // const questionPropertiesDDL = document.getElementById("question_properties");
         // questionPropertiesDDL.value = question.properties;
-        
+
         // const questionTitleElement = questionBlock.querySelector(".question-title");
         // applyQuestionProperty(question,questionTitleElement );
-    
+
     });
 }
 
@@ -160,7 +160,7 @@ function recreateSameQuestion(question) {
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
 
-        switch (parseInt(question.type)) {
+    switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.TEXT_INPUT:
             inputContainer.innerHTML = `
             <textarea id="${question.id}-userInput" class="question-input form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
@@ -276,7 +276,7 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    
+
     initializeSurveyFields();
 
     //populateSurveyForm();
@@ -290,7 +290,7 @@ $(document).ready(function () {
 
 });
 
-function initializeSurveyFields(){
+function initializeSurveyFields() {
     document.getElementById('survey_title').value = survey.title;
     document.getElementById('survey_description').value = survey.description;
     document.getElementById('visibility').value = survey.visibility;
@@ -311,7 +311,7 @@ function initializeInputListeners() {
     const descriptionCharLimit = 4500;
 
     titleInput.required = true;
-    
+
     titleInput.on('input', function () {
         const inputValue = $(this).val(); // Using jQuery's val() to get the input value
         if (inputValue.length > titleCharLimit) {
@@ -329,12 +329,12 @@ function initializeInputListeners() {
         updateDescription($(this), titleCharLimit); // Pass $(this) to jQuery function for updateTitle
     });
 
-        // Initialize title and character counter
-        updateTitle(titleInput, titleCharLimit);
-        updateDescription(descriptionInput, descriptionCharLimit);
+    // Initialize title and character counter
+    updateTitle(titleInput, titleCharLimit);
+    updateDescription(descriptionInput, descriptionCharLimit);
 }
 
-function initializeFieldsVisibility(){
+function initializeFieldsVisibility() {
     const inputOptionFields = document.getElementById("input_option_container");
     const textFields = document.getElementById("text_edit_container");
     const scaleFields = document.getElementById("scale-container");
@@ -351,7 +351,7 @@ function updateTitle(input, maxCharLimit) {
 
     if (inputValue.length > maxCharLimit - 1) {
         inputValue = inputValue.substring(0, maxCharLimit - 1);
-    input.val(inputValue); // Set the updated value using jQuery's val()
+        input.val(inputValue); // Set the updated value using jQuery's val()
     }
 
     const title = inputValue || 'Your Survey Title';
@@ -367,7 +367,7 @@ function updateDescription(input, maxCharLimit) {
     let inputValue = input.val(); // Use jQuery's val() method to get the value
     if (inputValue.length > maxCharLimit - 1) {
         inputValue = inputValue.substring(0, maxCharLimit - 1);
-    input.val(inputValue); // Set the updated value using jQuery's val()
+        input.val(inputValue); // Set the updated value using jQuery's val()
     }
 
     const description = inputValue || '';
@@ -700,7 +700,7 @@ questionInputOptionInput.addEventListener("input", function () {
     //selectedQuestionContainer.setAttribute("data-survey-question", JSON.stringify(question));
 
 
-        switch (parseInt(question.type)) {
+    switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
             inputOptions.forEach((option, index) => {
                 inputContainer.innerHTML += `
@@ -770,7 +770,7 @@ function updateLabelInput(labelInputContainer, labelType, labelID) {
         const questionInput = selectedQuestionContainer.querySelector(`${labelID}`);
         if (questionInput && labelType === "min") {
             questionInput.textContent = labelInput || question.scale_min_value;
-        }else if (questionInput && labelType === "max") {
+        } else if (questionInput && labelType === "max") {
             questionInput.textContent = labelInput || question.scale_max_value;
         }
 
@@ -880,10 +880,10 @@ deleteQuestionButton.addEventListener('click', function () {
         if (questionIndex !== -1) {
             surveyQuestions.splice(questionIndex, 1);
 
-                        // Update the indices after deletion
-                        surveyQuestions.forEach((question, index) => {
-                            question.index = index + 1; // Update indices based on the new positions
-                        });
+            // Update the indices after deletion
+            surveyQuestions.forEach((question, index) => {
+                question.index = index + 1; // Update indices based on the new positions
+            });
         }
         console.log(surveyQuestions);
 
@@ -908,7 +908,7 @@ duplicateQuestionButton.addEventListener('click', function () {
         const originalIndex = surveyQuestions.findIndex(q => q.id.toString() === question.id);
         surveyQuestions.splice(originalIndex + 1, 0, clonedQuestion);
 
-        
+
         //console.log(surveyQuestions);
 
         // Clone the selected question container
@@ -937,40 +937,40 @@ function saveSurveyForm() {
     survey.title = document.getElementById('survey_title').value;
     survey.description = document.getElementById('survey_description').value;
     survey.visibility = document.getElementById("visibility").value;
-    
+
     survey.questions = surveyQuestions;
 
     const validSurvey = validateDetails(survey);
 
     console.log(survey);
     // Make an AJAX POST request to the backend to save the form data
-    if(validSurvey){
+    if (validSurvey) {
         $.ajax({
             url: '/save-survey',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(survey),
-            success: function(response) {
+            success: function (response) {
                 // console.log('Form saved successfully:', response);
                 // history.back();
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error saving form:', error);
                 console.log('Response Text:', xhr.responseText);
             }
-            
+
         });
     }
 }
 
-function validateDetails(survey){
-    if(!survey.title.trim()){
+function validateDetails(survey) {
+    if (!survey.title.trim()) {
         alert("Please enter a title for your survey");
         return false;
     }
-    if(survey.visibility === null){
+    if (survey.visibility === null) {
         alert("Please select the visibility of your survey");
-        return false;      
+        return false;
     }
 
     if (survey.questions.length === 0) {
@@ -980,15 +980,15 @@ function validateDetails(survey){
     return true;
 }
 // Event listener for the "Save Form" button click
-document.getElementById('save-survey-form').addEventListener('click', function() {
+document.getElementById('save-survey-form').addEventListener('click', function () {
     saveSurveyForm(); // Call the function to save the survey form data
 });
 
-function initializeSurveySubmitBtn_admin(){
+function initializeSurveySubmitBtn_admin() {
     $('#survey-form').onclick = null;
     $('#survey-form').on('submit', function (event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
-       validateSurvey();
+        validateSurvey();
     });
 }

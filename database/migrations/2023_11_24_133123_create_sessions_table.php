@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->nullable();
-            $table->unsignedBigInteger('lecture_id')->nullable();
+            $table->string('code')->unique()->nullable();
             $table->dateTime('start_time')->nullable();
             $table->dateTime('end_time')->nullable()->default(null);
             $table->string('status')->default('active');
             $table->timestamps();
 
-            $table->unsignedBigInteger('quiz_id')->nullable(); 
+            $table->unsignedBigInteger('lecture_id')->nullable();
+            // $table->foreign('lecture_id')->constrainted()->references('id')->on('lecturees')->onDelete('cascade');
+            $table->unsignedBigInteger('quiz_id')->required(); 
             $table->foreign('quiz_id')->constrainted()->references('id')->on('quizzes')->onDelete('cascade');
 
         });

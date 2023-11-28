@@ -43,8 +43,6 @@
             </div>
         </div>
 
-        <button @click="startQuiz">Start Quiz</button>
-
         <JoinQuizJoinedParticipants :participants="participantList" />
     </div>
 </template>
@@ -52,102 +50,101 @@
 <script>
 import { useQuizStore } from "../../../store.js";
 import QuizHeader from "../quiz-header.vue";
-//   import JoinQuizUsername from '../join-quiz-username.vue';
 import JoinQuizJoinedParticipants from "../join-quiz-joined-participants.vue";
 import axios from "axios";
 
 export default {
-    components: {
-        QuizHeader,
-        //JoinQuizUsername,
-        JoinQuizJoinedParticipants,
-    },
-    data() {
-        return {
-            title: "test",
-            username: "",
-            joinedQuiz: false,
-            emptyUserNameMsg: false,
-            participantList: [],
-            socket: null,
-        };
-    },
-    created() {
-        const store = useQuizStore(); // Create store instance
-        const code = this.$route.query.code;
-        store.setRandomUserId();
-        store.setSessionCode(code);
-        store.fetchQuizDetails().then(() => {
-            this.title = store.quizTitle;
-            console.log("store.quizTitlestore.quizTitle " + store.quizTitle);
-        });
-    },
-    mounted() {
-    // Create a socket instance when the component is mounted
-    this.socket = io("http://localhost:3000");
+  components: {
+    QuizHeader,
+    JoinQuizJoinedParticipants,
+  },
+  data() {
+    return {
+      title: "test",
+      username: "",
+      joinedQuiz: false,
+      emptyUserNameMsg: false,
+      participantList: [],
+      socket: null,
+    };
+  },
+  created() {
+    // Fetch quiz details and set necessary data
+    const store = useQuizStore();
+    const code = this.$route.query.code;
 
-    // Listen for 'initial participants' event from the server
-    this.socket.on("initial participants", (participants) => {
-      this.participantList = participants.map(participant => participant.username);
+    store.setRandomUserId();
+    store.setSessionCode(code);
+
+    store.fetchQuizDetails().then(() => {
+      this.title = store.quizTitle;
     });
-
-    // Listen for 'participant joined' event from the server
-    this.socket.on("participant joined", ({ username }) => {
-      this.participantList.push(username);
-    });
-
-    // Listen for 'quizStartSignal' event from the server
-    this.socket.on("quizStartSignal", () => {
-      // Navigate to the "/quiz-loading" route when the quiz starts
-      this.$router.push("/quiz-loading");
-    });
+  },
+  mounted() {
+    this.initializeSocket();
+  },
+  beforeDestroy() {
+    // Ensure to disconnect the socket instance when the component is destroyed
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+  },
+  computed: {
+    inputStyle() {
+      // Compute input field style based on error condition
+      return this.emptyUserNameMsg
+        ? {
+            border: "3px solid #CA0000",
+            background: "#FFEDED",
+          }
+        : {};
     },
-    computed: {
-        inputStyle() {
-            // Compute input field style based on error condition
-            return this.emptyUserNameMsg
-                ? {
-                      border: "3px solid #CA0000",
-                      background: "#FFEDED",
-                  }
-                : {};
-        },
+  },
+  methods: {
+    initializeSocket() {
+      this.socket = io("http://localhost:3000");
+
+      this.socket.on("initial participants", (participants) => {
+        this.participantList = participants.map(participant => participant.username);
+      });
+
+      this.socket.on("participant joined", ({ username }) => {
+        this.participantList.push(username);
+      });
+
+      this.socket.on('session status', (sessionStatus) => {
+        if (this.joinedQuiz) {
+          this.$router.push("/quiz/quiz-loading");
+        } else if (sessionStatus === "running" && this.joinedQuiz) {
+          this.$router.push("/quiz/quiz-loading");
+        }else if(sessionStatus === "ended"){
+          alert("The session has ended. You will be redirected to the home page.");
+          this.$router.push("/");
+        }
+      });
     },
-    methods: {
-        startQuiz() {
-            // this.$router.push('/quiz-page-layout');
-            this.socket.emit("startQuiz");
+    validateUsername() {
+      if (this.username.trim() === "") {
+        this.emptyUserNameMsg = true;
+      } else {
+        this.emptyUserNameMsg = false;
+        this.joinedQuiz = true;
 
-            this.$router.push("/quiz-loading");
-        },
-        validateUsername() {
-            if (this.username.trim() === "") {
-                this.emptyUserNameMsg = true;
-            } else {
-                this.emptyUserNameMsg = false;
-                this.joinedQuiz = true; // Set the flag to indicate user has joined the quiz
+        const store = useQuizStore();
+        store.setUsername(this.username);
 
-                const store = useQuizStore();
-                store.setUsername(this.username);
-                console.log("store.username " + store.username);
-
-                const username = store.username;
-                axios
-                    .post("/api/register-name", { "username": username, "sessionId": store.sessionId  })
-                    .then((response) => {
-                        console.log(
-                            "Successfully joined the quiz:",
-                            response.data
-                        );
-                        this.socket.emit('add participant', { id: store.userId, username: username });
-
-                    })
-                    .catch((error) => {
-                        console.error("Error joining the quiz:", error);
-                        // Handle the error scenario if needed
-                    });
-            }
-        },
+        const username = store.username;
+        axios.post("/api/register-name", { "username": username, "sessionId": store.sessionId, "userId": store.userId })
+          .then((response) => {
+            this.socket.emit('join', { sessionCode: store.sessionCode, id: store.userId, username: username });
+            this.socket.emit('get status', store.sessionCode);          
+          })
+          .catch((error) => {
+            console.error("Error joining the quiz:", error);
+          });
+      }
     },
+  },
 };
 </script>
+

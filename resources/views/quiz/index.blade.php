@@ -18,30 +18,7 @@
             margin-top: 20px;
         }
 
-        .search-container label {
-            display: grid;
-            grid-template: 1fr / auto 1fr;
-            gap: 12px;
-            border: 1px solid #CFD5DB;
-            border-radius: 5px;
-            background: #fafafa;
-            padding: 12px;
-            color: #6C757D;
-            cursor: text;
-            align-items: center;
-            width: 250px;
-
-        }
-
-        .search-container label:focus-within {
-            border: 1px solid #000;
-        }
-
-        .search-container label>input {
-            outline: none;
-            border: none;
-            background: transparent;
-        }
+         
 
         .add-btn {
             display: flex;

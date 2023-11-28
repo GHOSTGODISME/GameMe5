@@ -6,6 +6,7 @@ use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InteractiveSessionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\QuizController;
@@ -33,6 +34,7 @@ Route::get('/', function () {
     // return view('chat');
     // return view('quiz.spa');
 });
+
 
 
 // Route::get('/{pathMatch}', function(){
@@ -135,11 +137,6 @@ Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->n
 
 
 // quiz question related
-// Route::resource('questions', QuestionController::class);
-// Route::post('/save-question', [QuestionController::class, 'saveQuestion']);
-// Route::get('/quiz-edit', [QuestionController::class, 'showAllQuestion'])->name('quiz-edit');
-// Route::post('/save-quiz', [QuizController::class, 'storeQuiz']);
-
 Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');
 Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz');
 Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
@@ -149,18 +146,40 @@ Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('del
 Route::post('/save-quiz', [QuizController::class, 'store']);
 
 
-Route::get('/join-quiz-layout', [QuizController::class, 'joinQuiz'])->name('join-quiz');
+// Route::get('/join-quiz-layout', [QuizController::class, 'joinQuiz'])->name('join-quiz');
+Route::get('/join-quiz', [QuizController::class, 'joinQuiz'])->name('join-quiz');
 
 
 Route::get('/quiz/details/{code}', [QuizController::class, 'getQuizDetails']);
 Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
+Route::get('/quiz/settings/{sessionId}', [QuizSessionController::class, 'getQuizSessionSettings']);
 
 
 Route::post('/create-quiz-session', [QuizSessionController::class,'createQuizSession']);
-Route::get('/quiz-session-lecturer/{sessionCode}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
-Route::get('/quiz-session-lecturer', [QuizSessionController::class, 'startSession1'])->name('quiz-session-lecturer1');
+// Route::get('/quiz-session-lecturer/{sessionCode}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
+Route::get('/quiz-session-lecturer/{sessionId}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
 Route::get('/leaderboard-lecturer', [QuizSessionController::class, 'getLeaderboard'])->name('leaderboard-lecturer');
+Route::put('/end-session/{sessionId}', [QuizSessionController::class, 'endSession'])->name('endSession');
 
 // Route::get('/quiz-summary', [QuizController::class, 'showQuizSummary']);
 Route::get('/quiz-summary/{userId}/{sessionId}/{quizId}', [QuizController::class, 'showQuizSummary']);
 Route::get('/user/{userId}/session/{sessionId}/quiz/{quizId}/details', [QuizController::class, 'fetchData']);
+
+Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizController::class, 'sendEmail']);
+Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizController::class, 'generatePDF'])->name("generate-pdf");
+
+Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class, 'getQuizQuestionsBySessionId']);
+Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
+
+Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
+Route::get('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
+Route::get('/join-interactive-session', [InteractiveSessionController::class, 'joinInteractiveSession'])->name('join-interactive-session');
+Route::put('/end-interactive-session/{sessionId}', [InteractiveSessionController::class, 'endInteractiveSession']);
+
+// Serve Vue app's entry point
+Route::get('/quiz/{any}', function () {
+    return view('quiz.spa');
+})->where('any', '.*');
+Route::get('/quiz/', function () {
+    return view('quiz.spa');
+});

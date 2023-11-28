@@ -32,9 +32,9 @@
             justify-content: space-evenly;
             overflow: auto;
             max-height: 400px;
-           
-      
-            border: 4px solid black; 
+
+
+            border: 4px solid black;
             background: #226755;
             border-radius: 10px;
         }
@@ -96,14 +96,14 @@
             color: black;
         }
 
-        
-    .header_container {
-        width: 100%;
-        height: 100px;
-        display: flex;
-        justify-content: space-between;
-        background: linear-gradient(to right, #13C1B7, #87DFA8);
-    }
+
+        .header_container {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, #13C1B7, #87DFA8);
+        }
     </style>
 </head>
 
@@ -114,17 +114,13 @@
             <div class="joined-participants-container">
                 <p class="joined-participants-text">Joined Participants <i class="fa-solid fa-person"></i><i
                         class="fa-solid fa-person-dress"></i>
-                    <span>(8)</span>
+                    <span id="participantsCount">0</span>
                 </p>
 
-                <div class="joined-participants-people-container">
-                    <span class="joined-participants-people">Ghostgod</span>
-                    <span class="joined-participants-people">husky</span>
-                    <span class="joined-participants-people">Ghostgod</span>
-                    <span class="joined-participants-people">husky</span>
+                <div class="joined-participants-people-container" id="participantsList">
                 </div>
 
-                <div class="d-none" style="text-align: center; margin-top: 50px;">
+                <div class="d-none" style="text-align: center; margin-top: 50px;" id="waitingMessage">
                     Waiting for participants.......
                 </div>
             </div>
@@ -141,32 +137,39 @@
                         <div class="details-container">
 
                             <div>1. Access the link below</div>
-                            <div>
-                                <span>joinquiz.link</span>
-                                <i class="fa fa-copy"></i>
+                            <div class="copy-quiz-link" style="cursor: pointer;">
+                                <span id="quizLinkText">localhost:8000</span>
+                                <span id="quizLinkIcon" class="fas fa-copy"></span>
+                            </div>
+                        </div>
+                        
+
+                        <div class="details-container">
+                            <div>2. Enter the code</div>
+                            <div class="copy-session-code" style="cursor: pointer;">
+                                <span id="sessionCodeText"></span>
+                                <span id="sessionCodeIcon" class="fas fa-copy"></span>
                             </div>
                         </div>
 
                         <div class="details-container">
-                            <div>2. Enter the code</div>
-                            <div>
-                                <span id="sessionCode">{{ $sessionCode }}</span>
-                                <i class="fa fa-copy copy-session-code" data-clipboard-target="#sessionCode"></i>
-                            </div>                            
+                            <div>Or scan the code below!!!</div>
+                            <div id="qrCode">{{$qrCodeContent}}</div>
                         </div>
                     </div>
 
 
                     <div class="btn-container">
-                        <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a>
+                        {{-- <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a> --}}
+                        <a onclick="startQuiz()" class="btn">Start</a>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-</script>
+    <script></script>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -174,29 +177,107 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
-        </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        new ClipboardJS('.copy-session-code');
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+        integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous">
+    </script>
 
-        // Display a message when the text is copied
-        document.querySelector('.copy-session-code').addEventListener('click', function() {
-            var sessionCodeElement = document.getElementById('sessionCode');
-            var sessionCode = sessionCodeElement.innerText;
+    <script>
+        socket = io("http://localhost:3000");
+        const sessionCode = sessionStorage.getItem('sessionCode');
+        socket.emit('joinSession', sessionCode.toString());
 
-            var dummyElement = document.createElement('textarea');
-            dummyElement.value = sessionCode;
-            document.body.appendChild(dummyElement);
-            dummyElement.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummyElement);
+        document.addEventListener('DOMContentLoaded', function() {
+            const sessionCodeElement = document.getElementById('sessionCodeText');
+            const sessionCodeIcon = document.getElementById('sessionCodeIcon');
+            const quizLinkElement = document.getElementById('quizLinkText');
+            const quizLinkIcon = document.getElementById('quizLinkIcon');
+            const sessionCode = sessionStorage.getItem('sessionCode');
 
-            alert('Code copied to clipboard!');
+            if (sessionCodeElement) {
+                sessionCodeElement.textContent = sessionCode || 'N/A';
+            }
+
+            quizLinkElement.textContent = `localhost:8000/join-quiz?code=${sessionCode}`
+
+            function handleCopyClick(element, iconElement) {
+                const text = element.innerText;
+                const dummyElement = document.createElement('textarea');
+                dummyElement.value = text;
+                document.body.appendChild(dummyElement);
+                dummyElement.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummyElement);
+                iconElement.className = 'fas fa-check';
+                setTimeout(() => {
+                    iconElement.className = 'fas fa-copy';
+                    iconElement.style.color = '';
+                    element.innerText = text;
+                }, 2000);
+            }
+
+            document.querySelector('.copy-session-code').addEventListener('click', function() {
+                handleCopyClick(sessionCodeElement, sessionCodeIcon);
+            });
+
+            document.querySelector('.copy-quiz-link').addEventListener('click', function() {
+                handleCopyClick(quizLinkElement, quizLinkIcon);
+            });
+
+            qrInitialize(sessionCode);
         });
-    });
-</script>
+
+
+        function startQuiz() {
+            socket.emit("startSession", sessionCode.toString());
+            window.location.href = '{{ route('leaderboard-lecturer') }}';
+            // $router.push("/quiz/quiz-loading");
+        }
+
+        function updateParticipants(participants) {
+            let participantsContainer = document.getElementById('participantsList');
+            let participantsCount = document.getElementById('participantsCount');
+            let waitingMessage = document.getElementById('waitingMessage');
+
+            if (participants.length > 0) {
+                participantsCount.textContent = participants.length;
+                waitingMessage.classList.add('d-none');
+
+                participantsContainer.innerHTML = '';
+                participants.forEach(function(participant) {
+                    let span = document.createElement('span');
+                    span.className = 'joined-participants-people';
+                    span.textContent = participant;
+                    participantsContainer.appendChild(span);
+                });
+            } else {
+                participantsContainer.innerHTML = '';
+                participantsCount.textContent = '0';
+                waitingMessage.classList.remove('d-none');
+            }
+        }
+
+        let participants = [];
+
+        socket.on("initial participants", (initialParticipants) => {
+            participants = initialParticipants.map(participant => participant.username);
+            updateParticipants(participants);
+        });
+
+        socket.on("participant joined", ({
+            username
+        }) => {
+            participants.push(username);
+            updateParticipants(participants);
+        });
+
+
+        window.addEventListener('beforeunload', function(event) {
+            socket.close();
+        });
+    </script>
 
 </body>
 

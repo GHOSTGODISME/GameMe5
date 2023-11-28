@@ -5,7 +5,7 @@
     </transition>
   </div>
 </template>
-  
+
 <script>
 import { useQuizStore } from '../../store.js';
 
@@ -13,60 +13,63 @@ export default {
   data() {
     return {
       showText: true,
-      countdownArray: [3, 2, 1, 'Start'], // Array to hold countdown values
-      currentIndex: 0, // Index of the current countdown value
-      countdown: '', // Current countdown value to be displayed
+      countdownArray: [3, 2, 1, 'Start'],
+      currentIndex: 0,
+      countdown: '',
     };
   },
   mounted() {
     this.startCountdown();
   },
   created() {
-    const store = useQuizStore(); // Create store instance
-    store.fetchQuizQuestions().then(() => {
-      console.log(store.questions);
-    });
+    this.fetchQuizSettings();
+    this.fetchQuizQuestions();
   },
   methods: {
-    async startCountdown() {
+    async fetchQuizSettings(){
+      const store = useQuizStore();
+      await store.fetchSessionSettings();
+    },
+    async fetchQuizQuestions() {
+      const store = useQuizStore();
+      await store.fetchQuizQuestions();
+      console.log(store.questions);
+    },
+    startCountdown() {
       const interval = setInterval(() => {
         if (this.currentIndex < this.countdownArray.length) {
           this.countdown = this.countdownArray[this.currentIndex];
           this.currentIndex++;
         } else {
-          this.showText = false; 
+          this.finishCountdown();
           clearInterval(interval);
-          console.log('Countdown Finished'); 
-          console.log('Redirecting to Quiz Page'); 
-      this.$router.push('/quiz-page-layout'); 
-
         }
-      }, 1500); // Change the interval to 1000ms for a one-second countdown
+      }, 1500); 
+    },
+    finishCountdown() {
+      this.showText = false;
+      console.log('Countdown Finished');
+      console.log('Redirecting to Quiz Page');
+      this.$router.push('/quiz/quiz-page-layout');
     },
   },
 };
 </script>
-  
-  
+
 <style scoped>
 #loading-body {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* font-size: 200px; */
   font-size: 16vw;
   font-weight: bold;
   color: white;
   text-align: center;
-  /* transition: background-color 1s ease; */
   animation: changeBackgroundColor 3s infinite;
-  /* Duration can be adjusted */
-
   width: 100%;
   height: 100%;
 }
 
-/* Animation for scaleing text */
 .scale-enter-active {
   animation: scale 1s ease;
 }
@@ -80,7 +83,6 @@ export default {
     transform: scale(1);
   }
 }
-
 
 @keyframes changeBackgroundColor {
   0% {
@@ -100,4 +102,3 @@ export default {
   }
 }
 </style>
-  

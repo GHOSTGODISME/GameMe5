@@ -345,7 +345,7 @@
                         <div>Question and Answer</div>
                         <hr>
                         <div class="live-session-setting-style">
-                            <label class="form-check-label" for="shuffleSwitch">Shuffle Questions & Options</label>
+                            <label class="form-check-label" for="shuffleSwitch">Shuffle Options</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="shuffleSwitch">
                             </div>
@@ -384,11 +384,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
+        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+        integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous">
+</script>
 
     <script>
         class QuizSessionSetting {
             constructor() {
-                this.shuffleQuestion = false;
+                this.shuffleOptions = false;
                 this.showLeaderboard = true;
             }
         }
@@ -403,9 +406,9 @@
             $('#continueBtn').click(function() {
                 // Get settings from the checkboxes
                 const quizSessionSetting = new QuizSessionSetting();
-                quizSessionSetting.shuffleOption = $('#shuffleSwitch').is(':checked');
-                QuizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked');
-
+                quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked')? 1 : 0;
+                quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked')? 1 : 0;
+                console.log(quizSessionSetting);
                 const quizId = quizFromDB.id;
                 // AJAX request to store the new quiz session
                 $.ajax({
@@ -422,10 +425,20 @@
                         // Assuming you have the URL stored in a variable called 'redirectUrl'
                         console.log(response.sessionCode);
                         if (response.sessionCode) {
+                            sessionStorage.setItem("sessionId", response.sessionId);
+                            sessionStorage.setItem("sessionCode", response.sessionCode);
                             // Redirect to the specified URL with the sessionCode as a query parameter
-                            window.location.href =
-                                "{{ route('quiz-session-lecturer', ['sessionCode' => ':sessionCode']) }}"
-                                .replace(':sessionCode', response.sessionCode);
+                            
+                            socket = io("http://localhost:3000");
+                            socket.emit("createSession", response.sessionCode.toString());
+
+                            socket.on('session created',()=>{
+                                window.location.href =
+                                "{{ route('quiz-session-lecturer', ['sessionId' => ':sessionId']) }}"
+                                .replace(':sessionId', response.sessionId);
+                                socket.close();
+                            })
+
                         } else {
                             // Handle the case when sessionCode is missing or invalid
                             console.error('Session code is missing or invalid.');

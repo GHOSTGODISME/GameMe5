@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('leaderboards', function (Blueprint $table) {
             $table->id();
+            $table->string('username');
             $table->integer('rank');
             $table->integer('score');
             $table->timestamps();

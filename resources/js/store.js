@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { createPinia } from 'pinia';
 
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
@@ -11,7 +10,6 @@ export const useQuizStore = defineStore('quiz', {
     questionTimes: {},
     questionPoints: {},
     navigationHistory: [],
-    // questionPoints: 0,
     
 
     userRank: null,
@@ -33,6 +31,9 @@ export const useQuizStore = defineStore('quiz', {
     correctAnswersCount: 0, 
     incorrectAnswersCount: 0, 
     averageTime:0,
+    
+    showLeaderboardFlag: 0,
+    shuffleOptionFlag: 0,
   }),
   actions: {
     setCurrentQuestionIndex(index) {
@@ -64,13 +65,22 @@ export const useQuizStore = defineStore('quiz', {
         [questionId]: timeTaken,
       };
     },
-    storeQuestionPoints(questionId) {
+    storeQuestionPoints(questionId, answeredCorrectly) {
       const question = this.questions.find(question => question.id === questionId);
+      
       this.questionPoints = {
         ...this.questionPoints,
         [questionId]: question.points,
       };
-      this.setTotalQuizPoints(this.totalPoints + question.points);
+
+
+      if(answeredCorrectly){
+      const points = parseInt(question.points);
+    const totalPoints = parseInt(this.totalPoints);
+    const sum = totalPoints + points;
+    
+      this.setTotalPoints(sum);
+    }
     },
     setQuizState(newState) {
       this.quizState = newState;
@@ -87,8 +97,8 @@ export const useQuizStore = defineStore('quiz', {
     setSessionCode(sessionCode) {
       this.sessionCode = sessionCode;
     },
-    setTotalQuizPoints(totalPoints) {
-      this.totalQuizPoints = totalPoints;
+    setTotalPoints(totalPoints) {
+      this.totalPoints = totalPoints;
     },
     setQuestionPoints(state, { questionId, points }) {
       this.questionPoints[questionId] = points;
@@ -152,21 +162,27 @@ export const useQuizStore = defineStore('quiz', {
         this.userRank = null;
       }
     },
-    // async fetchQuizDetails(code) {
-    //   try {
-    //     const response = await fetch(`/quiz/details/${code}`);
-    //     const details = await response.json();
-    //     this.setQuizTitle(details.title);
-    //     console.log("this.userTitle " + this.userTitle);
-    //   } catch (error) {
-    //     console.error('Failed to fetch quiz details:', error);
-    //   }
-    // },
+    async fetchSessionSettings(){
+      try {
+        const response = await fetch(`/quiz/settings/${this.sessionId}`);
+        console.log(response);
+        const details = await response.json();
+        console.log(details);
+        this.showLeaderboardFlag = details.sessionSettings.show_leaderboard_flag;
+        this.shuffleOptionFlag = details.sessionSettings.shuffle_option_flag;
+        console.log("this.showLeaderboardFlag " + this.showLeaderboardFlag);
+        console.log("this.shuffleOptionFlag " + this.shuffleOptionFlag);
+      } catch (error) {
+        console.error('Failed to fetch session settings:', error);
+      }
+    },
     async fetchQuizDetails() {
+      console.log("trigger");
       try {
         const response = await fetch(`/quiz/details/${this.sessionCode}`);
+        console.log(response);
         const details = await response.json();
-    
+        console.log(details);
         console.log('Fetched details:', details);
     
         if (details && details.quiz.title) {
@@ -182,7 +198,6 @@ export const useQuizStore = defineStore('quiz', {
         console.error('Failed to fetch quiz details:', error);
       }
     },
-    
     async fetchQuizQuestions() {
       try {
         const response = await fetch(`/quiz/questions/${this.quizId}`);
@@ -190,6 +205,8 @@ export const useQuizStore = defineStore('quiz', {
         this.setQuestions(questions);
         this.quizTotalQuestion = questions.length;
         console.log('Fetched questions:', this.questions);
+
+
             } catch (error) {
               console.error('Failed to fetch questions:', error);
                   }
@@ -251,6 +268,15 @@ export const useQuizStore = defineStore('quiz', {
       const randomUserId = Math.floor(Math.random() * 1000) + 1;
       this.userId = randomUserId;
     },
+    resetStore(){
+      this.$reset();
+    },
+    shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+      }
+  },
     
   },
   getters: {

@@ -22,7 +22,7 @@ class Quiz extends Model
         return $this->hasMany(QuizQuestion::class);
     }
 
-    public function quizSessions()
+    public function sessions()
     {
         return $this->hasMany(Session::class);
     }

@@ -254,7 +254,7 @@
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;align-items: center;">
+                {{-- <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;align-items: center;">
                     <div class="submit-button-container">
                         <button id="play-again-button" class="btn btn-primary button-style">Play again</button>
                     </div>
@@ -262,10 +262,24 @@
                     <div class="submit-button-container">
                         <button id="find-new-quiz-button" class="btn btn-primary button-style">Find new quiz</button>
                     </div>
+                </div> --}}
+                
+                <div>
+                    <hr>
+                    <p>This summary has already been sent to your email. Please Wait for a moment.</p>
+                    <a href="{{ route('generate-pdf', ['userId' => $userId, 'sessionId' => $sessionId, 'quizId' => $quizId]) }}" class="btn btn-primary">
+                        Haven't received? Download it now</a>
+                        <br>
+                        <hr>
                 </div>
 
+                <div>
+                    <a href="/" class="btn btn-primary">Back to Homepage</a>
+                    <hr>
+                </div>
+                
             </div>
-
+            
             <div id="review-question-container">
 
                 <p class="review-question-title">Review Questions</p>
@@ -296,9 +310,6 @@
         let userResponses = {};
         let correctness = {};
 
-        console.log('userResponses:', userResponses);
-        console.log('correctness:', correctness);
-
         async function fetchQuizDetails(userId, sessionId, quizId) {
             try {
                 const response = await fetch(`/user/${userId}/session/${sessionId}/quiz/${quizId}/details`);
@@ -320,12 +331,8 @@
             const sessionId = @json($sessionId);
             const quizId = @json($quizId);
             const quizDetails = await fetchQuizDetails(userId, sessionId, quizId);
-            console.log(userId);
-            console.log(sessionId);
-            console.log(quizId);
-            console.log(quizDetails);
+
             if (quizDetails) {
-                // Extract needed data from the fetched quizDetails object
                 const {
                     quiz,
                     quizResponse,
@@ -333,12 +340,8 @@
                     rank
                 } = quizDetails;
 
-                console.log(quiz);
-                console.log(quizResponse.quiz_response_details);
 
                 userResponseDetails = quizResponse.quiz_response_details;
-                // Update the summary with the fetched data
-                // For example:
                 const {
                     accuracy,
                     correct_answer_count,
@@ -346,7 +349,7 @@
                     total_points,
                     average_time
                 } = quizResponse;
-
+                
                 document.getElementById('quiz-username').textContent = quizResponse.username;
                 document.getElementById('quiz-rank').textContent = `${rank}/${totalParticipants}`;
                 document.getElementById('quiz-score').textContent = total_points;
@@ -366,9 +369,6 @@
                     userResponses[question_id] = user_response;
                     correctness[question_id] = isCorrect;
                 });
-                console.log("!");
-                console.log(userResponses);
-                console.log(correctness);
                 
                 generateQuizSummaryDetails();
             } else {
@@ -377,8 +377,6 @@
 
             
         }
-
-
 
         function generateInputHTML(singleAnswerFlag, option, isChecked, isCorrect) {
             const inputType = singleAnswerFlag === 1 ? "circle" : "square";
@@ -404,8 +402,6 @@
 
         function generateQuizSummaryDetails() {
             const quizContainer = $("#quiz-container");
-
-            console.log(questionsData);
             questionsData.forEach((question, index) => {
                 const {
                     id,

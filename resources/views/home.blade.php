@@ -14,13 +14,19 @@
     {{-- <a href="{{ route('quiz-edit') }}" class="btn btn-primary">quiz-edit</a> --}}
     <a href="{{ route('quiz-index') }}" class="btn btn-primary">quiz-index</a>
     <a href="{{ route('survey-index') }}" class="btn btn-primary">surveys</a>
+    <a href="{{ route('survey-index') }}" class="btn btn-primary">surveys</a>
+    <a href="{{ route('interactive-session-index') }}" class="btn btn-primary">interactivesession</a>
 
     <form method="GET" action="{{ route('join-quiz') }}">
         <input type="text" name="code">
         <button type="submit">Confirm</button>
     </form>
 
-    @vite('resources/js/app.js')
+    <form method="GET" action="{{ route('join-interactive-session') }}">
+        <input type="text" name="code">
+        <button type="submit">Confirm</button>
+    </form>
+
 </body>
 <script>
     // Check for error message in session
