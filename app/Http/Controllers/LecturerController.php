@@ -27,7 +27,7 @@ class LecturerController extends Controller{
         // Step 2: Check if the user has the account type set to "lecturer"
         if ($user && $user->accountType == 'lecturer') {
             // Step 3: Retrieve additional details from the lecturer table
-            $lecturer = Lecturer::where('id', $user->id)->first();
+            $lecturer = Lecturer::where('iduser', $user->id)->first();
     
             // Check if the lecturer is found
             if ($lecturer) {
@@ -47,10 +47,14 @@ class LecturerController extends Controller{
     $email = 'wongtian628@gmail.com';
     $user = User::where('email', $email)->first();
     
+    $request->validate([
+        'new_position' => 'required',
+    ]);
+
     $newPosition = $request->input('new_position');
     
     // Find the lecturer by user_id
-    $lecturer = Lecturer::where(['id' => $user->id])->first();
+    $lecturer = Lecturer::where(['iduser' => $user->id])->first();
     
     // Update the position
     $lecturer->position = $newPosition;

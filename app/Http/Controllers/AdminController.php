@@ -14,15 +14,15 @@ class AdminController extends Controller{
 
     function admin_stud(Request $request){
           // Retrieve all students or filter by name if a search parameter is provided
-    $query = User::where('accountType', 'student');
+        $query = User::where('accountType', 'student');
 
-    if ($request->has('search')) {
-        $searchTerm = $request->input('search');
-        $query->where('name', 'like', '%' . $searchTerm . '%');
-    }
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
 
-    $students = $query->get();
-        return view('Admin/admin_stud', ['students' => $students]);
+        $students = $query->get();
+            return view('Admin/admin_stud', ['students' => $students]);
     }
 
     //for staff
