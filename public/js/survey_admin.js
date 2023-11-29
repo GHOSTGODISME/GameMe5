@@ -606,8 +606,12 @@ function questionEditOption(question) {
 
         console.log("= question.scale_min_value " + question.scale_min_value);
         console.log("= question.scale_miax_value " + question.scale_max_value);
-        minLabel.textContent = question.scale_min_value;
-        maxLabel.textContent = question.scale_max_value;
+
+        console.log("question.scale_min_label " + question.scale_min_label);
+        console.log("question.scale_max_label " + question.scale_max_label);
+
+        minLabel.textContent = question.scale_min_label.trim() || question.scale_min_value;
+        maxLabel.textContent = question.scale_max_label.trim() || question.scale_max_value;
 
         scaleMinNum.value = question.scale_min_value;
         scaleMaxNum.value = question.scale_max_value;
@@ -622,83 +626,28 @@ function questionEditOption(question) {
 }
 
 
-// function createInputOptionDiv() {
-//     const inputOptionDiv = document.createElement("div");
-//     inputOptionDiv.className = "input-option";
 
-//     const inputOptionField = document.createElement("input");
-//     inputOptionField.type = "text";
-//     inputOptionField.placeholder = "Click to add input option";
-//     inputOptionField.addEventListener("click", () => {
-//         addInputOption(inputOptionDiv);
-//     });
-
-//     inputOptionDiv.appendChild(inputOptionField);
-
-//     return inputOptionDiv;
-// }
-
-// function addInputOption(inputOptionDiv) {
-//     if (!inputOptionDiv.classList.contains("added")) {
-//         inputOptionDiv.classList.add("added");
-//         const removeOptionButton = document.createElement("button");
-//         removeOptionButton.innerText = "x";
-//         removeOptionButton.className = "remove-option";
-//         removeOptionButton.addEventListener("click", () => {
-//             removeInputOption(inputOptionDiv);
-//         });
-//         inputOptionDiv.appendChild(removeOptionButton);
-//         inputOptionsContainer.appendChild(inputOptionDiv);
-//         inputOptionsContainer.appendChild(createInputOptionDiv()); // Add a new input option after this one
-//     }
-//         // Check if there's more than one option and hide the "x" button
-//         if (inputOptionsContainer.childElementCount > 1) {
-//             inputOptionDiv.lastElementChild.style.display = "inline"; // Show "x" button
-//         }
-// }
-
-
-
-// function removeInputOption(inputOptionDiv) {
-//     inputOptionsContainer.removeChild(inputOptionDiv);
-// }
-
-// // Initialize with one input option
-// inputOptionsContainer.appendChild(createInputOptionDiv());
-
-
-
-
-// // Assume 'questionInputOption' contains the input options entered in the textarea
 const questionInputOptionInput = document.getElementById("input_option_contentholder");
 questionInputOptionInput.addEventListener("input", function () {
-    //const inputOptions = questionInputOptionInput.value.split('\n').filter(option => option.trim() !== '');
     const inputOptions = parseInputOptions(questionInputOptionInput.value);
 
-    console.log("hello " + inputOptions);
-    // Retrieve the selected question container from the DOM
     const selectedQuestionContainer = document.querySelector(".selected-question");
 
     // Access the question object using the data-survey-question attribute
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-    //const question = surveyQuestions.find(q => q.id.toString() === JSON.parse(questionData).id);
+
+
     const question = surveyQuestions.find(q => q.id.toString() === questionData);
-    console.log("1");
-    console.log(question);
 
     var inputContainer = selectedQuestionContainer.querySelector(".input-container");
 
     inputContainer.innerHTML = ``;
 
-    // console.log("inputOptions " + inputOptions);
     question.updateOptions(inputOptions);
     const index = surveyQuestions.findIndex(q => q.id.toString() === question.id);
     if (index !== -1) {
         surveyQuestions[index] = question;
     }
-    // update the value that been stored in each block
-    //selectedQuestionContainer.setAttribute("data-survey-question", JSON.stringify(question));
-
 
     switch (parseInt(question.type)) {
         case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
@@ -725,7 +674,6 @@ questionInputOptionInput.addEventListener("input", function () {
             console.log(question);
 
             break;
-        // Add handling for other question types
     }
 });
 
@@ -804,7 +752,6 @@ populateSelect(maxSelect, scaleOptions);
 function updateScaleInput(scaleInputContainer) {
     scaleInputContainer.addEventListener("input", function () {
 
-
         // Retrieve the selected question container from the DOM
         const selectedQuestionContainer = document.querySelector(".selected-question");
 
@@ -842,23 +789,6 @@ updateScaleInput(maxSelect);
 //==========remove and duplicate================================
 //==================================================================================
 
-
-// // Get the element for the current question block
-// const questionBlock = document.querySelector('.survey-form');
-
-// // Get the parent element that contains all question blocks
-// const questionBlocksContainer = questionBlock.parentElement;
-
-// // Remove block button click event
-// const removeBlockButton = questionBlock.querySelector('button:nth-child(1)');
-// removeBlockButton.addEventListener('click', function () {
-//     // Check if this is the selected question block
-//     if (questionBlock.classList.contains('selected-question')) {
-//         // Remove the selected question block
-//         questionBlocksContainer.removeChild(questionBlock);
-//     }
-// });
-
 const deleteQuestionButton = document.getElementById("remove_block");
 deleteQuestionButton.addEventListener('click', function () {
     // Retrieve the selected question container from the DOM
@@ -871,9 +801,6 @@ deleteQuestionButton.addEventListener('click', function () {
 
         // Remove the selected question block from the DOM
         selectedQuestionContainer.parentElement.removeChild(selectedQuestionContainer);
-
-        // Also remove the corresponding structure element from the form structure
-        //formStructureContainer.removeChild(structure);
 
         // Remove the question object from the surveyQuestions array
         const questionIndex = surveyQuestions.indexOf(question);
@@ -908,11 +835,7 @@ duplicateQuestionButton.addEventListener('click', function () {
         const originalIndex = surveyQuestions.findIndex(q => q.id.toString() === question.id);
         surveyQuestions.splice(originalIndex + 1, 0, clonedQuestion);
 
-
-        //console.log(surveyQuestions);
-
         // Clone the selected question container
-        // const duplicatedQuestionContainer = selectedQuestionContainer.cloneNode(true);
         const duplicatedQuestionContainer = recreateSameQuestion(clonedQuestion);
 
         // Remove the 'selected-question' class from the original and add it to the duplicated question
@@ -951,8 +874,8 @@ function saveSurveyForm() {
             contentType: 'application/json',
             data: JSON.stringify(survey),
             success: function (response) {
-                // console.log('Form saved successfully:', response);
-                // history.back();
+                console.log('Survey saved successfully:', response);
+               window.location.href = "/survey-index";
             },
             error: function (xhr, status, error) {
                 console.error('Error saving form:', error);

@@ -10,8 +10,7 @@ use Carbon\Carbon;
 class QuizSummaryEmail extends Mailable
 {
     use Queueable, SerializesModels;
-
-
+    
     public $pdf;
 
     public function __construct(DomPDF $pdf)

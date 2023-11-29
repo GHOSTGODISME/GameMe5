@@ -31,9 +31,6 @@ class SendQuizSummaryEmail implements ShouldQueue
         $this->pdfContent = $pdfContent;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle()
     {
             $pdf = $this->generatePDF($this->pdfContent);

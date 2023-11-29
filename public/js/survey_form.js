@@ -233,39 +233,66 @@ function validateSurvey() {
 
     return allQuestionsAnswered;
 }
-
-function initializeSurveySubmitBtn_student(){
-    $('#survey-form').on('submit', function (event) {
-        event.preventDefault(); 
+function initializeSurveySubmitBtn_student() {
+    $('#survey-form').on('submit', function(event) {
+        event.preventDefault();
 
         const allQuestionsAnswered = validateSurvey();
 
-        if (allQuestionsAnswered) {
-            storeResponseOnSubmit();
+        convertImage().then(function(imageData) {
+            if (allQuestionsAnswered) {
+                storeResponseOnSubmit();
 
-            $.ajax({
-                url: '/submit-survey-response',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(surveyResponse),
-                success: function(response) {
-                    console.log('Form saved successfully:', response);
-                    // history.back();
-                    $('#form-preview').html('<p class="not-receive-response-text">Response has been submitted successfully!</p>');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error saving form:', error);
-                    console.log('Response Text:', xhr.responseText);
-                }
-                
-            });
-            console.log(surveyResponse);
-        }else{
-            alert('Please answer all questions before submitting the survey.');
-            scrollToUnansweredQuestion();
-        }
+                const dataToSend = {
+                    surveyResponse: surveyResponse,
+                    imageData: imageData
+                };
+
+                $.ajax({
+                    url: '/submit-survey-response',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(dataToSend),
+                    success: function(response) {
+                        console.log('Form saved successfully:', response);
+                        $('#form-preview').html('<p class="not-receive-response-text">Response has been submitted successfully!</p>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error saving form:', error);
+                        console.log('Response Text:', xhr.responseText);
+                    }
+                });
+            } else {
+                alert('Please answer all questions before submitting the survey.');
+                scrollToUnansweredQuestion();
+            }
+        }).catch(function(error) {
+            console.error('Error converting image:', error);
+        });
     });
 }
+
+function convertImage() {
+    const container = document.getElementById("print-layout");
+    const options = {
+        scale: 2
+    };
+
+    return new Promise(function(resolve, reject) {
+        html2canvas(container, options).then(function(canvas) {
+            const imageData = canvas.toDataURL('image/jpeg', 1);
+
+                    var imageWindow = window.open('');
+        imageWindow.document.write('<img src="' + imageData + '" style="width:100%;">');
+
+            console.log(imageData);
+            resolve(imageData);
+        }).catch(function(error) {
+            reject(error);
+        });
+    });
+}
+
 
 // Function to scroll to the section of the first unanswered question
 function scrollToUnansweredQuestion() {

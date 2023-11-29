@@ -91,16 +91,11 @@
                         <td>{{ $quiz->id }}</td>
                         <td>{{ $quiz->title }}</td>
                         <td>{{ $quiz->visibility }}</td>
+                        <td>{{ ucfirst($quiz->visibility) }}</td>
+
                         <td>{{ $quiz->updated_at->format('Y-m-d H:i:s') }}</td>
 
                         <td>
-                            {{-- <a href="{{ route('student-view-quiz', ['id' => $quiz->id]) }}"
-                                class="btn btn-info edit-delete-btn">Response</a> 
-    
-                             <a href="{{ route('show-response-quiz', ['id' => $quiz->id]) }}" 
-                                class="btn btn-info edit-delete-btn">Show
-                                Response</a> --}}
-
                                 <a href="{{ route('view-quiz', ['id' => $quiz->id]) }}"
                                     class="btn btn-info edit-delete-btn">
                                     View</a>

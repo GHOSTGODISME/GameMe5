@@ -125,18 +125,12 @@
                         <tr>
                             <td>{{ $survey->id }}</td>
                             <td>{{ $survey->title }}</td>
-                            <td>{{ $survey->visibility }}</td>
+                            <td>{{ ucfirst($survey->visibility) }}</td>
                             <td>{{ $survey->updated_at->format('Y-m-d H:i:s') }}</td>
 
-                            <td>
-                                <!-- Link to the detailed survey page -->
-                                
+                            <td>                                
                                 <a href="{{ route('student-view-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn">Response</a>
-                                
-                                <a href="{{ route('show-response-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn">Show Response</a>
-    
                                 <a href="{{ route('edit-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn"><i class="fa fa-edit"></i></a>
-                                <!-- Delete button -->
                                 <a class="btn btn-danger edit-delete-btn" onclick="confirmDelete({{ $survey->id }})"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>

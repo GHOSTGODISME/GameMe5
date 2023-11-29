@@ -348,19 +348,20 @@ class QuizSessionController extends Controller
          // Create an instance of the Dompdf class
          $dompdf = new Dompdf();
  
-         // (Optional) Setup the options
+         // Setup the options
          $options = new Options();
          $options->set('isHtml5ParserEnabled', true);
          $options->set('enable_javascript', true);
          $options->set('isRemoteEnabled', true);
          $dompdf->setOptions($options);
  
-         // Load HTML content (replace this with your HTML)
+         // Load HTML content 
          $html = view('Pdf.quiz-summary-pdf-template', compact('data', 'generatedDate'))->render();
+         
          // Load HTML to Dompdf
          $dompdf->loadHtml($html);
  
-         // (Optional) Set paper size and orientation
+         // Set paper size and orientation
          $dompdf->setPaper('A4', 'portrait');
  
          // Render PDF (generates the PDF)

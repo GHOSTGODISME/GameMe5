@@ -154,13 +154,13 @@ display: inline-flex;
     text-align: center;
 }
 
-.slider-hide .noUi-tooltip {
+/* .slider-hide .noUi-tooltip {
     display: none;
 }
 
 .slider-hide .noUi-active .noUi-tooltip {
     display: block;
-}
+} */
 
 .remove_duplicate_row {
     display: flex;

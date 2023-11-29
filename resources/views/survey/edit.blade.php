@@ -331,15 +331,10 @@
                                             <th>Response ID</th>
                                             <th>Survey ID</th>
                                             <th>User ID</th>
-                                            <!-- Add columns for each question title -->
-                                            {{-- @foreach ($surveyResponses->first()->surveyResponseQuestions as $questionResponse)
-                                    <th>{{ $questionResponse->survey_question->title }}</th>
-                                    @endforeach --}}
-
-                                    <!-- Display unique survey question titles -->
-                                        @foreach ($uniqueQuestions as $question)
-                                        <th>{{ $question->title }}</th>
-                                        @endforeach
+                                            <th>Responded Time</th> 
+                                            @foreach ($uniqueQuestions as $question)
+                                                <th>{{ $question->title }}</th>
+                                            @endforeach
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -348,10 +343,18 @@
                                                 <td>{{ $response->id }}</td>
                                                 <td>{{ $response->survey_id }}</td>
                                                 <td>{{ $response->user_id }}</td>
+                                                <td>{{ $response->created_at }}</td>
                                                 <!-- Loop through each question response for this response -->
                                                 @foreach ($response->surveyResponseQuestions as $questionResponse)
-                                                    <td>{{ $questionResponse->answers }}</td>
+                                                    <td>
+                                                        @if (is_array($questionResponse->answers))
+                                                            {{ implode(', ', $questionResponse->answers) }}
+                                                        @else
+                                                            {{ $questionResponse->answers }}
+                                                        @endif
+                                                    </td>
                                                 @endforeach
+
                                                 <!-- Add other response details as needed -->
                                             </tr>
                                         @endforeach

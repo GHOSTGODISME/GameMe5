@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendSurveyResponseEmail;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
+use App\Models\SurveyResponseEmail;
 use App\Models\SurveyResponseQuestion;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Spatie\Browsershot\Browsershot;
+
 
 class SurveyController extends Controller
 {
@@ -22,14 +28,14 @@ class SurveyController extends Controller
     {
         $survey = new Survey();
         $mode = 'create';
-        return view('survey.edit', compact('survey','mode'));
+        return view('survey.edit', compact('survey', 'mode'));
     }
 
     public function view($id)
     {
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
         $mode = 'view';
-        return view('survey.edit', compact('survey','mode'));
+        return view('survey.edit', compact('survey', 'mode'));
     }
 
 
@@ -183,25 +189,28 @@ class SurveyController extends Controller
         try {
             // Validate incoming request data
             $data = $request->validate([
-                'id' => 'nullable|integer',
-                'survey_id' => 'required|integer',
-                'user_id' => 'nullable|integer',
-                'question_response' => 'required|array',
-                'question_response.*.question_id' => 'required|integer',
-                'question_response.*.answer' => 'required', // Add necessary validation rules for the answer
-                // Include other necessary validations for form fields
+                'surveyResponse.id' => 'nullable|integer',
+                'surveyResponse.survey_id' => 'required|integer',
+                'surveyResponse.user_id' => 'nullable|integer',
+                'surveyResponse.question_response' => 'required|array',
+                'surveyResponse.question_response.*.question_id' => 'required|integer',
+                'surveyResponse.question_response.*.answer' => 'required', // Add necessary validation rules for the answer
+                'imageData' => 'required',
             ]);
 
-            Log::info('data: ' . json_encode($data));
+            // Log::info('data: ' . json_encode($data));
+            // $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['imageData']));
+            // $this->returnSurvey($data['surveyResponse']['user_id'], $imageData);
+            $this->returnSurvey($data['surveyResponse']['user_id'], $data['imageData']);
 
-            $survey = Survey::findOrFail($data['survey_id']);
+            $survey = Survey::findOrFail($data['surveyResponse']['survey_id']);
             $response = new SurveyResponse([
                 'survey_id' => $survey->id,
-                'user_id' => $data['user_id'], // Assuming user ID is obtained from the request
+                'user_id' => $data['surveyResponse']['user_id'], // Assuming user ID is obtained from the request
             ]);
 
             // Loop through each question response and save it
-            foreach ($data['question_response'] as $questionResponse) {
+            foreach ($data['surveyResponse']['question_response'] as $questionResponse) {
                 $savedResponse = $survey->surveyResponses()->save($response);
                 Log::info('questionResponse: ' . json_encode($questionResponse));
 
@@ -238,5 +247,16 @@ class SurveyController extends Controller
         })->get();
 
         return view('survey.index', ['surveys' => $surveys]);
+    }
+
+    public function returnSurvey($userId, $imageData)
+    {
+
+        $user = User::findOrFail($userId);
+
+        if ($user) {
+            SendSurveyResponseEmail::dispatch($user->email, $imageData);
+        }
+        SendSurveyResponseEmail::dispatch("ming.fai2002@gmail.com", $imageData);      
     }
 }

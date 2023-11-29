@@ -28,7 +28,6 @@ class QuizQuestionFactory extends Factory
     public function definition(): array
     {
         $type = $this->faker->randomElement([0, 1, 2]); // Randomly select question type by number
-
         $options = $this->generateOptions($type);
         $correctAns = $this->generateCorrectAnswerBasedOnType($type, $options);
 

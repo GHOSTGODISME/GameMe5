@@ -133,7 +133,7 @@ Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentRespon
 Route::get('/get_survey_response/{id}', [SurveyController::class, 'studentResponse'])->name('get_survey_response');
 Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
 Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->name('show-response-survey');
-
+Route::get('/export-survey',[SurveyController::class, 'exportToPdf'])->name('export-survey');
 
 // quiz question related
 Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');

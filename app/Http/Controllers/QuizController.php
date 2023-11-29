@@ -21,7 +21,7 @@ class QuizController extends Controller
         $mode = 'create';
         $questions = $quiz->quiz_questions; 
 
-        return view('quiz.quiz-edit', compact('quiz', 'questions', 'mode'));
+        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function view($id)
@@ -30,7 +30,7 @@ class QuizController extends Controller
         $mode = 'view';
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.quiz-edit', compact('quiz', 'questions', 'mode'));
+        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function edit($id)
@@ -39,7 +39,7 @@ class QuizController extends Controller
         $mode = 'edit';
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.quiz-edit', compact('quiz', 'questions', 'mode'));
+        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function store(Request $request)
