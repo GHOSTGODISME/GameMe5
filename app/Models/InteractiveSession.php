@@ -16,4 +16,8 @@ class InteractiveSession extends Model
         return $this->hasMany(User::class);
     }
 
+    public function lecturer(){
+        return $this->belongsTo(Lecture::class);
+    }
+
 }

@@ -24,17 +24,17 @@ class Session extends Model
                 return null;
             }
         } catch (\Exception $e) {
-            // Handle the exception, log, or throw further if needed
             return null;
         }
     }
 
+    public function lecturer(){
+        return $this->belongsTo(Lecturer::class);
+    }
 
-    // public function joinSessions()
-    // {
-    //     return $this->hasMany(JoinSession::class);
+    // public function students(){
+    //     return $this->hasMany(Student::class);
     // }
-
     
     public function quizResponses()
     {
