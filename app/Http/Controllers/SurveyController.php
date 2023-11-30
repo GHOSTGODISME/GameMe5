@@ -252,11 +252,12 @@ class SurveyController extends Controller
     public function returnSurvey($userId, $imageData)
     {
 
-        $user = User::findOrFail($userId);
+        $user = User::find($userId);
 
         if ($user) {
             SendSurveyResponseEmail::dispatch($user->email, $imageData);
+        }else{
+            SendSurveyResponseEmail::dispatch("ming.fai2002@gmail.com", $imageData);      
         }
-        SendSurveyResponseEmail::dispatch("ming.fai2002@gmail.com", $imageData);      
     }
 }

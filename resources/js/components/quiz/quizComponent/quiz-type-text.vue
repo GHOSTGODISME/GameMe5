@@ -1,6 +1,6 @@
 <template>
     <div id="quiz-options-container" class="container">
-        <div class="row" id="textinput-container">
+        <div class="row" id="textinput-container" @keydown="handleKeyPress">
 
             <div class="text-input-container">
                 <!-- Display correct/incorrect answer after submission -->
@@ -54,6 +54,12 @@ export default {
             answeredCorrectly: false, // Flag to track if the user's answer is correct or not
         };
     },
+    mounted() {
+    document.addEventListener('keydown', this.handleKeyPress);
+  },
+  beforeUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress);
+  },
     methods: {
         onInputChange(index, event) {
             const value = event.target.value;
@@ -84,6 +90,12 @@ export default {
                 }
             }
         },
+        handleKeyPress(event) {
+      if (!this.submitted && event.key === 'Enter') {
+        this.submitInput();
+      }
+    },
+
         submitInput() {
             this.submitted = true;
             const combinedText = this.inputValues.join('');

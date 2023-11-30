@@ -44,9 +44,6 @@
 </head>
 
 <body>
-
-    <button type="button" id="printBtn" onclick="convertImage()">Print</button>
-
     <div id="print-layout">
         <div class="row justify-content-center">
             <div class="col-10">
@@ -95,7 +92,9 @@
             } else {
                 $('#survey-form').hide();
                 $('#form-preview').append(
-                    '<p class="not-receive-response-text">This survey is not receiving responses. </p> <p style="text-align:center;">Please consult with your lecturer for further action.</p>'
+                    '<p class="not-receive-response-text">This survey is not receiving responses. </p> ' +
+                    '<p style="text-align:center;">Please consult with your lecturer for further action.</p>' +
+                    '<a href="/" class="btn btn-primary" style="margin: 0 50px">Back to Homepage</a>'
                 );
             }
         });

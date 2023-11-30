@@ -1,7 +1,11 @@
 <template>
     <QuizHeaderWithProgressBar :timeRemaining="timeRemaining" :progressBarValue="progressBarValue" />
 
-    <QuizQuestionText :title="question.title" />
+    <!-- <QuizQuestionText :title="question.title" /> -->
+
+    <div id="quiz-title-container" class="">
+      {{ question.title }}
+    </div>
 
     <div class="quiz-body">
         <div>
@@ -28,7 +32,7 @@
         useQuizStore
     } from "../../../store.js";
     import QuizHeaderWithProgressBar from "../quiz-header-with-progress-bar.vue";
-    import QuizQuestionText from "../quizComponent/quiz-question-text.vue";
+    // import QuizQuestionText from "../quizComponent/quiz-question-text.vue";
     import QuizTypeMCQ from "../quizComponent/quiz-type-mcq.vue";
     import QuizTypeTrueFalse from "../quizComponent/quiz-type-truefalse.vue";
     import QuizTypeText from "../quizComponent/quiz-type-text.vue";
@@ -39,7 +43,7 @@
     export default {
         components: {
             QuizHeaderWithProgressBar,
-            QuizQuestionText,
+            // QuizQuestionText,
             QuizTypeMCQ,
             QuizTypeTrueFalse,
             QuizTypeText,

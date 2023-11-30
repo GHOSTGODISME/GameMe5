@@ -97,7 +97,8 @@
     <div class="main-body">
         <div class="session-body-header">
             <div>
-                <span class="h2">Session - {{ $title }}<span> <small>(<span id="concurrentUser">0</span>)</small>
+                <span class="h2">Session - {{ $title }}<span> <small>(<span
+                                id="concurrentUser">0</span>)</small>
             </div>
             <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
         </div>
@@ -217,7 +218,7 @@
             updatePollResult(pollId, optionSelected, votes);
         });
 
-        socket.on('is-participants-length', (data)=>{
+        socket.on('is-participants-length', (data) => {
             const concurrentUser = document.getElementById('concurrentUser');
             concurrentUser.innerText = data;
         });
@@ -252,7 +253,7 @@
                 handleCopyClick(codePlaceholder, codeCopyIcon);
             });
 
-            $('#endBtn').click(function() {                
+            $('#endBtn').click(function() {
                 if (sessionId) {
                     $.ajaxSetup({
                         headers: {
@@ -395,31 +396,6 @@
             }
         }
 
-        function savePoll() {
-            const pollTitle = document.getElementById('pollTitle').value;
-            const options = [];
-            const optionInputs = document.querySelectorAll('#optionsContainer input:not([readonly])');
-            optionInputs.forEach(input => {
-                if (input.value.trim() !== '' && input.value !== null) {
-                    console.log(input.value);
-                    options.push(input.value);
-                }
-            });
-
-            if (options.length < 2) {
-                alert('Please enter at least two options for the poll.');
-                return;
-            }
-
-            socket.emit('createPoll', {
-                sessionCode,
-                pollTitle,
-                options
-            });
-
-            $('#pollModal').modal('hide');
-        }
-
         function createNewPollContainer(pollId, pollTitle, pollOptions) {
             const bigPollsContainer = document.querySelector('.big-polls-container');
 
@@ -467,7 +443,6 @@
         }
 
 
-        // Function to save the poll with validation
         function savePoll() {
             const pollTitle = document.getElementById('pollTitle').value;
             const options = [];
@@ -483,7 +458,7 @@
                 return;
             }
 
-            const pollId = `poll_${pollIdCounter++}`; // Generate a unique poll ID
+            const pollId = `poll_${pollIdCounter++}`;
             createNewPollContainer(pollId, pollTitle, options);
 
             socket.emit('createPoll', {

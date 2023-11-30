@@ -282,10 +282,10 @@ function convertImage() {
         html2canvas(container, options).then(function(canvas) {
             const imageData = canvas.toDataURL('image/jpeg', 1);
 
-                    var imageWindow = window.open('');
-        imageWindow.document.write('<img src="' + imageData + '" style="width:100%;">');
+        //             var imageWindow = window.open('');
+        // imageWindow.document.write('<img src="' + imageData + '" style="width:100%;">');
 
-            console.log(imageData);
+        //     console.log(imageData);
             resolve(imageData);
         }).catch(function(error) {
             reject(error);
