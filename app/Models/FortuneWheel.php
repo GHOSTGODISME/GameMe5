@@ -27,4 +27,8 @@ class FortuneWheel extends Model
         'entries' => '["Default 1","Default 2"]',
         'results' => '[]'
     ];
+
+    public function lecturer(){
+        return $this->belongsTo(Lecture::class);
+    }
 }

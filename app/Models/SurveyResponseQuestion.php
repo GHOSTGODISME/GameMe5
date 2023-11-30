@@ -20,7 +20,7 @@ class SurveyResponseQuestion extends Model
 
     public function surveyQuestion()
     {
-        return $this->belongsTo(SurveyQuestion::class, 'survey_question_id');
+        return $this->hasOne(SurveyQuestion::class, 'survey_question_id');
     }
     
     public function surveyResponse()

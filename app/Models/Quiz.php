@@ -17,6 +17,10 @@ class Quiz extends Model
         'visibility' => 'public'
     ];
 
+    public function lecturer(){
+        return $this->belongsTo(Lecturer::class);
+    }
+
     public function quiz_questions()
     {
         return $this->hasMany(QuizQuestion::class);

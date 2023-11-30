@@ -15,9 +15,4 @@ class QuizSessionSetting extends Model
     {
         return $this->belongsTo(Session::class);
     }
-    public function quizSessionSetting()
-    {
-        return $this->hasOne(QuizSessionSetting::class);
-    }
-    
 }

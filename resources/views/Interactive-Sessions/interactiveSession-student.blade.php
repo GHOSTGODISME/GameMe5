@@ -254,6 +254,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const leaveBtn = document.getElementById('leaveBtn');
             leaveBtn.addEventListener('click', function() {
+                io.emit('disconnect');
                 window.location.href = '/'; // Redirect to the root route
             });
         });
