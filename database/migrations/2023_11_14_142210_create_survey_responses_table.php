@@ -17,7 +17,7 @@ return new class extends Migration
 
             // Columns to capture survey responses
             // $table->foreignId('survey_id')->constrained()->onDelete('cascade'); // Foreign key to link to surveys table
-            $table->foreignId('user_id')->nullable()->constrained(); // If capturing user information
+            $table->foreignId('user_id')->references('id')->on('student')->onDelete('cascade');
         
             $table->foreignId('survey_id')->references('id')->on('surveys')->onDelete('cascade');
             // $table->foreignId('survey_response_id')->references('id')->on('survey_responses')->onDelete('cascade');
