@@ -1,12 +1,17 @@
 <?php
 
 
-
+use App\Http\Controllers\FortuneWheelController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\SurveyController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\InteractiveSessionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LecturerController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizSessionController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\ClassroomController;
 
@@ -21,10 +26,26 @@ use App\Http\Controllers\ClassroomController;
 |
 */
 
+// Route::any('{slug}', function(){
+//     return view('home');
+// });
+
 /*Homepage*/
 Route::get('/', function () {
-    return view('User/login');
+    return view('home');
+    // return view('chat');
+    // return view('quiz.spa');
 });
+
+
+
+// Route::get('/{pathMatch}', function(){
+//     return view('quiz.spa');
+// }) ->where ('pathMatch',".*");
+
+// Route::get('/{vue_capture?}', function() {
+//     return view('quiz.spa');
+// })->where('vue_capture', '[\/\w\.-]*');
 
 /*User Authentication*/
 /*Login*/
@@ -154,3 +175,70 @@ Route::post('class_stud_delete_announcement', [ClassroomController::class, 'clas
 
 //Report
 Route::get('report_home',  [ReportController::class, 'report_home'])->name('report_home');
+
+
+
+/////// kel
+
+// fortune wheel related
+Route::get('/fortune-wheel-main', [FortuneWheelController::class, 'index'])->name('fortune-wheel-index');
+Route::get('/create-fortune-wheel', [FortuneWheelController::class, 'createFortuneWheel'])->name('create-fortune-wheel');
+Route::get('/edit-fortune-wheel/{id}', [FortuneWheelController::class, 'editFortuneWheel'])->name('edit-fortune-wheel');
+Route::delete('/delete-fortune-wheel/{id}', [FortuneWheelController::class, 'deleteFortuneWheel'])->name('delete-fortune-wheel');
+Route::post('/save-fortune-wheel', [FortuneWheelController::class, 'updateFortuneWheel']);
+Route::get('/search-fortune-wheels', [FortuneWheelController::class, 'search'])->name('search-fortune-wheel');
+
+
+//survey related
+Route::get('/survey-index', [SurveyController::class, 'index'])->name('survey-index');
+Route::get('/search-survey', [SurveyController::class, 'search'])->name('search-survey');
+Route::get('/create-survey', [SurveyController::class, 'create'])->name('create-survey');
+Route::get('/edit-survey/{id}', [SurveyController::class, 'edit'])->name('edit-survey');
+Route::delete('/delete-survey/{id}', [SurveyController::class, 'delete'])->name('delete-survey');
+Route::post('/save-survey', [SurveyController::class, 'store']);
+Route::get('get-survey/{id}', [SurveyController::class, 'getSurvey']);
+Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentResponse'])->name('student-view-survey');
+Route::get('/get-survey-response/{id}', [SurveyController::class, 'studentResponse'])->name('get-survey-response');
+Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
+Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->name('show-response-survey');
+Route::get('/export-survey',[SurveyController::class, 'exportToPdf'])->name('export-survey');
+Route::get('/export-survey-response/{id}', [SurveyController::class, 'exportSurveyResponses']);
+
+// quiz question related
+Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');
+Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz');
+Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
+Route::get('/view-quiz/{id}', [QuizController::class, 'view'])->name('view-quiz');
+Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
+Route::post('/save-quiz', [QuizController::class, 'store']);
+Route::get('/find-quiz', [QuizController::class, 'search'])->name('find-quiz');
+
+
+Route::get('/join-quiz', [QuizSessionController::class, 'joinQuiz'])->name('join-quiz');
+Route::get('/quiz/details/{code}', [QuizSessionController::class, 'getQuizDetails']);
+Route::get('/quiz/questions/{code}', [QuizSessionController::class, 'getQuizQuestions']);
+Route::get('/quiz/settings/{sessionId}', [QuizSessionController::class, 'getQuizSessionSettings']);
+Route::post('/create-quiz-session', [QuizSessionController::class,'createQuizSession']);
+Route::get('/quiz-session-lecturer/{sessionId}', [QuizSessionController::class, 'startSession'])->name('quiz-session-lecturer');
+Route::get('/leaderboard-lecturer', [QuizSessionController::class, 'getLeaderboard'])->name('leaderboard-lecturer');
+Route::put('/end-session/{sessionId}', [QuizSessionController::class, 'endSession'])->name('endSession');
+Route::get('/quiz-summary/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'showQuizSummary']);
+Route::get('/user/{userId}/session/{sessionId}/quiz/{quizId}/details', [QuizSessionController::class, 'fetchData']);
+Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'sendEmail']);
+Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'generatePDF'])->name("generate-pdf");
+Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class, 'getQuizQuestionsBySessionId']);
+Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
+
+
+Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
+Route::get('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
+Route::get('/join-interactive-session', [InteractiveSessionController::class, 'joinInteractiveSession'])->name('join-interactive-session');
+Route::put('/end-interactive-session/{sessionId}', [InteractiveSessionController::class, 'endInteractiveSession']);
+
+// Serve Vue app's entry point
+Route::get('/quiz/{any}', function () {
+    return view('quiz.spa');
+})->where('any', '.*');
+Route::get('/quiz/', function () {
+    return view('quiz.spa');
+});

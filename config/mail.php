@@ -32,6 +32,7 @@ return [
     |            "postmark", "log", "array", "failover"
     |
     */
+    'debug' => env('MAIL_DEBUG', true), // Set this to true for debugging
 
     'mailers' => [
         'smtp' => [

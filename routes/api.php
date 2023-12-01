@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizSessionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// Route::get('/api/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
+// Route::get('/quiz/details/{code}', [QuizController::class, 'getQuizDetails']);
+// Route::get('/quiz/questions/{code}', [QuizController::class, 'getQuizQuestions']);
+
+
+Route::post('/register-name', [QuizSessionController::class, 'registerUsername']);
+Route::post('/store-individual-response', [QuizSessionController::class, 'storeIndividualResponse']);
+
+Route::post('/store-quiz-response', [QuizSessionController::class, 'storeQuizResponse']);
+Route::post('/store-full-responses', [QuizSessionController::class, 'storeFullResponses']);
+// routes/api.php
