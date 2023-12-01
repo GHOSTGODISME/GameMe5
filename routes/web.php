@@ -179,10 +179,11 @@ Route::delete('/delete-survey/{id}', [SurveyController::class, 'delete'])->name(
 Route::post('/save-survey', [SurveyController::class, 'store']);
 Route::get('get-survey/{id}', [SurveyController::class, 'getSurvey']);
 Route::get('/student-view-survey/{id}', [SurveyController::class, 'studentResponse'])->name('student-view-survey');
-Route::get('/get_survey_response/{id}', [SurveyController::class, 'studentResponse'])->name('get_survey_response');
+Route::get('/get-survey-response/{id}', [SurveyController::class, 'studentResponse'])->name('get-survey-response');
 Route::post('/submit-survey-response', [SurveyController::class, 'storeResponse']);
 Route::get('/show-response/{id}', [SurveyController::class, 'showResponses'])->name('show-response-survey');
 Route::get('/export-survey',[SurveyController::class, 'exportToPdf'])->name('export-survey');
+Route::get('/export-survey-response/{id}', [SurveyController::class, 'exportSurveyResponses']);
 
 // quiz question related
 Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');

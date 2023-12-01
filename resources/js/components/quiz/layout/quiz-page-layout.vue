@@ -1,11 +1,7 @@
 <template>
     <QuizHeaderWithProgressBar :timeRemaining="timeRemaining" :progressBarValue="progressBarValue" />
 
-    <!-- <QuizQuestionText :title="question.title" /> -->
-
-    <div id="quiz-title-container" class="">
-      {{ question.title }}
-    </div>
+    <div id="quiz-title-container">{{ question.title }} </div>
 
     <div class="quiz-body">
         <div>

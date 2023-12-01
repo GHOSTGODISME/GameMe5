@@ -94,7 +94,7 @@
                 $('#form-preview').append(
                     '<p class="not-receive-response-text">This survey is not receiving responses. </p> ' +
                     '<p style="text-align:center;">Please consult with your lecturer for further action.</p>' +
-                    '<a href="/" class="btn btn-primary" style="margin: 0 50px">Back to Homepage</a>'
+                    '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >Back to Homepage</a></p>'
                 );
             }
         });

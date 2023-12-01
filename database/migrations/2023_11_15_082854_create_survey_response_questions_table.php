@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::create('survey_response_questions', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('survey_response_id')->constrained('survey_responses')->onDelete('cascade');
-            $table->foreignId('survey_question_id')->constrained('survey_questions')->onDelete('cascade'); // Foreign key to link to survey_questions table
+            // $table->foreignId('survey_response_id')->constrained('survey_responses')->onDelete('cascade');
+            // $table->foreignId('survey_question_id')->constrained('survey_questions')->onDelete('cascade');
+
+            $table->foreignId('survey_response_id')->references('id')->on('survey_responses')->onDelete('cascade');
+            $table->foreignId('survey_question_id')->references('id')->on('survey_questions')->onDelete('cascade');
+
+
             $table->json('answers');
 
       });

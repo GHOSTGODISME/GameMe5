@@ -16,16 +16,12 @@
 }
 
 #fortune-wheel-title {
-  /* width: 800px; */
   margin: 20px 0;
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bolder;
-
   white-space: nowrap;
-  width: 500px;
   overflow: hidden;
   text-overflow: ellipsis;
-
 }
 
 .container-style {
@@ -70,9 +66,11 @@
 
 /* formatting for spin wheel tool tab */
 .contentholder {
-  width: 100%;
+  /* width: 100%; */
   min-height: 150px !important;
   padding: 10px 20px;
+  overflow: auto;
+  text-wrap: nowrap;
 }
 
 .tab-content {
@@ -80,7 +78,6 @@
   background: whitesmoke;
   padding: 30px;
   margin: 0 0 30px;
-  ;
 }
 
 .fortune_wheel_card {

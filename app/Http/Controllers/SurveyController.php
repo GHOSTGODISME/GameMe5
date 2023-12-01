@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SurveyResponsesExport;
 use App\Jobs\SendSurveyResponseEmail;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
@@ -12,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Browsershot\Browsershot;
 
 
@@ -260,4 +262,46 @@ class SurveyController extends Controller
             SendSurveyResponseEmail::dispatch("ming.fai2002@gmail.com", $imageData);      
         }
     }
+
+    public function exportSurveyResponses($surveyId)
+{
+    $surveyResponses = SurveyResponse::where('survey_id', $surveyId)->get();
+    
+    $uniqueTitles = SurveyResponseQuestion::whereIn('survey_response_id', $surveyResponses->pluck('id'))
+    ->distinct('survey_question_id')
+    ->pluck('survey_question_id');
+    $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
+
+
+    $headings = ['Response ID', 'Survey ID', 'User ID', 'Responded Time'];
+    foreach ($uniqueQuestions as $question) {
+        $headings[] = $question->title; 
+    }
+
+    $data = []; 
+
+    foreach ($surveyResponses as $response) {
+
+        $responseData = [
+            'Response ID' => $response->id,
+            'Survey ID' => $response->survey_id,
+            'User ID' => $response->user_id,
+            'Responded Time' => $response->created_at,
+        ];
+
+        foreach($response->surveyResponseQuestions as $questionResponse){
+            if (is_array($questionResponse->answers)) {
+                $responseData[] = implode(', ', $questionResponse->answers);
+            } else {
+                $responseData[] = $questionResponse->answers;
+            }
+        }
+        $data[] = $responseData;
+    }
+
+    // Export data to Excel using Maatwebsite\Excel package
+    return Excel::download(new SurveyResponsesExport($data, $headings), 'survey_responses.xlsx');
+}
+
+    
 }

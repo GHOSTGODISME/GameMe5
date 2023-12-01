@@ -255,7 +255,9 @@ function initializeSurveySubmitBtn_student() {
                     data: JSON.stringify(dataToSend),
                     success: function(response) {
                         console.log('Form saved successfully:', response);
-                        $('#form-preview').html('<p class="not-receive-response-text">Response has been submitted successfully!</p>');
+                        $('#form-preview').html(
+                            '<p class="not-receive-response-text">Response has been submitted successfully!</p>' + 
+                            '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >Back to Homepage</a></p>');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error saving form:', error);

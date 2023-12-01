@@ -114,9 +114,9 @@
                                                 <b style="display: block;">Survey Link</b>
                                                 <span id="copyLink" style="cursor: pointer;">
                                                     {{-- <p style="display: inline;">randome link </p> --}}
-                                                    <a href="{{ route('get_survey_response', ['id' => $survey->id]) }}"
+                                                    <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}"
                                                         id="surveyLink" target="_blank"
-                                                        style="word-wrap: break-word">{{ route('get_survey_response', ['id' => $survey->id]) }}</a>
+                                                        style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
 
                                                     <i class="fa fa-copy"></i>
                                                 </span>
@@ -322,7 +322,7 @@
 
                     @if (count($surveyResponses) > 0)
                         <div class="row justify-content-center ">
-                            <p>number of response: {{ $surveyResponses->count() }}</p>
+                            <p>Number of response: {{ $surveyResponses->count() }}</p>
 
                             <div class="survey-response-style table-responsive">
                                 <table border="1" class="table table-striped table-bordered table-hover ">
@@ -362,6 +362,12 @@
                                 </table>
                             </div>
                         </div>
+                        
+                        <div style="margin: 50px 0; display: flex; justify-content: flex-end;">
+                            <a href="{{ url('/export-survey-response/' . $survey->id) }}" class="btn btn-dark">Export to Excel</a>
+
+                        </div>
+
                     @else
                         <p>No records found.</p>
                     @endif
@@ -415,9 +421,9 @@
                         <p class="m-0"><b>Survey Link</b></p>
                         <span id="copyLink" style="cursor: pointer;">
                             {{-- <p style="display: inline;">randome link </p> --}}
-                            <a href="{{ route('get_survey_response', ['id' => $survey->id]) }}" id="surveyLink"
+                            <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}" id="surveyLink"
                                 target="_blank"
-                                style="word-wrap: break-word">{{ route('get_survey_response', ['id' => $survey->id]) }}</a>
+                                style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
                             <i class="fa fa-copy"></i>
                         </span>
                     @endif
