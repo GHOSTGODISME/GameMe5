@@ -32,7 +32,7 @@
         height: 100%;
         background: #0195FF;
         transition: right 0.3s ease;
-        z-index: 1;
+        z-index: 1000; /* Set a higher z-index value */
     }
 
     .nav-link {

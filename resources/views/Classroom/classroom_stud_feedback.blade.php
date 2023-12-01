@@ -14,11 +14,12 @@
         border-radius: 8px;
         border: 1px solid #BFBFBF;
         margin-bottom:30px;
+        background: #0195FF;
     }
     .ann_header{
         display: flex;
         flex-direction: row;
-        margin:5px 20px 5px 20px;
+        margin:20px 20px 5px 20px;
     }
 
     .ann_header p, .ann_header h1{
@@ -27,7 +28,7 @@
     }
 
     .ann_category{
-        color: #000;
+        color: #FAFAFA;
         font-family: 'Roboto';
         font-size: 18px;
         font-style: normal;
@@ -37,7 +38,7 @@
     }
 
     .author{
-        color: #565656;
+        color: #eeeeee;
         font-family: 'Roboto';
         font-size: 14px;
         font-style: normal;
@@ -46,13 +47,14 @@
     }
 
     .datetime{
-        color: #565656;
+        color: #FAFAFA;
         font-family: 'Roboto';
         font-size: 14px;
         font-style: normal;
         font-weight: 500;
         line-height: normal;
         margin-left:auto;
+        margin-right:30px;
     }
 
     .ann_content{
@@ -95,6 +97,18 @@
             <h1 class="ann_category">Feedback</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                @if($announcement->user_id == $currentUser->id)
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
+                @endif
+            
             </div>
             <div class="ann_content">
             <p> A new feedback has been assigned. Fill it now!</p>

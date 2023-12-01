@@ -132,36 +132,35 @@
 </style>
 
 <div class="title_bar">
-    <h1 class="classroom_title">Add Classroom</h1>
+    <h1 class="classroom_title">Edit Classroom</h1>
 </div>
 
-<form action="{{ route('lect_add_classroom') }}" method="POST" class="add_class_form" enctype="multipart/form-data">
+<form action="{{ route('lect_update_classroom', ['classroom' => $classroom->id]) }}" method="POST" class="update_class_form" enctype="multipart/form-data">
     @csrf
-
     <div class="class_row">
-        <div class="studE_info">
-            <div class="input_group">
-                <p class="label_class_stud">Class Name:</p>
-            </div>
-            <div><input type="text" class="class_input" name="name"></div>
+    <div class="studE_info">
+        <div class="input_group">
+            <p class="label_class_stud">Class Name:</p>
         </div>
-
-        <div class="studE_info">
-            <div class="input_group">
-                <p class="label_class_stud">Course code:</p>
-            </div>
-            <div><input type="text" class="class_input" name="course_code"></div>
-        </div>
+        <div><input type="text" class="class_input" name="name" value="{{ $classroom->name }}"></div>
     </div>
-
+    
+    <div class="studE_info">
+        <div class="input_group">
+            <p class="label_class_stud">Course code:</p>
+        </div>
+        <div><input type="text" class="class_input" name="course_code" value="{{ $classroom->coursecode }}"></div>
+    </div>
+</div>
     <div class="class_row">
         <div class="studE_info">
             <div class="input_group">
                 <p class="label_class_stud">Group: </p>
             </div>
-            <div><input class="class_input" type="text" name="group"></div>
+            <div><input class="class_input" type="text" name="group" value="{{ $classroom->group }}"></div>
         </div>
     </div>
+    
 
     <div class="class_row">
         <div class="input_group"></div>

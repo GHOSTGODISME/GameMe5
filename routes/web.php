@@ -4,6 +4,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\LecturerController;
 use App\Http\Controllers\UserAuthController;
@@ -100,7 +101,7 @@ Route::get('classroom_lect_home',[ClassroomController::class, 'classroom_lect_ho
 Route::post('join_class',[ClassroomController::class, 'join_class'])->name('join_class');
 Route::post('classroom_quit',[ClassroomController::class, 'classroom_quit'])->name('classroom_quit');
 Route::post('classroom_remove',[ClassroomController::class, 'classroom_remove'])->name('classroom_remove');
-
+Route::post('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_student'])->name('lect_remove_student');
 //Specify Class - Student
 Route::get('class_stud_stream/{classroom}', [ClassroomController::class, 'class_stud_stream'])->name('class_stud_stream');
 Route::get('class_stud_quiz/{classroom}', [ClassroomController::class, 'class_stud_quiz'])->name('class_stud_quiz');
@@ -133,5 +134,23 @@ Route::get('class_lect_people/{classroom}', [ClassroomController::class, 'class_
 
 Route::get('lect_add_class', [ClassroomController::class, 'lect_add_class'])->name('lect_add_class');
 Route::post('lect_add_classroom', [ClassroomController::class, 'lect_add_classroom'])->name('lect_add_classroom');
+
+Route::get('lect_update_class/{classroom}', [ClassroomController::class, 'lect_update_class'])->name('lect_update_class');
+
+Route::post('lect_update_classroom/{classroom}', [ClassroomController::class, 'lect_update_classroom'])->name('lect_update_classroom');
+
+
 Route::get('lect_search_class', [ClassroomController::class, 'classroom_lect_home'])->name('lect_search_class');
 Route::post('class_add_announcement', [ClassroomController::class, 'class_add_announcement'])->name('class_add_announcement');
+Route::post('class_stud_add_announcement', [ClassroomController::class, 'class_stud_add_announcement'])->name('class_stud_add_announcement');
+
+
+Route::get('/get_announcement_details',  [ClassroomController::class, 'get_announcement_details'])->name('get_announcement_details');
+Route::post('/class_stud_update_announcement', [ClassroomController::class,'class_stud_update_announcement'])->name('class_stud_update_announcement');
+Route::post('class_update_announcement', [ClassroomController::class,'class_update_announcement'])->name('class_update_announcement');
+Route::post('class_delete_announcement', [ClassroomController::class, 'class_delete_announcement'])->name('class_delete_announcement');
+Route::post('class_stud_delete_announcement', [ClassroomController::class, 'class_stud_delete_announcement'])->name('class_stud_delete_announcement');
+
+
+//Report
+Route::get('report_home',  [ReportController::class, 'report_home'])->name('report_home');

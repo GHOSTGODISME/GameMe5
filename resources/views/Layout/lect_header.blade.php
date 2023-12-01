@@ -25,14 +25,16 @@
 
      /* Navigation panel styles */
      .navigation-panel {
+     
         position: fixed;
         top: 0;
         right: -300px; /* Initially off-screen */
         width: 300px;
         height: 100%;
-        background: #3CCBC3;;
+        background: #3CCBC3;
         transition: right 0.3s ease;
-        z-index: 1;
+        z-index: 1000; /* Set a higher z-index value */
+
     }
 
     .nav-link {
@@ -102,7 +104,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/report_icon.png') }}" alt="report_icon">
-            <a href="#" class="nav-link">Report</a>
+            <a href="{{ route('report_home') }}" class="nav-link">Report</a>
         </div>
         <!-- Add more navigation links as needed -->
     </div>
