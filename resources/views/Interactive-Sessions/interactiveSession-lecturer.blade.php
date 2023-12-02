@@ -66,6 +66,10 @@
             border-bottom: 1px solid black;
         }
 
+        .session-content-container .session-single-message:last-child {
+            border-bottom: none;
+        }
+
         .session-polls-container {
             height: 600px;
             max-height: 600px;
@@ -100,7 +104,10 @@
                 <span class="h2">Session - {{ $title }}<span> <small>(<span
                                 id="concurrentUser">0</span>)</small>
             </div>
-            <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
+            <div>
+                <a id="exportChat" class="btn btn-dark">Export Chat</a>
+                <a id="endBtn" class="btn btn-dark">End Session</a>
+            </div>
         </div>
 
         <div class="container">
@@ -115,8 +122,7 @@
                                 <input type="text" class="form-control" placeholder="Type your reply here"
                                     id="messageInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"
-                                        onclick="sendMessage()">Enter</button>
+                                    <button class="btn btn-dark" type="button" onclick="sendMessage()">Enter</button>
                                 </span>
                             </div>
                         </div>
@@ -223,6 +229,23 @@
             concurrentUser.innerText = data;
         });
 
+        socket.on('returnChatMessage', (messages) => {
+            const formattedData = messages.map(entry => `${entry.username} ${entry.time}\n${entry.message}`).join(
+                '\n\n');
+            const blob = new Blob([formattedData], {
+                type: 'text/plain'
+            });
+
+            const url = URL.createObjectURL(blob);
+
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `${@json($title)}_messsage_${currentDate}.txt`;
+            downloadLink.click();
+        })
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -249,8 +272,18 @@
                 }, 2000);
             }
 
+            document.getElementById('messageInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
             document.getElementById('code-copy-container').addEventListener('click', function(event) {
                 handleCopyClick(codePlaceholder, codeCopyIcon);
+            });
+
+            $('#exportChat').click(function() {
+                socket.emit("exportChatMessage", sessionCode);
             });
 
             $('#endBtn').click(function() {

@@ -15,6 +15,7 @@ class InteractiveSessionController extends Controller
     public function createInteractiveSession(Request $request)
     {
         $title = $request->input('title');
+        
         $sessionCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
         $session = InteractiveSession::create([

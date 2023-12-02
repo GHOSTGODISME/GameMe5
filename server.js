@@ -181,7 +181,6 @@ function handleInteractiveSession(socket) {
       messages.push(msg);
 
       io.to(sessionCode).emit('chatMessageReceived', msg);
-
     }
   });
 
@@ -204,6 +203,13 @@ function handleInteractiveSession(socket) {
       // io.to(sessionCode).emit('pollVoteReceived', { pollId, optionSelected, userId });
     }
   });
+
+  socket.on('exportChatMessage', (sessionCode)=>{
+    if (interactiveSessions[sessionCode]) {
+      const messages = interactiveSessions[sessionCode].messages;
+      io.to(sessionCode).emit('returnChatMessage', messages);
+    }
+  })
 }
 
 function buildMsg(id, username, message) {
