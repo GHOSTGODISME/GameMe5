@@ -184,7 +184,10 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('Classroom/classroom_stud_stream', compact('classroom', 'announcements'));
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+        return view('Classroom/classroom_stud_stream', compact('classroom', 'announcements', 'currentUser'));
     }
     
     
@@ -204,7 +207,11 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('Classroom/classroom_stud_quiz', compact('classroom','announcements'));
+
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+        return view('Classroom/classroom_stud_quiz', compact('classroom','announcements','currentUser'));
     }
 
     public function class_lect_quiz(Classroom $classroom)
@@ -225,7 +232,10 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('Classroom/classroom_stud_qna', compact('classroom','announcements'));
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+        return view('Classroom/classroom_stud_qna', compact('classroom','announcements','currentUser'));
     }
 
     public function class_lect_qna(Classroom $classroom)
@@ -245,7 +255,12 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('Classroom/classroom_stud_polls', compact('classroom','announcements'));
+
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+
+        return view('Classroom/classroom_stud_polls', compact('classroom','announcements','currentUser'));
     }
 
     public function class_lect_polls(Classroom $classroom)
@@ -265,7 +280,10 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('Classroom/classroom_stud_feedback', compact('classroom','announcements'));
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+        return view('Classroom/classroom_stud_feedback', compact('classroom','announcements','currentUser'));
     }
 
     public function class_lect_feedback(Classroom $classroom)
@@ -305,7 +323,12 @@ class ClassroomController extends Controller{
         $qna = AnnQna::where('id', $qna->id)->first();
         $announcement = Announcement::where('id',$qna->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();
-        return view('Classroom/classroom_specify_qna', compact('classroom','qna','announcement'));
+
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+
+        return view('Classroom/classroom_specify_qna', compact('classroom','qna','announcement','currentUser'));
     }
 
     public function class_reply_qna(Request $request, AnnQna $qna){
@@ -349,7 +372,13 @@ class ClassroomController extends Controller{
         $userHasVoted = AnnPollsResult::where('user_id',$userId)
         ->where('polls_id', $polls->id)
         ->exists();
-        return view('Classroom/classroom_specify_polls', compact('classroom','polls','announcement','option1Count','option2Count','userHasVoted'));
+
+        // $currentUserEmail = session('email'); 
+        $currentUserEmail = 'aa@gmail.com';
+        $currentUser = User::where('email', $currentUserEmail)->first();
+
+
+        return view('Classroom/classroom_specify_polls', compact('classroom','polls','announcement','option1Count','option2Count','userHasVoted', 'currentUser'));
     }
 
     public function class_reply_polls(Request $request){
@@ -415,7 +444,7 @@ class ClassroomController extends Controller{
         // Redirect to a success page or return a response as needed
 
       
-        return redirect()->route('classroom_lect_home')->with('success_message', 'Classroom created successfully');
+        return redirect()->route('lect_add_class')->with(['success_message' => 'Classroom created successfully', 'joinCode' => $joinCode, 'classroomId' =>$classroom->id]);
     }
 
     public function class_add_announcement(Request $request){
@@ -497,6 +526,89 @@ class ClassroomController extends Controller{
     // Redirect or respond as needed
     return redirect()->route('class_lect_stream', ['classroom' => $request->classId]);
     }
+
+
+    public function class_stud_add_announcement(Request $request){
+        // Validate the form data
+    $validatedData = $request->validate([
+        'announcementType' => 'required|in:text,qna,polls',
+        'content' => 'required_if:announcementType,text',
+        'qna_question' => 'required_if:announcementType,qna',
+        'polls_question' => 'required_if:announcementType,polls',
+        'option1' => 'required_if:announcementType,polls',
+        'option2' => 'required_if:announcementType,polls',
+        // Add other validation rules as needed
+    ]);
+
+     // $email = $request->session()->get('email');
+     $email = 'aa@gmail.com';
+     $user = User::where('email', $email)->first();
+    
+     $type = "";
+
+     switch ($request->announcementType) {
+         case 'qna':
+             $type = "AnnQna";
+             break;
+         case 'text':
+             $type = "AnnText";
+             break;
+         case 'polls':
+             $type = "AnnPolls";
+             break;
+         // Add other cases as needed for different announcement types
+         default:
+             // Handle the default case if necessary
+             break;
+     }
+
+    // Create an announcement record
+    $announcement = Announcement::create([
+        'idclass' => $request->classId,
+        'type' => $type,
+        'created_at' => now(),
+        'user_id' => $user->id, // Assuming user is authenticated
+    ]);
+
+    // Save data to specific child tables based on the announcement type
+    switch ($request->announcementType) {
+        case 'text':
+            AnnText::create([
+                'annid' => $announcement->id,
+                'content' => $request->content,
+            ]);
+            break;
+
+        case 'qna':
+            AnnQna::create([
+                'ann_id' => $announcement->id,
+                'question' => $request->qna_question,
+                // Add other fields for Q&A as needed
+            ]);
+            break;
+
+        case 'polls':
+            AnnPolls::create([
+                'ann_id' => $announcement->id,
+                'question' => $request->polls_question,
+                'option1' => $request->option1,
+                'option2' => $request->option2,
+                // Add other fields for Polls as needed
+            ]);
+            break;
+
+        // Add other cases for additional announcement types
+
+        default:
+            // Handle other cases or throw an error
+            break;
+    }
+
+    // Redirect or respond as needed
+    return redirect()->route('class_stud_stream', ['classroom' => $request->classId]);
+    }
+
+
     
 
     public function class_lect_specify_qna(AnnQna $qna){
@@ -528,5 +640,186 @@ class ClassroomController extends Controller{
         return view('Classroom/classroom_lect_specify_polls', compact('classroom','polls','announcement','option1Count','option2Count','userHasVoted'));
 
     }
+
+    public function get_announcement_details(Request $request)
+    {
+        $announcementId = $request->input('announcementId');
+        $announcement = Announcement::with('annText', 'annQna', 'annPolls')->findOrFail($announcementId);
+    
+        $details = [
+            'annText' => $announcement->annText,
+            'annQna' => $announcement->annQna,
+            'annPolls' => $announcement->annPolls,
+            // Add other details as needed
+        ];
+    
+        // Return the specific details as JSON
+        return response()->json(['announcement' => $announcement, 'details' => $details]);
+    }
+
+public function class_update_announcement(Request $request)
+{
+
+ // Validate the request data
+        $request->validate([
+            'announcementId' => 'required|exists:announcement,id',
+            'updateAnnouncementType' => 'required|in:Text Announcement,Q&A Announcement,Polls Announcement',
+            'content' => 'required_if:updateAnnouncementType,Text Announcement',
+            'qna_question' => 'required_if:updateAnnouncementType,,Q&A Announcement',
+            'polls_question' => 'required_if:updateAnnouncementType,Polls Announcement',
+            'option1' => 'required_if:updateAnnouncementType,Polls Announcement',
+            'option2' => 'required_if:updateAnnouncementType,Polls Announcement',
+            // Add other validation rules as needed
+        ]);
+
+        $announcementId = $request->input('announcementId');
+
+        // Fetch the announcement by ID
+        $announcement = Announcement::findOrFail($announcementId);
+
+        // Update announcement fields based on the request
+        $announcement->update([
+            // Update other fields as needed
+        ]);
+
+        $type = $request->updateAnnouncementType;
+
+
+        // Update data in specific child tables based on the announcement type
+        switch ($type) {
+            case "Text Announcement":
+                AnnText::where('annid', $announcement->id)->update([
+                    'content' => $request->content,
+                ]);
+                break;
+
+            case 'Q&A Announcement':
+                $announcement->annQna->update([
+                    'question' => $request->qna_question,
+                    // Update other fields for Q&A as needed
+                ]);
+                break;
+
+            case 'Polls Announcement':
+                $announcement->annPolls->update([
+                    'question' => $request->polls_question,
+                    'option1' => $request->option1,
+                    'option2' => $request->option2,
+                    // Update other fields for Polls as needed
+                ]);
+                break;
+
+            // Update other cases for additional announcement types
+
+            default:
+                // Handle other cases or throw an error
+                break;
+        }
+
+        // Return a response, e.g., a success message or JSON response
+        return back();
+
+}
+
+
+
+    public function class_delete_announcement(Request $request) {
+        // Get announcement ID from the request
+    $announcementId = $request->input('announcementId');
+    $announcement = Announcement::find($announcementId);
+
+    if (!$announcement) {
+        return response()->json(['error' => 'Announcement not found'], 404);
+    }
+
+     // $email = $request->session()->get('email');
+     $email = 'aa@gmail.com';
+     $user = User::where('email', $email)->first();
+    
+    // Type check and delete associated content based on the announcement type
+    switch ($announcement->type) {
+        case 'AnnText':
+            $announcement->annText()->delete();
+            break;
+        case 'AnnQuiz':
+            $announcement->annQuiz()->delete();
+            break;
+        case 'AnnQna':
+            AnnQnaAns::where('quesid', $announcement->annQna->id)->delete();
+            $announcement->annQna()->delete();
+            break;
+        case 'AnnPolls':
+            AnnPollsResult::where('polls_id', $announcement->annPolls->id)->delete();
+            $announcement->annPolls()->delete();
+            break;
+        case 'AnnFeedback':
+            $announcement->annFeedback()->delete();
+            break;
+        // Add more cases as needed for other announcement types
+        default:
+            // Handle the default case or throw an error
+            break;
+    }
+
+    // Finally, delete the announcement itself
+    $announcement->delete();
+        // Return a response, e.g., a success message or JSON response
+        return response()->json(['success' => 'Announcement deleted successfully']);
+    }
+
+
+    function lect_update_class($classroomId){
+        $classroom = Classroom::find($classroomId);
+        // You can add more error handling here if the classroom is not found.
+
+        return view('Classroom/classroom_lect_edit_class', ['classroom' => $classroom]);
+    }
+
+
+    function lect_update_classroom(Request $request, $id){
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'course_code' => 'required|string|max:255',
+            'group' => 'required|string|max:255',
+            // Add more validation rules if needed
+        ]);
+
+        $classroom = Classroom::find($id);
+
+        if (!$classroom) {
+            // Handle the case where the classroom is not found
+            return redirect()->back()->with('error_message', 'Classroom not found.');
+        }
+
+        // Update the classroom properties
+        $classroom->name = $request->input('name');
+        $classroom->coursecode = $request->input('course_code');
+        $classroom->group = $request->input('group');
+
+        // Save the updated classroom
+        $classroom->save();
+
+        // Redirect with success message
+        return redirect()->route('classroom_lect_home')->with('success_message', 'Classroom updated successfully.');
+    
+    }
+
+    public function lect_remove_student($id)
+    {
+        $student = Classstudent::where('idstudent', $id)->first();
+        $classroom = $student -> idclass;
+        if (!$student) {
+            // Handle the case where the student is not found
+            return redirect()->back()->with('error_message', 'Student not found.');
+        }
+
+        // Remove the student
+        $student->delete();
+
+        // Redirect with success message
+        return redirect()->route('class_lect_people', ['classroom' => $classroom])->with('success_message', 'Student removed successfully.');
+    }
+    
 
 }

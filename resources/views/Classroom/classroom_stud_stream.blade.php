@@ -20,7 +20,8 @@
     .ann_header{
         display: flex;
         flex-direction: row;
-        margin:5px 20px 5px 20px;
+        margin:20px 20px 5px 20px;
+    
     }
 
     .ann_header p, .ann_header h1{
@@ -55,6 +56,7 @@
         font-weight: 500;
         line-height: normal;
         margin-left:auto;
+        margin-right:30px;
     }
 
     .ann_content{
@@ -65,18 +67,19 @@
     border-top: 1px solid #BFBFBF;
     cursor: pointer;
     border-radius: 0px 0px 8px 8px;
+    background: #FAFAFA;
     font-family: 'Roboto';
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    background: #FAFAFA;
+    text-align: center;
     }
 
     .ann_content p{
-        padding:5px 20px 5px 20px;
+        padding:17px 20px 1px 20px;
+  
     }
-
     .class_button{
         border-radius: 8px;
         background: var(--Button, #2A2A2A); 
@@ -92,10 +95,9 @@
         margin-right:20px;
         cursor:pointer;
     }
+    
 
 </style>
-
-
 
 
 @foreach ($announcements as $announcement)
@@ -107,6 +109,19 @@
                 <h1 class="ann_category">Announcement</h1>
                 <p class="author">{{$announcement->user->name}}<p>
                     <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                    
+                    @if($announcement->user_id == $currentUser->id)
+                    <div class="button-container">
+                        <div class="menu-icon" onclick="toggleMenu(this, event)">
+                            <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                        </div>
+                        <div class="action-menu">
+                            <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
+                            <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        </div>
+                       
+                    </div>
+                    @endif
                 </div>
                 <div class="ann_content">
                 <p>{{ $announcement->annText->content }}</p>
@@ -121,6 +136,19 @@
             <h1 class="ann_category">Quiz</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                
+                @if($announcement->user_id == $currentUser->id)
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
+                @endif
+
             </div>
 
             <div class="ann_content">
@@ -137,6 +165,20 @@
             <h1 class="ann_category">Q&A</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                
+                @if($announcement->user_id == $currentUser->id)
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
+                @endif
+
             </div>
             <div class="ann_content" onclick="redirect('{{ route('class_specify_qna', ['qna' => $announcement->annQna->id]) }}')">
             <p>{{ $announcement->annQna->question }}</p>
@@ -151,6 +193,20 @@
             <h1 class="ann_category">Polls</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                
+                @if($announcement->user_id == $currentUser->id)
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
+                @endif
+
             </div>
             <div class="ann_content" onclick="redirect('{{ route('class_specify_polls', ['polls' => $announcement->annPolls->id]) }}')">
             <p>{{ $announcement->annPolls->question }}</p>
@@ -164,6 +220,19 @@
             <h1 class="ann_category">Feedback</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                
+                @if($announcement->user_id == $currentUser->id)
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
+                @endif
+
             </div>
             <div class="ann_content">
             <p> A new feedback has been assigned. Fill it now!</p>
@@ -183,5 +252,6 @@
 function redirect(url) {
         window.location.href = url;
     }
+
 </script>
 @endsection

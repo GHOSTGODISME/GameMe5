@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
+    z-index: -1;
     }
 
     .class_container_row1{
@@ -73,7 +74,7 @@
     align-items: center; 
     width:50px;
     height:50px;
-   
+    z-index: 1;
   } 
 
 
@@ -112,6 +113,7 @@
     font-style: normal;
     font-weight: 200;
     line-height: normal;
+    z-index: 1;
   }
 
   .action-menu a:hover {
@@ -129,32 +131,31 @@
     @endphp
     <div class="classroom_container" style="background-color: {{ $randomColor }};" onclick="redirect('{{ route('class_lect_stream', ['classroom' => $classroom->id]) }}')">
         <div class="class_container_row1">
-        <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
-        <div class="button-container">
-            <div class="menu-icon" onclick="toggleMenu(this, event)">
-                <img src="img/threedot_white.png" alt="three_dot">
-            </div>
-            <div class="action-menu">
-                <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Remove Class</a>
+            <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
+
+            <div class="button-container">
+                <div class="menu-icon" onclick="toggleMenu(this, event)">
+                    <img src="img/threedot_white.png" alt="three_dot">
+                </div>
+                <div class="action-menu">
+                    <a href="#" onclick="redirect('{{ route('lect_update_class', ['classroom' => $classroom->id]) }}')">Edit Class</a>
+                    <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Remove Class</a>
+                </div>
             </div>
         </div>
 
-        </div>
         <div class="class_container_row2">
-        <p>{{ $classroom->name }}</p>
+            <p>{{ $classroom->name }}</p>
         </div>
 
         <div class="class_container_row3">
             <p> {{ $classroom->creator->user->name }}</p>
         </div>
-
     </div>
 @endforeach
 
-
-
 <script>
- function confirmAndSubmit(classroomId) {
+    function confirmAndSubmit(classroomId) {
         if (confirm("Are you sure you want to remove this classroom?")) {
             $.ajax({
                 url: "{{ route('classroom_remove') }}",
@@ -172,19 +173,18 @@
                     }
                 },
                 error: function () {
-                        alert('Error removing classroom');
-                    }
+                    alert('Error removing classroom');
+                }
             });
         }
     }
 
-function redirect(url) {
+    function redirect(url) {
         window.location.href = url;
     }
 
- // Add a variable to keep track of the currently open menu
-let openMenu = null;
-
+    // Add a variable to keep track of the currently open menu
+    let openMenu = null;
 // Function to toggle menu visibility
 function toggleMenu(icon, event) {
     event.stopPropagation(); // Stop event propagation to prevent the container click
@@ -201,6 +201,11 @@ function toggleMenu(icon, event) {
         openMenu.style.display = 'block';
         // Add a click event listener to the document body to close the menu when clicking outside
         document.body.addEventListener('click', handleBodyClick);
+
+        // Add a click event listener to the menu to stop propagation
+        menu.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
     } else {
         closeMenu(menu);
     }
@@ -224,7 +229,5 @@ function handleBodyClick() {
 
 // Add a click event listener to the document body
 document.body.addEventListener('click', handleBodyClick);
-
-
 </script>
 @endsection

@@ -25,14 +25,16 @@
 
      /* Navigation panel styles */
      .navigation-panel {
+     
         position: fixed;
         top: 0;
         right: -300px; /* Initially off-screen */
         width: 300px;
         height: 100%;
-        background: #3CCBC3;;
+        background: #3CCBC3;
         transition: right 0.3s ease;
-        z-index: 1;
+        z-index: 1000; /* Set a higher z-index value */
+
     }
 
     .nav-link {
@@ -82,7 +84,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
-            <a href="#" class="nav-link">Quiz</a>
+            <a href="{{ route('quiz-index') }}" class="nav-link">Quiz</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
@@ -90,19 +92,19 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
-            <a href="#" class="nav-link">Feedback</a>
+            <a href="{{ route('survey-index') }}" class="nav-link">Feedback</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
-            <a href="#" class="nav-link">Session</a>
+            <a href="{{ route('quiz-session-lecturer') }}" class="nav-link">Session</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
-            <a href="#" class="nav-link">Tools</a>
+            <a href="{{ route('fortune-wheel-index') }}" class="nav-link">Tools</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/report_icon.png') }}" alt="report_icon">
-            <a href="#" class="nav-link">Report</a>
+            <a href="{{ route('report_home') }}" class="nav-link">Report</a>
         </div>
         <!-- Add more navigation links as needed -->
     </div>

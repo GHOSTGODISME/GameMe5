@@ -21,13 +21,44 @@
     margin-left:90px;
     margin-top:30px; 
     margin-right:90px; 
+    padding-bottom:50px;
     }
     .title_container{
         display:flex;
         flex-direction:row;
         width:100%;
-        justify-content: flex-end;
+        align-items: center;
     }
+
+    .title_container a{
+       margin:0;
+       padding:0;
+    }
+
+
+    .class_title{
+        color: var(--Button, #2A2A2A);
+        font-family: 'Roboto';
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-bottom: 0;
+      
+    }
+
+    .class_subtitle{
+        color: #5C5C5C;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-decoration:underline;
+        margin-right:75%;
+        align-self: flex-end;
+    }
+
 
     .add_icon{
         width:30px;
@@ -50,6 +81,7 @@
     .search-form {
         position: relative;
         margin-top:15px;
+        margin-right:10px;
     }
 
     /* Style for the search icon */
@@ -88,24 +120,20 @@
 @include('Layout/lect_header')
 
 <div class="content">
-<h1 class="class_title">Classroom</h1>
- <div class = title_container>
-
-    <div class="sub_cont">
-    <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
-        <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
-        <input type="text" name="search" class="search-input" placeholder="Search">
-    </form>
-    </div>
-    <div class="sub_cont">
-        <a href="{{ route('lect_add_class') }}">
-            <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
-        </a>
-    </div>
-
-</div>
-    <!-- Page Content -->
-    @yield('content')
-</div>       
+    <h1 class="class_title">Classroom</h1>
+        <div class="title_container">
+            <h3 class="class_subtitle">Classes</h3>
+            <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
+                <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
+                <input type="text" name="search" class="search-input" placeholder="Search">
+            </form>
+            <a href="{{ route('lect_add_class') }}">
+                <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
+            </a>
+        </div>
+        <!-- Page Content -->
+    
+        @yield('content')
+    </div>       
 </body>
 </html>

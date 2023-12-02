@@ -18,11 +18,11 @@ class StudentController extends Controller{
         return view('User/stud_homepage');
     }
 
-   function getStudInfo()
+   function getStudInfo(Request $request)
     {
         // Retrieve student information from the database
-       // $email = $request->session()->get('email');
-        $email='aa@gmail.com';
+        $email = $request->session()->get('email');
+        // $email='aa@gmail.com';
         $student = User::where('email', $email)->first();
         // Check if the student is found
         if (!$student) {
@@ -36,8 +36,8 @@ class StudentController extends Controller{
     {
         $field = $request->input('field');
         $value = $request->input('value');
-        // $email = $request->session()->get('stud_email');
-        $email='wongtian628@gmail.com';
+        $email = $request->session()->get('stud_email');
+        //$email='wongtian628@gmail.com';
         // Assuming your User model has an 'email' column
         $user = User::where('email', $email)->first();
 
@@ -59,8 +59,8 @@ class StudentController extends Controller{
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
     
         $uploadedFile = $request->file('profile_picture');
@@ -100,8 +100,8 @@ class StudentController extends Controller{
         $currentPassword = $request->input('current_password');
 
         // Retrieve the user's hashed password from the database
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $hashedPassword = $user->password;
 
@@ -119,8 +119,8 @@ class StudentController extends Controller{
         'new_password' => 'required|min:6',
     ]);
 
-    // $email = $request->session()->get('email');
-    $email = 'aa@gmail.com';
+    $email = $request->session()->get('email');
+    //$email = 'aa@gmail.com';
     $user = User::where('email', $email)->first();
     // Update the password
     $user->password = bcrypt($request->input('new_password'));

@@ -53,6 +53,7 @@
         font-weight: 500;
         line-height: normal;
         margin-left:auto;
+        margin-right:30px;
     }
 
     .ann_content{
@@ -103,6 +104,16 @@
             <div class="ann_header">
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
+                <div class="button-container">
+                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
+                    </div>
+                    <div class="action-menu">
+                        <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
+                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    </div>
+                   
+                </div>
             </div>
             <div class="ann_content" onclick="redirect('{{ route('class_lect_specify_polls', ['polls' => $announcement->annPolls->id]) }}')">
             <p>{{ $announcement->annPolls->question }}</p>

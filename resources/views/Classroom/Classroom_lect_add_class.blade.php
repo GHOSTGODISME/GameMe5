@@ -8,8 +8,9 @@
 .class_row {
     display: flex;
     flex-direction: row;
-    width: 50%;
+    width: 60%;
     justify-content: space-between;
+    margin-top:30px;
 }
 
 .studE_info {
@@ -73,10 +74,60 @@
     align-items: center;
 }
 
+.cancel-button:hover{
+    text-decoration: none;
+    color: #FEFEFE;
+}
+
 .success_message {
     color: #28a745;
     margin-top: 10px;
 }
+
+.classroom_title{
+    color: var(--Button, #2A2A2A);
+    font-family: 'Roboto';
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.label_class_stud{
+    color: #000;
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.success-modal {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+    }
+
+    .success-message {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .join-code {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .close-button {
+        width: 120px;
+        height: 40px;
+        font-size: 16px;
+    }
 
 </style>
 
@@ -121,7 +172,28 @@
     </div>
 
     @if (session('success_message'))
-        <div class="success_message">{{ session('success_message') }}</div>
+    <!-- Bootstrap Modal for Success Message -->
+<!-- Bootstrap Modal for Success Message -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body success-modal">
+                <div class="text-center">
+                    <img src="{{ asset('img/success_icon.png') }}" alt="Success Icon" class="success-icon">
+                </div>
+                <p class="success-message">{{ session('success_message') }}</p>
+                <p class="join-code"><strong>Join Code: {{ session('joinCode') }}</strong></p>
+                <button type="button" class="btn btn-primary close-button" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-- Show the modal using JavaScript -->
+        <script>
+            $(document).ready(function () {
+                $('#successModal').modal('show');
+            });
+        </script>
     @endif
 </form>
 

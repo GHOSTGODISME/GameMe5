@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class AnnFeedback extends  Model
 {
     public $timestamps = false;
-    protected $table = "ann_feedback";
+    protected $table = "ann_survey";
 
     protected $fillable = [
         'id', 
         'ann_id', 
-        'feedback_id',
+        'survey_id',
     ];
     
     public function announcement()
