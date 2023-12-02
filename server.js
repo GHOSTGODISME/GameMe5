@@ -317,6 +317,7 @@ function handleSessionEvents(socket) {
     if (sessions[sessionCode]) {
       updateSessionStatus('running', sessionCode);
       initializeLeaderboard(sessionCode);
+      const sessionStatus = sessions[sessionCode].sessionStatus;
       io.to(sessionCode).emit('session status', sessionStatus);
 
     }
