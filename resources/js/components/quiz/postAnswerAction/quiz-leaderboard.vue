@@ -67,7 +67,7 @@
                 });
             },
             startTimer() {
-                this.timeRemaining = 1;
+                this.timeRemaining = 5;
                 this.progressBarValue = 100;
 
                 this.timerInterval = setInterval(() => {

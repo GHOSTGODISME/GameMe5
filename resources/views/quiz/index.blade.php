@@ -129,6 +129,13 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+        console.log("quizzes");
+        console.log(@JSON(quizzes));
+        console.log("allQuizzes");
+        console.log(@JSON(allQuizzes));
+        console.log("ownQuizzes");
+        console.log(@JSON(ownQuizzes));
+
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete this quiz?')) {
                 // Make an AJAX request to delete the quiz

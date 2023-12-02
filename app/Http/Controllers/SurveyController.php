@@ -166,6 +166,17 @@ class SurveyController extends Controller
         return response()->json(['message' => 'Survey created or updated successfully', 'survey' => $survey]);
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $surveys = Survey::when($search, function ($query) use ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->get();
+
+        return view('survey.index', ['surveys' => $surveys]);
+    }
+
     public function getSurvey($id)
     {
         // Fetch the survey details by ID from the database
@@ -240,16 +251,7 @@ class SurveyController extends Controller
         return view('survey.show-responses', ['surveyResponses' => $surveyResponses]);
     }
 
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
 
-        $surveys = Survey::when($search, function ($query) use ($search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })->get();
-
-        return view('survey.index', ['surveys' => $surveys]);
-    }
 
     public function returnSurvey($userId, $imageData)
     {

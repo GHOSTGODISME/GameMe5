@@ -60,7 +60,7 @@
             this.initializeSocket();
             this.startTimer();
             this.startTimer();
-            this.socket = io("http://localhost:3000");
+            // this.socket = io("http://localhost:3000");
         },
         methods: {
             initializeSocket() {
@@ -74,8 +74,8 @@
                     currentQuestion.duration :
                     this.defaultTime;
 
-                // this.timeRemaining = questionDuration;
-                this.timeRemaining = 5;
+                this.timeRemaining = questionDuration;
+                // this.timeRemaining = 5;
                 this.progressBarValue = 100;
 
                 this.timerInterval = setInterval(() => {
