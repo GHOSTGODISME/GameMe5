@@ -18,14 +18,16 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->string('accountType');
+            $table->string('gender');
+            $table->date('dob')->default('2002-04-16');
+            $table->integer('verification_code')->default(0);
+            $table->string('profile_picture')->nullable()->default(NULL);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('users');
     }

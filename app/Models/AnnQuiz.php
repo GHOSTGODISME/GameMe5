@@ -12,7 +12,7 @@ class AnnQuiz extends  Model
     protected $fillable = [
         'id', 
         'ann_id', 
-        'quiz_id',
+        'session_id',
     ];
     // public function announcement()
     // {
