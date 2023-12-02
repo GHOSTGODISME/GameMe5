@@ -26,10 +26,25 @@ class InteractiveSessionController extends Controller
             'start_time' => now(),
         ]);
         
-        return view("Interactive-Sessions.interactiveSession-lecturer", [
-            "title" => $title,
-            "sessionCode" => $sessionCode,
-            "sessionId" => $session->id,
+        // return view("Interactive-Sessions.interactiveSession-lecturer", [
+        //     "title" => $title,
+        //     "sessionCode" => $sessionCode,
+        //     "sessionId" => $session->id,
+        // ]);
+
+        return redirect()->route('interactive-session-lecturer', [
+            'title' => $title,
+            'sessionCode' => $sessionCode,
+            'sessionId' => $session->id,
+        ]);
+        
+    }
+
+    public function showInteractiveSessionLecturer(Request $request){
+                return view("Interactive-Sessions.interactiveSession-lecturer", [
+            "title" => $request->input('title'),
+            "sessionCode" => $request->input('sessionCode'),
+            "sessionId" => $request->input('sessionId'),
         ]);
     }
 
@@ -58,6 +73,5 @@ class InteractiveSessionController extends Controller
             $session->status = 'ended';
             $session->end_time = now();
         }
-
     }
 }

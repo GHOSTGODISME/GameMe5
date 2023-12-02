@@ -83,6 +83,13 @@
             letter-spacing: 5px;
             text-align: center;
         }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-content: center;
+        }
     </style>
 </head>
 
@@ -129,11 +136,11 @@
                     </div>
                 </div>
                 <div class="col-md-6 session-polls-container">
-                    <div style="text-align: end;">
-                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
-                                class="fa fa-solid fa-plus"></i> New Poll</a>
+                    <div class="flex-container">
+                        <h3>Polls</h3>
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
+                                    class="fa fa-solid fa-plus"></i> New Poll</a>
                     </div>
-
                     <div class="big-polls-container">
                     </div>
 
@@ -201,7 +208,11 @@
         const username = "testname";
 
         console.log(sessionCode);
-        socket.emit("createInteractiveSession", sessionCode);
+        socket.emit("createInteractiveSession", {
+            sessionCode,
+            id,
+            username
+        });
 
         socket.on('chatMessageReceived', (data) => {
             const {

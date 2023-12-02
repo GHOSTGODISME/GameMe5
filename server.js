@@ -48,13 +48,14 @@ function initializePollVotes(sessionCode, pollId, options) {
 function voteForPollOption(sessionCode, pollId, optionSelected) {
   const interactiveSession = interactiveSessions[sessionCode];
 
-  if ( interactiveSession&& interactiveSession.votes[pollId]) {
+  if (interactiveSession && interactiveSession.votes[pollId]) {
     console.log("pass1");
     if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
-    console.log("pass2");
-      
+      console.log("pass2");
+
       interactiveSession.votes[pollId][optionSelected]++;
-      io.to(sessionCode).emit('pollVoteReceived', {pollId,
+      io.to(sessionCode).emit('pollVoteReceived', {
+        pollId,
         optionSelected,
         votes: interactiveSession.votes[pollId],
       });
@@ -153,25 +154,29 @@ function handleSession(socket) {
     }
   });
 
-  socket.on('createInteractiveSession', (sessionCode) => {
-    console.log(sessionCode + " entered");
-    if (!interactiveSessions[sessionCode]) {
-      console.log(sessionCode + " - interactive session created");
-      initializeInteractiveSessionData(sessionCode);
-      broadcastAllIS(sessionCode);
-    }
-    socket.join(sessionCode);
-    console.log(sessionCode + " - interactive session joined");
-  })
 
-  socket.on('rejoinInteractiveSessionRoom', (sessionCode) => {
-    if (interactiveSessions[sessionCode]) {
-      socket.join(sessionCode);
-    }
-  })
 }
 
 function handleInteractiveSession(socket) {
+  socket.on('createInteractiveSession', (data) => {
+    const { sessionCode, id, username } = data;
+
+    if (!interactiveSessions[sessionCode]) {
+      console.log(sessionCode + " - interactive session created");
+      initializeInteractiveSessionData(sessionCode);
+    }
+    const participants = interactiveSessions[sessionCode].participants;
+    const existingUser = participants.find((participant) => participant.id === id);
+
+      if (!existingUser) {
+        participants.push({ id, username });
+      }
+
+    socket.join(sessionCode);
+    console.log(sessionCode + " - interactive session joined");
+    broadcastAllIS(sessionCode)
+  })
+
   socket.on('sendChatMessage', (data) => {
     const { sessionCode, id, username, message } = data;
     if (interactiveSessions[sessionCode]) {
@@ -204,7 +209,7 @@ function handleInteractiveSession(socket) {
     }
   });
 
-  socket.on('exportChatMessage', (sessionCode)=>{
+  socket.on('exportChatMessage', (sessionCode) => {
     if (interactiveSessions[sessionCode]) {
       const messages = interactiveSessions[sessionCode].messages;
       io.to(sessionCode).emit('returnChatMessage', messages);
@@ -297,15 +302,12 @@ function handleJoinEvents(socket) {
 
       if (!existingUser) {
         participants.push({ id, username });
-        broadcastAllIS(sessionCode);
       }
 
       console.log("start " + sessionCode);
       console.log(participants);
       console.log("end " + sessionCode);
-      
-
-
+      broadcastAllIS(sessionCode);
     } else {
       console.log("not joined");
     }

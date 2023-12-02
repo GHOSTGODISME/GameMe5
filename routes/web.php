@@ -212,9 +212,10 @@ Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'gen
 
 
 Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
-Route::get('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
+Route::post('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
 Route::get('/join-interactive-session', [InteractiveSessionController::class, 'joinInteractiveSession'])->name('join-interactive-session');
 Route::put('/end-interactive-session/{sessionId}', [InteractiveSessionController::class, 'endInteractiveSession']);
+Route::get('/interactive-session-lecturer', [InteractiveSessionController::class, 'showInteractiveSessionLecturer'])->name('interactive-session-lecturer');
 
 // Serve Vue app's entry point
 Route::get('/quiz/{any}', function () {
