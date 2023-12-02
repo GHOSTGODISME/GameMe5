@@ -13,20 +13,48 @@ class QuizController extends Controller
 {
     public function index(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $lecturer = Lecturer::where('iduser', $user->id)->first() ?? 1;
 
         $quizzes = Quiz::all();
         $allQuizzes = Quiz::all();
 
-        $ownQuizzes = $lecturer->quizzes()->get();
+        // $ownQuizzes = $lecturer->quizzes()->get();
 
         return view('quiz.index', [
             'quizzes' => $quizzes,
-            'allQuizzes' => $allQuizzes, 
-            'ownQuizzes' => $ownQuizzes
+            'allQuizzes' => $allQuizzes,
+            // 'ownQuizzes' => $ownQuizzes
         ]);
+    }
+
+    public function index_own_quiz(Request $request)
+    {
+        $quizzes = Quiz::all();
+        $search = $request->input('search');
+
+        if ($request->has('search')) {
+        $quizzes = Quiz::when($search, function ($query) use ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->get();
+        }
+        
+        return view('quiz.index-own-quiz', ['quizzes' => $quizzes]);
+    }
+
+    public function index_all_quiz(Request $request)
+    {
+        $quizzes = Quiz::where('visibility','public')->get();
+        $search = $request->input('search');
+
+        if ($request->has('search')) {
+            $quizzes = $quizzes->when($search, function ($query) use ($search) {
+                return $query->where('title', 'like', '%' . $search . '%');
+            })->get();
+        }    
+
+        return view('quiz.index-all-quiz', ['quizzes' => $quizzes]);
     }
 
     public function create(Request $request)
@@ -38,7 +66,7 @@ class QuizController extends Controller
         return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
-    public function view(Request $request,$id)
+    public function view(Request $request, $id)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'view';
@@ -47,7 +75,7 @@ class QuizController extends Controller
         return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
-    public function edit(Request $request,$id)
+    public function edit(Request $request, $id)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'edit';

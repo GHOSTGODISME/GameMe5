@@ -1,35 +1,40 @@
-@extends('Layout/index_master')
+@extends('Layout/interactive_tools_master')
 @section('content')
-    <h1 class= "admin_title">Fortune Wheels</h1>
 
-    <div class = "title_bar">
-        <div>
+    <div class="lecturer-index-body">
+        <h1>Fortune Wheels</h1>
+
+        <div class="search-top-container">
+            <div class="search-container">
+                <form action="{{ route('search-fortune-wheel') }}" method="GET">
+                    <label>
+                        <span class="fa fa-search"></span>
+                        <input type="search" placeholder="Search" name="search" value="{{ request()->input('search') }}">
+                    </label>
+                    <button type="submit" class="btn btn-dark"><span class="fa fa-search"></span> Search</button>
+                </form>
+            </div>
+            
+
             <a href="{{ route('create-fortune-wheel') }}" class="btn btn-dark add-btn"><i class="fa-solid fa-plus"></i>Add
                 Wheel</a>
         </div>
-        <form action="{{ route('search-fortune-wheel') }}" method="GET" class="search-form">
-            <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
-            <input type="text" name="search" class="search-input" placeholder="Search">
-            <button type="submit" class="search-button">Search</button>
-        </form>
-    </div>
 
-
-        <div class="table-responsive">
+        <div class="table-responsive lecturer-index-table-container">
             @if (count($fortuneWheels) > 0)
-                <table class="admin_table">
+                <table class="table ">
                     <thead>
                         <tr>
-                            <th class="bordered">No</th>
-                            <th class="bordered">Title</th>
-                            <th class="bordered">Modified Date</th>
-                            <th class="bordered">Action</th>
+                            <th width="10%">No.</th>
+                            <th width="45%">Title</th>
+                            <th width="30%">Modified Date</th>
+                            <th width="15%">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($fortuneWheels as $fortuneWheel)
+                        @foreach ($fortuneWheels as $index => $fortuneWheel)
                             <tr>
-                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $index + 1 }}</td>
                                 <td>{{ $fortuneWheel->title }}</td>
                                 <td>{{ $fortuneWheel->updated_at->format('Y-m-d H:i:s') }}</td>
 

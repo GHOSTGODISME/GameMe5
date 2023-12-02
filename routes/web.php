@@ -213,6 +213,11 @@ Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('del
 Route::post('/save-quiz', [QuizController::class, 'store']);
 Route::get('/find-quiz', [QuizController::class, 'search'])->name('find-quiz');
 
+Route::get('/quiz-index-own-quiz', [QuizController::class, 'index_own_quiz'])->name('own-quiz');
+Route::get('/quiz-index-own-quiz-search', [QuizController::class, 'index_own_quiz'])->name('own-quiz-search');
+Route::get('/quiz-index-all-quiz', [QuizController::class, 'index_all_quiz'])->name('all-quiz');
+Route::get('/quiz-index-all-quiz-search', [QuizController::class, 'index_all_quiz'])->name('all-quiz-search');
+
 
 Route::get('/join-quiz', [QuizSessionController::class, 'joinQuiz'])->name('join-quiz');
 Route::get('/quiz/details/{code}', [QuizSessionController::class, 'getQuizDetails']);

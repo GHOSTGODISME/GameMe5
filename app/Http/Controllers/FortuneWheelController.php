@@ -9,18 +9,17 @@ use Illuminate\Support\Facades\View;
 
 class FortuneWheelController extends Controller
 {
+
+    public function index()
+    {
+        $fortuneWheels = FortuneWheel::all();
+        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
+    }
     public function createFortuneWheel()
     {
         $fortuneWheel = new FortuneWheel();
         //$fortuneWheel->save();
         return view('Interactive-tools.fortune-wheel-edit', compact('fortuneWheel'));
-    }
-
-    // Index method that redirects to createFortuneWheel
-    public function index()
-    {
-        $fortuneWheels = FortuneWheel::all();
-        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
     }
 
     public function updateFortuneWheel(Request $request)
