@@ -12,6 +12,13 @@ class InteractiveSessionController extends Controller
     {
         return view("Interactive-Sessions.index");
     }
+
+    public function stud_index()
+    {
+        return view("Interactive-Sessions.stud_index");
+    }
+
+
     public function createInteractiveSession(Request $request)
     {
         $title = $request->input('title');

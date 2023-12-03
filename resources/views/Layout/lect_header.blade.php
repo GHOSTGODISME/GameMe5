@@ -8,10 +8,11 @@
     } 
     
     .logo{
-        width: 200px;
+        width: 180px;
         height: 50px;
         flex-shrink: 0;
-        margin-top:30px;
+        margin-top:25px;
+        margin-left:50px;
     }
 
     .hamburger{
@@ -68,6 +69,12 @@
         margin-top:40px;
     }
 
+    
+    .menu_icons{
+        width:60px;
+        height:60px;
+    }
+
 
 </style>
     <div class="header_container">
@@ -79,31 +86,31 @@
             <img src="{{ asset('img/close_icon.png') }}" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
+            <img  class="menu_icons" src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
             <a href="{{ route('lect_profile') }}" class="nav-link">Profile</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
-            <a href="{{ route('quiz-index') }}" class="nav-link">Quiz</a>
+            <img class="menu_icons" src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
+           <a href="{{ route('own-quiz') }}" class="nav-link">Quiz</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
+            <img class="menu_icons" src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
             <a href="{{ route('classroom_lect_home') }}" class="nav-link">Classroom</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
+            <img class="menu_icons" src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
             <a href="{{ route('survey-index') }}" class="nav-link">Feedback</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
+            <img class="menu_icons" src="{{ asset('img/session_icon.png') }}" alt="session_icon">
             <a href="{{ route('interactive-session-index') }}" class="nav-link">Session</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
+            <img class="menu_icons" src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
             <a href="{{ route('fortune-wheel-index') }}" class="nav-link">Tools</a>
         </div>
         <div class="nav_row">
-            <img src="{{ asset('img/report_icon.png') }}" alt="report_icon">
+            <img class="menu_icons" src="{{ asset('img/report_icon.png') }}" alt="report_icon">
             <a href="{{ route('report_home') }}" class="nav-link">Report</a>
         </div>
         <!-- Add more navigation links as needed -->

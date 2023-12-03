@@ -237,6 +237,8 @@ Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class,
 Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
 
 
+Route::get('/stud_index', [InteractiveSessionController::class,'stud_index'])->name("stud_index");
+Route::post('/stud-join-interactive-session', [InteractiveSessionController::class,'stud_join_interactive_session'])->name("stud-join-interactive-session");
 Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
 Route::post('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
 Route::get('/join-interactive-session', [InteractiveSessionController::class, 'joinInteractiveSession'])->name('join-interactive-session');

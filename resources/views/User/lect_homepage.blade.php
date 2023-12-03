@@ -222,7 +222,7 @@
         font-size: 14px;
     }
 </style>
-<div class="content">
+
     <div class="title_container">
     <h1 class="class_title">Classroom</h1>
     <a href="{{ route('classroom_lect_home')}}" class="class_subtitle">View More</a>
@@ -288,7 +288,7 @@
             </a>
         </div>
 
-</div>  
+
 <script>
     const bigBigCont = document.getElementById('bigBigCont');
     const container = document.querySelector('.classroom_container');

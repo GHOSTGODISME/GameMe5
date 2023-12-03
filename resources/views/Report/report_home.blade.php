@@ -187,6 +187,7 @@
             <th class="bordered">Quiz Name</th>
             <th class="bordered">Creation Date</th>
             <th class="bordered">Created By</th>
+            <th class="bordered">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -195,7 +196,7 @@
                 <td class="bordered">{{ $loop->index + 1 }}</td>
                 <td class="bordered"><a href="{{ route('report_specify', ['reportId' => $report->id]) }}">{{ $report->quiz->title }}</a></td>
                 <td class="bordered">{{ $report->created_at }}</td>
-                <td class="bordered">{{ $report->lecturer->user->name }}</td>
+                <td class="bordered">{{ $report->lecturer->user->name}}</td>
                 <td class="button-container">
                     <div class="menu-icon" onclick="toggleMenu(this)">
                         <img src="img/threedot_icon.png" alt="three_dot">
@@ -205,7 +206,7 @@
                     </div>
                 </td>
             </tr>
-        @endforeach 
+        @endforeach
     </tbody>
 </table>
 

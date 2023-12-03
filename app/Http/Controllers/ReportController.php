@@ -30,7 +30,6 @@ class ReportController extends Controller{
         }
 
         $sessionData = $query->get(['sessions.*', 'quizzes.title as quiz_title']); // Include the 'quizzes.title' in the selected columns
-
         return view('Report/report_home', compact('sessionData'));
     }
 

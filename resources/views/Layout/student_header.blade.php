@@ -1,3 +1,13 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap'">
+    <title>@yield('title', 'GameMe5')</title>
+ 
+</head>
+
 <style>
     .header_container{
         width:100%;
@@ -66,6 +76,12 @@
         align-items: flex-end;
         margin-top:30px;
     }
+
+    .menu_icons{
+        width:60px;
+        height:60px;
+    }
+
 </style>
 
 <div class="header_container">
@@ -78,20 +94,17 @@
         <img src="{{ asset('img/close_icon.png') }}" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
     </div>
     <div class="nav_row">
-        <img src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
+        <img  class="menu_icons" src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
         <a href="{{ route('stud_profile') }}" class="nav-link">Profile</a>
     </div>
+    
     <div class="nav_row">
-        <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
-        <a href="#" class="nav-link">Quiz</a>
-    </div>
-    <div class="nav_row">
-        <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
+        <img class="menu_icons"  src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
         <a href="{{ route('classroom_stud_home') }}" class="nav-link">Classroom</a>
     </div>
     <div class="nav_row">
-        <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
-        <a href="{{ route('interactive-session-index') }}" class="nav-link">Session</a>
+        <img class="menu_icons"  src="{{ asset('img/session_icon.png') }}" alt="session_icon">
+        <a href="{{ route('stud_index') }}" class="nav-link">Session</a>
     </div>
     <!-- Add more navigation links as needed -->
 </div>

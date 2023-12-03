@@ -42,7 +42,7 @@ class UserAuthController extends Controller{
                     break;
                 case 'admin':
                     $request->session()->put('email', $request->email);
-                    return redirect()->intended(route('admin'));
+                    return redirect()->intended(route('admin_stud'));
                     break;
                 default:
                     Auth::logout();

@@ -91,7 +91,7 @@
                     <div>
                     <div class="styled-select">
                         <select name="accountType" class="admin_input">
-                            <option value="student">Student</option>
+                            <option value="lecturer">Staff</option>
                             <!-- Add more options if needed -->
                         </select>
                     </div>

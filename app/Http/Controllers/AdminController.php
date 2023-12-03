@@ -96,7 +96,7 @@ class AdminController extends Controller{
         $user = User::create($validatedData);
 
         $lecturerData = ['position' => $validatedData['position']];
-        $lecturer = Lecturer::create(['id' => $user->id] + $lecturerData);
+        $lecturer = Lecturer::create(['iduser' => $user->id] + $lecturerData);
 
         // Redirect or respond as needed (e.g., return a success message)
         return redirect()->route('admin_staff')->with('success_message', 'Staff created successfully');
@@ -114,7 +114,8 @@ class AdminController extends Controller{
 
     function admin_edit_staff($staffId)
     {
-            $staff = Lecturer::where('id', $staffId)->first();
+            $staff = Lecturer::where('iduser', $staffId)->first();
+
             // Retrieve the staff with the given ID along with the associated lecturer
             $user = User::findOrFail($staffId);
 
@@ -153,19 +154,25 @@ class AdminController extends Controller{
     
     function admin_update_staff(Request $request, $staffId)
     {
-        // Validate the request data
+
+       
+       
+
+        $staff = Lecturer::where('id', $staffId)->first();
+        $userId = $staff->user->id;
+     
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $staffId, // Include user ID to exclude the current user from uniqueness check
-            'new_password' => 'nullable|string|min:6',
-            'dob' => 'required|date',
-            'gender' => 'required|in:male,female',
-            'position' => 'required|string',
+            'name' => 'required',
+            'email'=>'required',
+            'new_password' => 'nullable',
+            'dob' => 'required',
+            'gender' => 'required',
+            'position' => 'required',
             // Add other validation rules as needed
         ]);
     
         // Update the student details
-        $user= User::findOrFail($staffId);
+        $user= User::findOrFail($userId);
         $staff = Lecturer::findOrFail($staffId);
         // Check if a new password is provided
         if ($request->filled('new_password')) {

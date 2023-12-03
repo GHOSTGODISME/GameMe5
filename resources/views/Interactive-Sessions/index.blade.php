@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
-    <title>Document</title>
+    <title>Sessions</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
 
 
     <style scoped>
         body {
-            display: grid;
-            place-items: center;
             background: linear-gradient(90deg, #13C1B7 0%, #87DFA8 100%);
+            margin:0;
+            padding:0;
         }
 
         .content-body {
@@ -23,6 +26,7 @@
             justify-content: flex-end;
             align-items: center;
             gap: 80px;
+            margin-top:100px;
         }
 
         img {
@@ -40,20 +44,79 @@
             width: 200px;
             height: 50px;
         }
+
+    #txt_int_code{
+    padding: 25px 15px 20px 15px;
+    border: 1px solid #BFBFBF;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background: #FAFAFA;
+    width: 500px;
+    height: 40px;
+    flex-shrink: 0;
+    margin-top:30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Roboto', sans-serif; /* Replace 'Your Font' with the desired font name */
+    font-size: 25px; /* Adjust the font size as needed */
+    font-weight: bold; /* Adjust the font weight as needed */
+    text-align: center; /* Center the text horizontally */
+}
+
+#txt_int_code:focus{
+    outline: none;
+    border-color: #007bff; /* Change the border color on focus */
+} 
+    
+#txt_int_code::placeholder{
+    color: #A3A3A3;
+    font-family:'Roboto';
+    font-size: 25px;
+    font-style:normal;
+    font-weight: 400;
+    line-height: normal;
+    text-align: center;
+}
+
+.stud_big_cont{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.button_general{
+    width: 300px;
+    height: 45px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: var(--Button, #2A2A2A);
+    color: #FEFEFE;
+    font-family: 'Roboto';
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;  
+}
+
+
     </style>
 </head>
 
 <body>
     {{-- for header template --}}
-
+@include('Layout/lect_header');
     <div class="content-body">
-        <div><img src ="img/logo_header.png" alt="Logo"></div>
+
+        <div class="stud_big_cont">
+            <img src="img/logo_stud.png" alt="logo">
         <form method="POST" action="{{ route('create-interactive-session') }}"
             style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
             @csrf
-            <input type="text" name="title" class="form-control input-style" placeholder="Title">
-            <button type="submit" class="btn btn-dark btn-style">Create Session</button>
+            <input type="text" name="title" id="txt_int_code" class="form-control input-style" placeholder="Title">
+            <button type="submit" class="button_general">Create Session</button>
         </form>
+    </div>
     </div>
 
 
