@@ -23,7 +23,7 @@
         flex-direction: row;
         border-radius: 8px 8px 0 0;
         background: #0195FF;
-        padding:5px 20px 5px 20px;
+        padding:20px 20px 5px 20px;
     }
 
     .ann_header p, .ann_header h1{
@@ -103,7 +103,9 @@
 .option_one, .option_two {
     border: 1px solid #ddd;
     margin: 10px;
-    padding:10px;
+    padding:15px;
+    padding-top:25px;
+    padding-bottom:25px;
     width:500px; /* Adjust the width as needed */
     box-sizing: border-box;
     cursor: pointer;
@@ -111,14 +113,16 @@
     display:flex;
     flex-direction: row;
     justify-content: center;
+    align-content: center;
     align-items: center;
+
 }
 
-
-
-.polls_result {
-    margin-top: 20px;
+.option_one p, .option_two p,.option_one label, .option_two label{
+    margin:0;
+    padding:0;
 }
+
 
 form {
     margin-top: 20px;
@@ -146,7 +150,8 @@ input[type="submit"] {
 }
 
 .polls_result{
-    padding:5px 20px 5px 20px;
+    margin-top: 20px;
+    padding:8px 20px 8px 20px;
     border-top: 1px solid #BFBFBF;
 }
 
@@ -167,6 +172,7 @@ input[type="submit"] {
     margin-left:3px;
 }
 
+
 .progress-container {
     flex: 3;
     height: 20px; /* Increase the height of the progress bar */
@@ -180,6 +186,9 @@ input[type="submit"] {
 .progress{
     display: flex;
     flex-direction: row ;
+    margin:0;
+    height:20px;
+    background:#FFFFFF;
 }
 .progress p{
     color: #000000;
@@ -217,13 +226,21 @@ input[type="submit"] {
     margin: 10px;
 
 }
+
+.info_txt{
+    margin-top:5px;
+    margin-left:30px;
+}
 </style>
 
+
+
+<div class="row">
+<div class="col-md-12">
 <div class="annPolls">
     <div class="ann_header">
     <p class="author">{{$announcement->user->name}}</p>
         <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
-        @if($announcement->user_id == $currentUser->id)
         <div class="button-container">
             <div class="menu-icon" onclick="toggleMenu(this, event)">
                 <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
@@ -234,8 +251,6 @@ input[type="submit"] {
             </div>
            
         </div>
-        @endif
-    
     </div>
     <div class="ann_content">
     <p class="question">{{ $announcement->annPolls->question }}</p>
@@ -295,8 +310,10 @@ input[type="submit"] {
         </div>
     </form>
 @else
-    <p>You have already voted for this poll.</p>
+    <p class="info_txt">You have already voted for this poll.</p>
 @endif
+</div>
+</div>
 </div>
 
 <script>

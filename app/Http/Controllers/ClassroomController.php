@@ -353,7 +353,7 @@ class ClassroomController extends Controller{
         return redirect()->back()->with('success', 'Reply added successfully.');
     }
 
-    public function class_specify_polls(AnnPolls $polls){
+    public function class_specify_polls(AnnPolls $polls, Request $request){
         $polls = AnnPolls::where('id', $polls->id)->first();
         $announcement = Announcement::where('id',$polls->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();
@@ -619,7 +619,7 @@ class ClassroomController extends Controller{
         return view('Classroom/classroom_lect_specify_qna', compact('classroom','qna','announcement'));
     }
    
-    public function class_lect_specify_polls(AnnPolls $polls){
+    public function class_lect_specify_polls(AnnPolls $polls, Request $request){
         $polls = AnnPolls::where('id', $polls->id)->first();
         $announcement = Announcement::where('id',$polls->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();

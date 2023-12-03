@@ -9,14 +9,13 @@
     text-decoration: underline;
     /* Add any other styles for the current page link */
     }
-
-.annPolls{
+  .annPolls{
         border-radius: 8px;
         border: 1px solid #BFBFBF;
         margin-bottom:30px;
-        background: #0195FF;
-
+        background: #3CCBC3;
     }
+
     .ann_header{
         display: flex;
         flex-direction: row;
@@ -25,7 +24,6 @@
 
     .ann_header p, .ann_header h1{
         padding: 0;
-
     }
 
     .ann_category{
@@ -67,10 +65,17 @@
     cursor: pointer;
     border-radius: 0px 0px 8px 8px;
     background: #FAFAFA;
+    font-family: 'Roboto';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
     }
 
     .ann_content p{
-        padding:5px 20px 5px 20px;
+        padding:17px 20px 1px 20px;
+  
     }
 
     .class_button{
@@ -88,6 +93,7 @@
         margin-right:20px;
         cursor:pointer;
     }
+   
 </style>
 
 
@@ -98,7 +104,6 @@
             <div class="ann_header">
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
-                @if($announcement->user_id == $currentUser->id)
                 <div class="button-container">
                     <div class="menu-icon" onclick="toggleMenu(this, event)">
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
@@ -109,10 +114,8 @@
                     </div>
                    
                 </div>
-                @endif
-            
             </div>
-            <div class="ann_content" onclick="redirect('{{ route('class_specify_polls', ['polls' => $announcement->annPolls->id]) }}')">
+            <div class="ann_content" onclick="redirect('{{ route('class_lect_specify_polls', ['polls' => $announcement->annPolls->id]) }}')">
             <p>{{ $announcement->annPolls->question }}</p>
             </div>
         </div>
