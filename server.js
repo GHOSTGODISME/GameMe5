@@ -206,12 +206,34 @@ function handleInteractiveSession(socket) {
     }
   });
 
+  socket.on('saveChatMessage', (sessionCode) => {
+    if (interactiveSessions.get(sessionCode)) {
+      const messages = interactiveSessions.get(sessionCode).messages;
+      io.to(sessionCode).emit('returnChatMessageSave', messages);
+    }
+  })
+
   socket.on('exportChatMessage', (sessionCode) => {
     if (interactiveSessions.get(sessionCode)) {
       const messages = interactiveSessions.get(sessionCode).messages;
       io.to(sessionCode).emit('returnChatMessage', messages);
     }
   })
+
+  socket.on('leaveInteractiveSession', (data) => {
+    console.log('triggered leave');
+    const { sessionCode, id } = data;
+    if (interactiveSessions.get(sessionCode)) {
+      const participants = interactiveSessions.get(sessionCode).participants;
+      interactiveSessions.get(sessionCode).participants =
+        participants.filter((participant) => participant.id !== id);
+
+        console.log(id);
+        console.log(participants);
+        console.log(participants.filter((participant) => participant.id !== id));
+      broadcastAllIS(sessionCode);
+    }
+  });
 }
 
 function buildMsg(id, username, message) {
@@ -242,7 +264,6 @@ function initializeConnection(sessionCode) {
 
 function broadcastAllIS(sessionCode) {
   const participants = interactiveSessions.get(sessionCode).participants;
-
   io.to(sessionCode).emit('is-participants-length', participants.length);
 }
 
@@ -281,7 +302,11 @@ function handleJoinEvents(socket) {
 
   socket.on('endInteractiveSession', (sessionCode) => {
     if (interactiveSessions.get(sessionCode)) {
-      delete interactiveSessions.get(sessionCode);
+      console.log(interactiveSessions.get(sessionCode));
+
+      io.to(sessionCode).emit('interactiveSessionEnded');
+      interactiveSessions.delete(sessionCode);
+      console.log(interactiveSessions.get(sessionCode));
     }
   });
 
@@ -324,7 +349,7 @@ function handleSessionEvents(socket) {
 
   socket.on('endSession', (sessionCode) => {
     if (sessions.get(sessionCode)) {
-      delete sessions.get(sessionCode);
+      sessions.delete(sessionCode);
     }
   });
 
@@ -385,6 +410,7 @@ function handleDisconnect(socket) {
       const participants = sessionData.participants;
       sessionData.participants = participants.filter((participant) => participant.id !== socket.id);
       const leaderboard = sessionData.leaderboard;
+
       delete leaderboard[socket.id]; // Remove the participant from the leaderboard
       io.to(sessionCode).emit('participant left', socket.id);
       io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));

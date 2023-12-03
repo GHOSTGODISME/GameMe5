@@ -17,8 +17,6 @@ return new class extends Migration
             $table->bigInteger('code');
             $table->json('messages')->nullable();
             $table->string('status')->default("live");
-            $table->dateTime('start_time')->nullable();
-            $table->dateTime('end_time')->nullable()->default(null);
             $table->timestamps();
 
             $table->unsignedBigInteger('lecture_id')->nullable();

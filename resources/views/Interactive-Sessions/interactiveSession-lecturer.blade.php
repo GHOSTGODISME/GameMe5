@@ -138,8 +138,8 @@
                 <div class="col-md-6 session-polls-container">
                     <div class="flex-container">
                         <h3>Polls</h3>
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
-                                    class="fa fa-solid fa-plus"></i> New Poll</a>
+                        <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
+                                class="fa fa-solid fa-plus"></i> New Poll</a>
                     </div>
                     <div class="big-polls-container">
                     </div>
@@ -304,18 +304,28 @@
                             'X-CSRF-TOKEN': csrfToken
                         }
                     });
-                    $.ajax({
-                        url: '/end-interactive-session/' + sessionId,
-                        type: 'PUT',
-                        success: function(response) {
-                            socket.emit("endInteractiveSession", sessionCode);
-                            console.log('Session ended successfully');
-                            window.location.href = '/';
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Failed to end session:', error);
-                        }
+
+                    socket.emit("saveChatMessage", sessionCode);
+                    socket.on('returnChatMessageSave', message => {
+                        $.ajax({
+                            url: '/end-interactive-session', // Replace with your route
+                            type: 'POST', // Adjust the HTTP method accordingly
+                            data: {
+                                messages: message,
+                                sessionId: sessionId
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                socket.emit("endInteractiveSession", sessionCode);
+                                console.log('Session ended successfully');
+                                // window.location.href = '/';
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Failed to end session:', error);
+                            }
+                        });
                     });
+
                 } else {
                     console.error('Session ID not found');
                 }
