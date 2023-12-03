@@ -919,6 +919,7 @@ function initializeSurveySubmitBtn_admin() {
 function compareObject(obj1, obj2) {
     // Check if both inputs are objects
     if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+        console.log("false 1");
         return false;
     }
 
@@ -926,7 +927,10 @@ function compareObject(obj1, obj2) {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
 
+    console.log(keys1);
+    console.log(keys2);
     if (keys1.length !== keys2.length) {
+        console.log("false 2");
         return false;
     }
 
@@ -937,9 +941,11 @@ function compareObject(obj1, obj2) {
         if (typeof val1 === 'object' && typeof val2 === 'object') {
             const objectsEqual = compareObject(val1, val2);
             if (!objectsEqual) {
+                console.log("false 3");
                 return false;
             }
         } else if (val1 !== val2) {
+            console.log("false 4");
             return false;
         }
     }
@@ -948,7 +954,7 @@ function compareObject(obj1, obj2) {
 
 
 window.addEventListener('beforeunload', function(e) {
-    if (!compareObject(surveyFromDB, survey)) {
+    if (!compareObject(ori_survey, survey)) {
         e.preventDefault();
         e.returnValue = '';
         return 'Are you sure you want to leave? Your changes may not be saved.';

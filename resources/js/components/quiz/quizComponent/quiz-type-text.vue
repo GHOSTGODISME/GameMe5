@@ -28,7 +28,7 @@
     </div>
 
     <div class="submit-button-container">
-        <button v-if="!submitted" id="quiz-submit-button" class="btn btn-primary button-style" @click="submitInput">
+        <button v-if="!submitted" id="quiz-submit-button" class="btn btn-primary button-style" type="submit" @click="submitInput">
             Submit
         </button>
     </div>

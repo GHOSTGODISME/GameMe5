@@ -57,7 +57,7 @@
                 quizTitle: '',
                 questionsRemaining: '',
                 score: 0,
-                ranking: ''
+                ranking: 0,
             };
         },
         mounted() {
@@ -69,7 +69,7 @@
                 this.quizTitle = store.quizTitle;
                 this.questionsRemaining = `${store.currentQuestionIndex + 1}/${store.quizTotalQuestion}`;
                 this.score = store.totalPoints;
-                this.ranking = store.ranking;
+                this.ranking = store.userRank;
             },
         },
     };

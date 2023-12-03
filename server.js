@@ -23,6 +23,17 @@ const interactiveSessions = new Map();
 const sessionStartTimes = new Map();
 const interactiveSessionStartTimes = new Map();
 
+function initializeSessionData(sessionCode) {
+  sessions.set(sessionCode, {
+    participants: [],
+    leaderboard: [],
+    totalParticipants: 0,
+    sessionStatus: 'waiting',
+    startTime: Date.now(),
+  });
+  sessionStartTimes.set(sessionCode, Date.now()); 
+}
+
 function initializeInteractiveSessionData(sessionCode) {
   interactiveSessions.set(sessionCode, {
     participants: [],
@@ -136,12 +147,13 @@ function handleSession(socket) {
     console.log(sessionCode);
     if (sessions.get(sessionCode)) {
       const leaderboard = sessions.get(sessionCode).leaderboard;
+      const participants = sessions.get(sessionCode).participants;
 
       socket.join(sessionCode); // Participant joins the room with session code
       console.log("joined " + sessionCode);
       socket.to(sessionCode).emit("get leaderboard");
       io.to(sessionCode).emit('initial leaderboard', Object.values(leaderboard));
-
+      io.to(sessionCode).emit('initial participants', participants);
     }
   });
 
@@ -268,6 +280,15 @@ function broadcastAllIS(sessionCode) {
 }
 
 function handleJoinEvents(socket) {
+  socket.on('getSessionParticipants', (sessionCode)=>{
+    console.log("getSessionParticipants");
+    socket.join(sessionCode);
+
+    const participants = sessions.get(sessionCode).participants;
+    io.to(sessionCode).emit('initial participants', participants);
+  });
+
+
   socket.on('join', (data) => {
     const { sessionCode, id, username } = data;
 
@@ -295,8 +316,6 @@ function handleJoinEvents(socket) {
       console.log(participants);
       console.log(leaderboard);
       console.log("end " + sessionCode);
-
-
     }
   });
 

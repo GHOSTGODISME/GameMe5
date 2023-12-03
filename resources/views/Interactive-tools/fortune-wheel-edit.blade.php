@@ -1,6 +1,11 @@
 @extends('Layout/interactive_tools_master')
 <meta name="csrf-token" content="{{ csrf_token() }}">
+{{-- <link rel="stylesheet" href="{{ asset('css/interactive_tools_style.css') }}"> --}}
 
+<script type="text/javascript" src="{{ asset('js/Winwheel.js') }}"></script>
+
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
 
 
 @section('content')
@@ -8,10 +13,28 @@
         .nav-link {
             font-size: 18px;
         }
+
+        .the_wheel {
+            position: relative;
+            width: max-content;
+        }
+
+        .pointer {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 50px solid black;
+            position: absolute;
+            top: 20px;
+            left: calc(50% - 40px);
+            z-index: 999;
+            transform-origin: bottom center;
+        }
     </style>
 
     <div class="save-btn-container">
-        <button id="save-wheel-button" class="btn btn-dark">Save Wheel</button>
+        <button id="save-wheel-button" class="btn btn-dark">Save & Exit</button>
     </div>
 
     <!-- Add this hidden input field to store the Fortune Wheel's ID -->
@@ -31,13 +54,22 @@
         </div>
 
         <div class="row">
-            <div class="col-md-6 col-xl-7 container-style">
+            {{-- <div class="col-md-6 col-xl-7 container-style">
                 <div id="result-box" class="box">Press "Spin" to start</div>
                 <button class="btn btn-dark interactive_btn" id="spin-button" type="button"
                     style="padding: 10px 50px;">Spin</button>
+            </div> --}}
+
+            <div class="col-xl-7 container-style">
+                <div class="the_wheel">
+                    <div class="pointer"></div>
+                    <canvas id="canvas" width="500" height="500"></canvas>
+                    <button type="button" id="spinBtn" class="btn btn-dark" onclick="startSpin();">Spin</button>
+                </div>
             </div>
 
-            <div class="col-md-6 col-xl-5 container-style">
+            {{-- <div class="col-md-6 col-xl-5 container-style"> --}}
+            <div class="col-xl-5 container-style">
                 <div class="card fortune_wheel_card"></div>
                 <div>
                     <ul class="nav nav-tabs" role="tablist">
@@ -153,6 +185,7 @@
                     fw.entries = entries;
 
                     updateEntriesCount();
+                    updateWheelSegmentsFromEntries();
                 }
             });
 
@@ -165,9 +198,6 @@
                     updateResultsCount();
                 }
             });
-
-
-
         });
 
         // class FortuneWheel{
@@ -181,14 +211,105 @@
         // const fw = new FortuneWheel(@json($fortuneWheel));
 
         const fw = @json($fortuneWheel);
-        const ori_fw = @json($fortuneWheel);
+        let ori_fw = @json($fortuneWheel);
         console.log(fw);
+
+        /////// for fortune wheel -- the actual wheel
+        const segments = [];
+        console.log(fw.entries);
+        fw.entries.forEach(entry => {
+            segments.push({
+                'text': entry,
+                'fillStyle': 'whitesmoke'
+            });
+        });
+
+        let theWheel = new Winwheel({
+            'numSegments': segments.length,
+            'outerRadius': 200,
+            'segments': segments,
+            'responsive': true,
+            'animation': {
+                'type': 'spinToStop',
+                'duration': 5,
+                'spins': 8,
+                'callbackFinished': alertPrize
+            }
+        });
+        const canvas = document.getElementById('fortuneWheel');
+        theWheel.draw(canvas);
+
+        function startSpin() {
+            theWheel.stopAnimation(false);
+            theWheel.rotationAngle = 0;
+            theWheel.draw();
+            theWheel.animation.spins = 8;
+            theWheel.startAnimation();
+        }
+
+        function alertPrize(indicatedSegment) {
+            const selectedEntry = theWheel.getIndicatedSegment();
+            if (selectedEntry) {
+                // Remove the selected entry from the entries list
+                const indexToRemove = fw.entries.indexOf(selectedEntry.text);
+                if (indexToRemove !== -1) {
+                    fw.entries.splice(indexToRemove, 1);
+                    updateEntriesUI();
+                }
+
+                fw.results.push(selectedEntry.text);
+                updateResultsUI();
+
+                removeSegment(selectedEntry.text);
+            }
+
+            alert("Selected: " + selectedEntry.text);
+        }
+
+        function updateWheelSegmentsFromEntries() {
+            const segments = [];
+            if (fw.entries && Array.isArray(fw.entries)) {
+                fw.entries.forEach(entry => {
+                    console.log(fw.entries);
+                    if (entry && typeof entry === 'string') { // Validate entry to be a non-empty string
+                        segments.push({
+                            'text': entry,
+                            'fillStyle': 'whitesmoke'
+                        });
+                    }
+                });
+            }
+            theWheel = new Winwheel({
+                'numSegments': segments.length,
+                'outerRadius': 200,
+                'segments': segments,
+                'responsive': true,
+                'animation': {
+                    'type': 'spinToStop',
+                    'duration': 5,
+                    'spins': 8,
+                    'callbackFinished': alertPrize
+                }
+            });
+
+        theWheel.draw();
+
+                // theWheel.draw(canvas);
+            }
+        
+
+
+        function removeSegment(selectedEntry) {
+            theWheel.deleteSegment(selectedEntry.text);
+            theWheel.draw();
+        }
 
         // Function to update entries in the UI
         function updateEntriesUI() {
             const entriesTextArea = $('#entries_contentholder');
             entriesTextArea.val(fw.entries.join('\n'));
             countEntriesResults('entries_contentholder', 'entries_count');
+            updateWheelSegmentsFromEntries();
         }
 
         function updateEntriesCount() {
@@ -198,6 +319,7 @@
         function updateResultsCount() {
             countEntriesResults('results_contentholder', 'results_count');
         }
+
 
         // Function to update results in the UI
         function updateResultsUI() {
@@ -252,6 +374,7 @@
                         //     fortuneWheel: fw
                         //  },
                         success: function(response) {
+                            ori_fw = fw;
                             console.log('Wheel saved successfully');
                             history.back();
                         },
@@ -353,50 +476,50 @@
 
         });
 
-        // Function to randomly select and move an entry to Results
-        $('#spin-button').click(function() {
-            const entriesTextArea = $('#entries_contentholder');
-            const resultBox = $('#result-box');
+        // // Function to randomly select and move an entry to Results
+        // $('#spin-button').click(function() {
+        //     const entriesTextArea = $('#entries_contentholder');
+        //     const resultBox = $('#result-box');
 
-            fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
-            const entries = fw.entries;
-            var selectedEntry = null;
-            var randomIndex = 0;
+        //     fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
+        //     const entries = fw.entries;
+        //     var selectedEntry = null;
+        //     var randomIndex = 0;
 
-            if (entries.length > 0) {
-                let spinDuration = 3000; // 3s
-                let spinInterval = 100; // for each 100ms, spin once
+        //     if (entries.length > 0) {
+        //         let spinDuration = 3000; // 3s
+        //         let spinInterval = 100; // for each 100ms, spin once
 
-                let spinTimer = setInterval(function() {
-                    // Randomly select an entry
-                    randomIndex = Math.floor(Math.random() * entries.length);
-                    selectedEntry = entries[randomIndex];
+        //         let spinTimer = setInterval(function() {
+        //             // Randomly select an entry
+        //             randomIndex = Math.floor(Math.random() * entries.length);
+        //             selectedEntry = entries[randomIndex];
 
-                    // Update the result-box with the selected entry
-                    resultBox.text(selectedEntry);
-                }, spinInterval);
+        //             // Update the result-box with the selected entry
+        //             resultBox.text(selectedEntry);
+        //         }, spinInterval);
 
-                // Stop the spin after the specified duration
-                setTimeout(function() {
-                    clearInterval(spinTimer);
-                    // Display the selected name
-                    alert(selectedEntry + "!!!");
+        //         // Stop the spin after the specified duration
+        //         setTimeout(function() {
+        //             clearInterval(spinTimer);
+        //             // Display the selected name
+        //             alert(selectedEntry + "!!!");
 
-                    // Remove the selected name from Entries and put into result
-                    entries.splice(randomIndex, 1);
-                    fw.results.push(selectedEntry);
+        //             // Remove the selected name from Entries and put into result
+        //             entries.splice(randomIndex, 1);
+        //             fw.results.push(selectedEntry);
 
-                    // Update the UI
-                    updateResultsUI();
-                    updateEntriesUI();
+        //             // Update the UI
+        //             updateResultsUI();
+        //             updateEntriesUI();
 
-                }, spinDuration);
-            } else {
-                alert('No more entries to pick.');
-            }
+        //         }, spinDuration);
+        //     } else {
+        //         alert('No more entries to pick.');
+        //     }
 
 
-        });
+        // });
 
         // Function to control the visibility of import button
         $('#excel_file_input').change(function() {

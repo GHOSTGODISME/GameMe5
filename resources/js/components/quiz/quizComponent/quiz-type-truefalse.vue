@@ -1,5 +1,5 @@
 <template>
-    <div id="quiz-options-container" class="container">
+    <div id="quiz-options-container" class="container" ref="quizContainer">
       <div class="row" id="truefalse-container" @keydown="handleKeyPress">
         <div v-for="(option, index) in options" :key="index" :class="getOptionClasses(option)" @click="selectOption(option)"
         :data-key="index + 1">
@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="submit-button-container">
-      <button v-if="!submitted" id="quiz-submit-button" class="btn btn-primary button-style" @click="submitInput">
+      <button v-if="!submitted" id="quiz-submit-button" class="btn btn-primary button-style" type="submit" @click="submitInput">
         Submit
       </button>
     </div>
@@ -61,20 +61,19 @@
         return this.submitted && option !== this.correctAnswer[0] && this.selectedOption !== option;
       },
       handleKeyPress(event) {
-      if (!this.submitted) {
-        const key = event.key;
-        const optionIndex = parseInt(key) - 1;
-        const selectedOption = this.options.find(
-          (option, index) => index === optionIndex
-        );
+  if (!this.submitted) {
+    const key = event.key;
+    const optionIndex = parseInt(key);
 
-        if (selectedOption) {
-          this.selectOption(selectedOption);
-        } else if (key === 'Enter') {
-          this.submitInput();
-        }
-      }
-    },
+    if (!isNaN(optionIndex) && optionIndex >= 1 && optionIndex <= this.options.length) {
+      const selectedOption = this.options[optionIndex - 1];
+      this.selectOption(selectedOption);
+    } else if (key === 'Enter') {
+      this.submitInput();
+    }
+  }
+},
+
 
       submitInput() {
         this.submitted = true;

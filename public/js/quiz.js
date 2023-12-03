@@ -75,7 +75,8 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.points = questionData.points !== undefined ? questionData.points : 0;
             question.duration = questionData.duration !== undefined ? questionData.duration : 0;
             question.quiz_id = questionData.quiz_id || "";
-            question.index = questionData.index !== undefined ? questionData.index : 0;
+            
+            question.index = questionData.index !== undefined ? parseInt(questionData.index) : 0;
             console.log("question");
             return question;
         });
@@ -84,9 +85,28 @@ function mapQuizDataToInstance(fetchedQuizData) {
     return quizInstance;
 }
 
+function deepCopy(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj; // Return the value if obj is not an object
+    }
+
+    let copiedObj = Array.isArray(obj) ? [] : {};
+
+    for (let key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            copiedObj[key] = deepCopy(obj[key]);
+        }
+    }
+
+    return copiedObj;
+}
+
+
 const quiz = mapQuizDataToInstance(quizFromDB);
+let ori_quiz = deepCopy(quiz);
 
 let savedQuiz = mapQuizDataToInstance(quizFromDB);
+
 console.log("quizzz");
 console.log(quiz);
 
@@ -895,7 +915,7 @@ function generateQuestionHTML(question, index, mode) {
     <div class="question-container-footer">
         <div>
             <label for="quiz-duration-show">Duration</label>
-        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}">
+        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" ? "disabled" : ""}>
             <option value="10" ${question.duration === 10 ? 'selected' : ''}>10 seconds</option>
             <option value="15" ${question.duration === 15 ? 'selected' : ''}>15 seconds</option>
             <option value="30" ${question.duration === 30 ? 'selected' : ''}>30 seconds</option>
@@ -904,7 +924,7 @@ function generateQuestionHTML(question, index, mode) {
 
         <div>
             <label for="quiz-points-show">Points</label>
-        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}">
+        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" ? "disabled" : ""}>
             <option value="10" ${question.points === 10 ? 'selected' : ''}>10</option>
             <option value="15" ${question.points === 15 ? 'selected' : ''}>15</option>
             <option value="30" ${question.points === 30 ? 'selected' : ''}>30</option>
@@ -962,6 +982,8 @@ function duplicateQuestion(uniqueID) {
         console.log(duplicatedQuestion);
         // Update the UI or perform any other necessary actions
         populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
+        console.log(allQuiz);
+        console.log(quiz);
     } else {
         console.log('Question not found.');
     }
@@ -1038,6 +1060,7 @@ function saveQuiz() {
             contentType: 'application/json',
             data: JSON.stringify(quiz),
             success: function (response) {
+                ori_quiz = quiz;
                 console.log('Quiz saved successfully:', response);
                 history.back();
             },
@@ -1049,41 +1072,16 @@ function saveQuiz() {
     }
 }
 
-// Event listener for the "Save Form" button click
-document.getElementById('save-quiz-btn').addEventListener('click', function() {
-    saveQuiz(); 
-});
+// // Event listener for the "Save Form" button click
+// document.getElementById('save-quiz-btn').addEventListener('click', function() {
+//     saveQuiz(); 
+// });
 
-
-
-// // check save before leaving
-// function compareObject(savedQuiz, modifiedQuiz) {
-//     if (savedQuiz.constructor !== modifiedQuiz.constructor) {
-//         return false; // Objects are not of the same class
-//     }
-
-//     for (let key in savedQuiz) {
-//         if (typeof savedQuiz[key] === 'object') {
-//             // For nested objects or arrays, you may need a deeper comparison
-//             // Here, it's assumed properties are not nested objects or arrays
-//             if (JSON.stringify(savedQuiz[key]) !== JSON.stringify(modifiedQuiz[key])) {
-//                 console.log("JSON.stringify(savedQuiz[key]) " + JSON.stringify(savedQuiz[key]));
-//                 console.log("JSON.stringify(modifiedQuiz[key]) " + JSON.stringify(modifiedQuiz[key]));
-//                 console.log("false 1");
-//                 return false; // Detected changes in nested objects or arrays
-//             }
-//         } else if (savedQuiz[key] !== modifiedQuiz[key]) {
-//             console.log("false 2");
-//             return false; // Detected changes in top-level properties
-//         }
-//     }
-
-//     return true; // No changes detected
-// }
 
 function compareObject(obj1, obj2) {
     // Check if both inputs are objects
     if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+        console.log("false 1");
         return false;
     }
 
@@ -1092,6 +1090,7 @@ function compareObject(obj1, obj2) {
     const keys2 = Object.keys(obj2);
 
     if (keys1.length !== keys2.length) {
+        console.log("false 2");
         return false;
     }
 
@@ -1102,18 +1101,25 @@ function compareObject(obj1, obj2) {
         if (typeof val1 === 'object' && typeof val2 === 'object') {
             const objectsEqual = compareObject(val1, val2);
             if (!objectsEqual) {
+                console.log(val1);
+                console.log(val2);
+                console.log("false 3");
                 return false;
             }
         } else if (val1 !== val2) {
+            console.log(val1);
+            console.log(val2);
+            console.log("false 4");
             return false;
         }
     }
     return true;
 }
-
 // Event listener for beforeunload
 window.addEventListener('beforeunload', function (e) {
-        if (!compareObject(savedQuiz, quiz)) {
+        if (!compareObject(ori_quiz, quiz)) {
+            console.log(ori_quiz);
+            console.log(quiz);
         e.preventDefault();
         e.returnValue = '';
         return 'Are you sure you want to leave? Your changes may not be saved.';

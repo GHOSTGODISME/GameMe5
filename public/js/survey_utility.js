@@ -116,6 +116,8 @@ const idPrefix = "s"
 const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
 
 const survey = mapSurveyDataToInstance(surveyFromDB);
+let ori_survey = survey;
+
 let surveyQuestions = survey.questions;
 
 // console.log();

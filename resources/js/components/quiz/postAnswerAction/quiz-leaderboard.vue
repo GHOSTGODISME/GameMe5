@@ -73,7 +73,7 @@
                 this.timerInterval = setInterval(() => {
                     if (this.timeRemaining > 0) {
                         this.timeRemaining--;
-                this.progressBarValue = (this.timeRemaining / 10) * 100;
+                this.progressBarValue = (this.timeRemaining / 5) * 100;
                     } else {
                         this.handleTimeUp();
                     }

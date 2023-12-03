@@ -36,6 +36,7 @@ class SurveyController extends Controller
     public function view($id)
     {
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
+        
         $mode = 'view';
         return view('survey.edit', compact('survey', 'mode'));
     }
