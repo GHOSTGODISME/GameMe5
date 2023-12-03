@@ -80,7 +80,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
-            <a href="{{ route('stud_profile') }}" class="nav-link">Profile</a>
+            <a href="{{ route('lect_profile') }}" class="nav-link">Profile</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
@@ -88,7 +88,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
-            <a href="#" class="nav-link">Classroom</a>
+            <a href="{{ route('classroom_lect_home') }}" class="nav-link">Classroom</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
@@ -96,7 +96,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
-            <a href="{{ route('quiz-session-lecturer') }}" class="nav-link">Session</a>
+            <a href="#" class="nav-link">Session</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">

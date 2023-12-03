@@ -23,10 +23,9 @@ use Illuminate\Support\Facades\Session;
 
 class ClassroomController extends Controller{
 
-    function classroom_stud_home(){
+    function classroom_stud_home(Request $request){
 
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $stud = Student::where('iduser', $user->id)->first();
         $student = Student::with('classrooms')->find($stud->id);
@@ -36,8 +35,7 @@ class ClassroomController extends Controller{
 
     function classroom_lect_home(Request $request){
 
-        //$email = $request->session()->get('email');
-        $email = 'wongtian628@gmail.com';
+        $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lect = Lecturer::where('iduser', $user->id)->first();
     
@@ -66,8 +64,8 @@ class ClassroomController extends Controller{
         // Get the classroom based on the provided class code
         $classroom = Classroom::where('joincode', $request->class_code)->first();
 
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $stud = Student::where('iduser', $user->id)->first();
       
@@ -86,8 +84,8 @@ class ClassroomController extends Controller{
         $request->validate([
             'class_id' => 'required|exists:class_student,idclass',
         ]);
-             // $email = $request->session()->get('email');
-             $email = 'aa@gmail.com';
+             $email = $request->session()->get('email');
+             ///$email = 'aa@gmail.com';
              $user = User::where('email', $email)->first();
              $stud = Student::where('iduser', $user->id)->first();
              $classStudent = ClassStudent::where([
@@ -184,8 +182,8 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
         return view('Classroom/classroom_stud_stream', compact('classroom', 'announcements', 'currentUser'));
     }
@@ -208,8 +206,8 @@ class ClassroomController extends Controller{
         ->orderBy('created_at', 'desc')
         ->get();
 
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
         return view('Classroom/classroom_stud_quiz', compact('classroom','announcements','currentUser'));
     }
@@ -232,8 +230,8 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        ///$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
         return view('Classroom/classroom_stud_qna', compact('classroom','announcements','currentUser'));
     }
@@ -256,8 +254,8 @@ class ClassroomController extends Controller{
         ->orderBy('created_at', 'desc')
         ->get();
 
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
 
         return view('Classroom/classroom_stud_polls', compact('classroom','announcements','currentUser'));
@@ -280,8 +278,8 @@ class ClassroomController extends Controller{
         ->with('content')
         ->orderBy('created_at', 'desc')
         ->get();
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
         return view('Classroom/classroom_stud_feedback', compact('classroom','announcements','currentUser'));
     }
@@ -324,8 +322,8 @@ class ClassroomController extends Controller{
         $announcement = Announcement::where('id',$qna->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();
 
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
 
         return view('Classroom/classroom_specify_qna', compact('classroom','qna','announcement','currentUser'));
@@ -338,8 +336,8 @@ class ClassroomController extends Controller{
         ]);
 
         // Create a new reply and associate it with the Q&A
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $contentWithLineBreaks = str_replace("\r\n", "\n", $request->input('reply_content'));
         $reply = new AnnQnaAns([
@@ -357,7 +355,8 @@ class ClassroomController extends Controller{
         $polls = AnnPolls::where('id', $polls->id)->first();
         $announcement = Announcement::where('id',$polls->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $userId =$user->id;
 
@@ -373,8 +372,8 @@ class ClassroomController extends Controller{
         ->where('polls_id', $polls->id)
         ->exists();
 
-        // $currentUserEmail = session('email'); 
-        $currentUserEmail = 'aa@gmail.com';
+        $currentUserEmail = session('email'); 
+        //$currentUserEmail = 'aa@gmail.com';
         $currentUser = User::where('email', $currentUserEmail)->first();
 
 
@@ -384,8 +383,8 @@ class ClassroomController extends Controller{
     public function class_reply_polls(Request $request){
         $pollsId = $request->input('polls_id');
         $selectedOption = $request->input('poll_option');
-        // $email = $request->session()->get('email');
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $userId =$user->id;
 
@@ -418,8 +417,8 @@ class ClassroomController extends Controller{
         $joinCode = str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
 
         // Get the current user ID
-            // $email = $request->session()->get('email');
-        $email = 'wongtian628@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'wongtian628@gmail.com';
         $user = User::where('email', $email)->first();
         $authorId = $user->id;
 
@@ -459,8 +458,8 @@ class ClassroomController extends Controller{
         // Add other validation rules as needed
     ]);
 
-     // $email = $request->session()->get('email');
-     $email = 'aa@gmail.com';
+     $email = $request->session()->get('email');
+     //$email = 'aa@gmail.com';
      $user = User::where('email', $email)->first();
     
      $type = "";
@@ -540,8 +539,8 @@ class ClassroomController extends Controller{
         // Add other validation rules as needed
     ]);
 
-     // $email = $request->session()->get('email');
-     $email = 'aa@gmail.com';
+     $email = $request->session()->get('email');
+     //$email = 'aa@gmail.com';
      $user = User::where('email', $email)->first();
     
      $type = "";
@@ -622,7 +621,8 @@ class ClassroomController extends Controller{
         $polls = AnnPolls::where('id', $polls->id)->first();
         $announcement = Announcement::where('id',$polls->ann_id)->first();
         $classroom = Classroom::where('id',$announcement->idclass)->first();
-        $email = 'aa@gmail.com';
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $userId =$user->id;
 
@@ -732,8 +732,8 @@ public function class_update_announcement(Request $request)
         return response()->json(['error' => 'Announcement not found'], 404);
     }
 
-     // $email = $request->session()->get('email');
-     $email = 'aa@gmail.com';
+     $email = $request->session()->get('email');
+     //$email = 'aa@gmail.com';
      $user = User::where('email', $email)->first();
     
     // Type check and delete associated content based on the announcement type
@@ -821,5 +821,31 @@ public function class_update_announcement(Request $request)
         return redirect()->route('class_lect_people', ['classroom' => $classroom])->with('success_message', 'Student removed successfully.');
     }
     
+    function assign_class(Request $request){
+        $request->validate([
+            'class_id' => 'required|exists:classroom,id',
+        ]);
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
+        $user = User::where('email', $email)->first();
+        $userId =$user->id;
+        // Create a new Announcement
+        $announcement = new Announcement();
+        $announcement->idclass = $request->input('class_id');
+        $announcement->type = 'AnnQuiz'; // Set the type to 'quiz'
+        $announcement->user_id = $userId;
+        $announcement->save();
+
+        // Create a new AnnQuiz
+        $annQuiz = new AnnQuiz();
+        $annQuiz->ann_id = $announcement->id;
+        $annQuiz->session_id =
+        // Add other fields as needed
+        $annQuiz->save();
+    
+        return redirect()->back()->with('success', 'Assignment successful!');
+    }
+
+
 
 }

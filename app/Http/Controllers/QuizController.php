@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use App\Models\User;
+use App\Models\Lecturer;
 use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
+use App\Models\Classlecturer;
 use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
@@ -24,22 +27,34 @@ class QuizController extends Controller
         return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
-    public function view($id)
+    public function view($id, Request $request)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'view';
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+    
+        $lecturerClasses = Classlecturer::with('class')->where('idlecturer', $lecturer->id)->get();
+        
+        return view('quiz.edit', compact('quiz', 'questions', 'mode','lecturerClasses'));
     }
 
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'edit';
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        $lecturerClasses = Classlecturer::with('class')->where('idlecturer', $lecturer->id)->get();
+
+        return view('quiz.edit', compact('quiz', 'questions', 'mode','lecturerClasses'));
     }
 
     public function store(Request $request)

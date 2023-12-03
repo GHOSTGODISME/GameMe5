@@ -19,4 +19,9 @@ class Classlecturer extends Model
         return $this->belongsTo(Lecturer::class, 'idlecturer', 'id');
     }
 
+    public function class()
+    {
+        return $this->belongsTo(Classroom::class, 'idclass','id');
+    }
+
 }

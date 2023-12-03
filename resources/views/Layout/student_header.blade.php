@@ -86,7 +86,7 @@
     </div>
     <div class="nav_row">
         <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
-        <a href="#" class="nav-link">Classroom</a>
+        <a href="{{ route('classroom_stud_home') }}" class="nav-link">Classroom</a>
     </div>
     <!-- Add more navigation links as needed -->
 </div>

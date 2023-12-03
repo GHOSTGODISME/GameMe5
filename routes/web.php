@@ -172,11 +172,12 @@ Route::post('class_update_announcement', [ClassroomController::class,'class_upda
 Route::post('class_delete_announcement', [ClassroomController::class, 'class_delete_announcement'])->name('class_delete_announcement');
 Route::post('class_stud_delete_announcement', [ClassroomController::class, 'class_stud_delete_announcement'])->name('class_stud_delete_announcement');
 
+Route::post('assign_class', [ClassroomController::class,'assign_class'])->name('assign_class');
 
 //Report
 Route::get('report_home',  [ReportController::class, 'report_home'])->name('report_home');
-
-
+Route::get('report_specify/{reportId}',  [ReportController::class, 'report_specify'])->name('report_specify');
+Route::get('report_search', [ReportController::class, 'report_home'])->name('report_search');
 
 /////// kel
 

@@ -28,6 +28,7 @@
     margin-left:90px;
     margin-top:30px; 
     margin-right:90px; 
+    padding-bottom:50px;
     }
     
     .lect_title{

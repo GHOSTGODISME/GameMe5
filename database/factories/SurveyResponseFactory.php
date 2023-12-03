@@ -20,7 +20,7 @@ class SurveyResponseFactory extends Factory
 
         return [
             'survey_id' => Survey::factory()->create()->id,
-            'user_id' => null, 
+            'user_id' => 1, 
         ];
     }
 

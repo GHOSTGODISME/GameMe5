@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Student;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -15,7 +16,13 @@ use Illuminate\Support\Facades\Storage;
 class StudentController extends Controller{
 
     function stud_homepage(){
-        return view('User/stud_homepage');
+        $email = session()->get('email');
+        //$email = 'aa@gmail.com';
+        $user = User::where('email', $email)->first();
+        $stud = Student::where('iduser', $user->id)->first();
+        $student = Student::with('classrooms')->find($stud->id);
+
+        return view('User/stud_homepage', compact('student'));
     }
 
    function getStudInfo(Request $request)

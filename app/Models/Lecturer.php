@@ -23,4 +23,6 @@ class Lecturer extends  Model
     {
         return $this->belongsToMany(Lecturer::class, 'class_lecturer', 'idclass', 'idlecturer');
     }
+
+    
 }

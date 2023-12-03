@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Lecturer;
+use App\Models\Classroom;
 use Illuminate\Http\Request;
+use App\Models\Classlecturer;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,15 +16,28 @@ use Illuminate\Support\Facades\Session;
 
 class LecturerController extends Controller{
 
-    function lect_homepage(){
-        return view('User/lect_homepage');
+    function lect_homepage(Request $request){
+        
+        $email = session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lect = Lecturer::where('iduser', $user->id)->first();
+        $searchQuery = $request->input('search');
+        $classrooms = Classroom::where('name', 'LIKE', '%' . $searchQuery . '%')->get();
+    
+        // Get the classes associated with the lecturer
+        $lecturerClasses = Classlecturer::where('idlecturer', $lect->id)->pluck('idclass')->toArray();
+
+        // Filter the classrooms to include only those that the lecturer has
+        $filteredClassrooms = $classrooms->whereIn('id', $lecturerClasses);
+      
+        return view('User/lect_homepage',  ['classrooms' => $filteredClassrooms ]);
     }
 
-    function getLectInfo()
+    function getLectInfo(Request $request)
     {
         // Step 1: Find the use
-        // $email = $request->session()->get('email');
-        $email='wongtian628@gmail.com';
+        $email = $request->session()->get('email');
+        //$email='wongtian628@gmail.com';
         $user = User::where('email', $email)->first();
         // Step 2: Check if the user has the account type set to "lecturer"
         if ($user && $user->accountType == 'lecturer') {
@@ -44,7 +59,8 @@ class LecturerController extends Controller{
 
     public function update_lecturer_position(Request $request)
 {
-    $email = 'wongtian628@gmail.com';
+    $email = $request->session()->get('email');
+    //$email = 'wongtian628@gmail.com';
     $user = User::where('email', $email)->first();
     
     $request->validate([

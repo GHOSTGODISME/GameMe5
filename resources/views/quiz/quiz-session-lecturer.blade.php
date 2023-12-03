@@ -156,6 +156,14 @@
                             <div>Or scan the code below!!!</div>
                             <div id="qrCode">{{$qrCodeContent}}</div>
                         </div>
+
+                        <div class="details-container">
+                            <div>FOR assign to classroom</div>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
+                                Assign to Class
+                            </button>
+                        </div>
+
                     </div>
 
 
@@ -168,6 +176,38 @@
             </div>
         </div>
     </div>
+{{-- 
+
+      <!-- assign class Modal -->
+      <div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignClassForm" action="{{ route('assign_class') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="class_session_code" id="class_session_code" value="{{ $sessionCode }}">
+                        <div class="form-group">
+                            <label for="class">Select Class:</label>
+                            <select class="form-control" id="class" name="class_id" required>
+                                @foreach($lecturerClasses as $classDetail)
+                                    <option value="{{ $classDetail->class->id }}">{{ $classDetail->class->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-primary">Assign</button>
+                        </div>
+                    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
     <script></script>
 
@@ -201,7 +241,6 @@
             }
 
             quizLinkElement.textContent = `localhost:8000/join-quiz?code=${sessionCode}`
-
             function handleCopyClick(element, iconElement) {
                 const text = element.innerText;
                 const dummyElement = document.createElement('textarea');
