@@ -339,7 +339,7 @@
                         <div>Details</div>
                         <hr>
                         <p><b>Title: </b><span id="session-title">{{ $quiz->title }}</span></p>
-                        <p><small><b>Number of Questions: </b><span id="question-count">10</span></small>
+                        <p><small><b>Number of Questions: </b><span id="question-count">{{$quiz->quiz_questions->count()}}</span></small>
                         </p>
                     </div>
 

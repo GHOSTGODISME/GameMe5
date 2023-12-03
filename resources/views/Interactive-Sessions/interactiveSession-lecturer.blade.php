@@ -197,17 +197,24 @@
         //         console.log(@{$title});
         // console.log(@{$sessionCode});
 
+        function generateUniqueID() {
+            const timestamp = new Date().getTime().toString(16); // Timestamp converted to hexadecimal
+            const randomString = Math.random().toString(16).slice(2); // Random string
+            return `poll-${timestamp}-${randomString}`;
+        }
+
         console.log(@json($title));
         console.log(@json($sessionCode));
         socket = io("http://localhost:3000");
         const sessionCode = @json($sessionCode);
         sessionStorage.setItem("interactiveSessionCode", sessionCode);
-        sessionStorage.setItem("lect_id", @json(session("lect_id")));
-        sessionStorage.setItem("lect_name", @json(session("lect_name")));
-        let pollIdCounter = 1;
+        sessionStorage.setItem("lect_id", @json(session('lect_id')));
+        sessionStorage.setItem("lect_name", @json(session('lect_name')));
+
+        let pollIdCounter = generateUniqueID();
         const sessionId = @json($sessionId);
-        const id = @json(session("lect_id"));
-        const username = @json(session("lect_name"));
+        const id = `l-${@json(session('lect_id'))}`;
+        const username = @json(session('lect_name'));
 
         console.log(sessionCode);
         socket.emit("createInteractiveSession", {
@@ -336,8 +343,12 @@
         });
 
         function updatePollResult(pollId, optionSelected, votes) {
+            console.log("triggerd");
+
             const pollContainer = document.querySelector(`[data-poll-id="${pollId}"]`);
             if (pollContainer) {
+                console.log("triggerd");
+
                 const pollOptions = pollContainer.querySelectorAll('.polls-options');
 
                 pollOptions.forEach((optionElement) => {
@@ -345,14 +356,23 @@
                     const optionText = optionTextContainer.textContent.trim();
 
                     if (optionText === optionSelected) {
+                        console.log("triggerd");
+                        console.log("votes " + votes);
+                        console.log(votes);
+                        console.log("optionSelected " + optionSelected);
+
                         const progressContainer = optionElement.querySelector('.progress');
                         const progressBar = progressContainer.querySelector('.progress-bar');
 
-                        // Update the progress bar with the updated votes
-                        const totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
-                        const selectedOptionVotes = votes[optionSelected];
-
+                        if (votes instanceof Map) {
+                            totalVotes = Array.from(votes.values()).reduce((acc, curr) => acc + curr, 0);
+                            selectedOptionVotes = votes.get(optionSelected);
+                        } else if (typeof votes === 'object') {
+                            totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
+                            selectedOptionVotes = votes[optionSelected];
+                        }
                         const votesPercentage = totalVotes > 0 ? (selectedOptionVotes / totalVotes) * 100 : 0;
+                        console.log("votesPercentage " + votesPercentage);
 
                         progressBar.style.width = `${votesPercentage}%`;
                         progressBar.textContent = `${selectedOptionVotes}`;
@@ -515,7 +535,7 @@
                 return;
             }
 
-            const pollId = `poll_${pollIdCounter++}`;
+            const pollId = `${generateUniqueID()}`;
             createNewPollContainer(pollId, pollTitle, options);
 
             socket.emit('createPoll', {

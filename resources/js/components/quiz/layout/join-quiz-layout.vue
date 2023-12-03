@@ -74,7 +74,7 @@ export default {
     },
     created() {
         const store = useQuizStore();
-        const code = this.$route.query.code;
+        const code = this.$route.query.code.toString();
 
         if (this.storedState && this.storedState.sessionCode === code) {
             Object.keys(this.storedState).forEach((key) => {
@@ -85,8 +85,6 @@ export default {
         } else {
             const studId = sessionStorage.getItem('stud_id');
             store.setUserId(studId);
-
-            console.log(sessionData);
             store.setSessionCode(code);
         }
 
@@ -169,30 +167,24 @@ export default {
                 this.emptyUserNameMsg = true;
             } else {
                 this.emptyUserNameMsg = false;
-                this.joinedQuiz = true;
 
                 const store = useQuizStore();
-                store.setUsername(this.username);
-                console.log("store.username " + store.username);
+                // store.setUsername(this.username);
+                // console.log("store.username " + store.username);
+                store.username = this.username;
 
-                const localStorageState = localStorage.getItem("quizStore");
-                if (localStorageState) {
-                    useQuizStore.$state = JSON.parse(localStorageState);
-                }
-                console.log(localStorageState);
-
-                const username = store.username;
-                axios
+               axios
                     .post("/api/register-name", {
-                        username: username,
+                        username: store.username,
                         sessionId: store.sessionId,
                         userId: store.userId,
                     })
                     .then((response) => {
+                        this.joinedQuiz = true;
                         this.socket.emit("join", {
                             sessionCode: store.sessionCode,
                             id: store.userId,
-                            username: username,
+                            username: store.username,
                         });
                         this.socket.emit("get status", store.sessionCode);
                     })

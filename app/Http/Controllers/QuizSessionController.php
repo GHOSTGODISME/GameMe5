@@ -145,15 +145,16 @@ class QuizSessionController extends Controller
             return view('quiz.spa', ['sessionCode' => $code]);
         } else {
             LaravelSession::flash('error', 'Please enter a valid session code.');
-            return redirect()->to('/');
+            return response()->json(['message' => 'invalid code']);
+            // return redirect()->to('/');
         }
     }
     public function registerUsername(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
 
         $validatedData = $request->validate([
             'username' => 'required|string|max:255', // Validation rules for username
@@ -171,8 +172,8 @@ class QuizSessionController extends Controller
             'incorrect_answer_count' => null,
             'total_points' => null,
             'average_time' => null,
-            'user_id' => $student->id,
-            //  'user_id' => $validatedData['userId'],
+            // 'user_id' => $student->id,
+             'user_id' => $validatedData['userId'],
         ]);
 
         return response()->json(['message' => 'Username registered successfully']);
@@ -209,16 +210,16 @@ class QuizSessionController extends Controller
     }
     public function storeIndividualResponse(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
 
         // Retrieve data from the request
         $sessionId = $request->input('session_id');
         $quizId = $request->input('quiz_id');
-        // $userId = $request->input('user_id');
-        $userId = $student->id;
+        $userId = $request->input('user_id');
+        // $userId = $student->id;
         $questionId = $request->input('question_id');
         $timeTaken = $request->input('time_taken');
         $userResponse = $request->input('user_response');
@@ -248,18 +249,19 @@ class QuizSessionController extends Controller
 
     public function storeQuizResponse(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
         
         // Validate incoming request data here if needed
         $sessionId = $request->input('session_id');
-        $userId = $request->$student->id;
+        // $userId = $request->$student->id;
 
         $existingResponse = QuizResponse::where('session_id', $sessionId)
-            ->where('user_id', $userId)
-            ->first();
+        // ->where('user_id', $userId)
+        ->where('user_id', $request->input('user_id'))
+        ->first();
 
         if ($existingResponse) {
             // Update the existing QuizResponse record
@@ -276,7 +278,7 @@ class QuizSessionController extends Controller
             QuizResponse::create([
                 'session_id' => $sessionId,
                 'username' => $request->input('username'),
-                'user_id' => $userId,
+                'user_id' => $request->input('user_id'),
                 'accuracy' => $request->input('accuracy'),
                 'correct_answer_count' => $request->input('correct_answer_count'),
                 'incorrect_answer_count' => $request->input('incorrect_answer_count'),
@@ -290,19 +292,19 @@ class QuizSessionController extends Controller
 
     public function storeFullResponses(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
         
-        Log::info('Request Data: ' . json_encode($request->all()));
+        // Log::info('Request Data: ' . json_encode($request->all()));
 
         $data = $request->all();
 
         try {
             $sessionId = $data['sessionId'];
-            // $userId = $data['userId'];
-            $userId = $student->id;
+            $userId = $data['userId'];
+            // $userId = $student->id;
             $responses = $data['responses'];
 
             // Find or create a quiz response record based on session and user
