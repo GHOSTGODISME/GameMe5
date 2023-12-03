@@ -108,18 +108,15 @@ border:2px white solid;
                         contentType: false,
                         processData: false,
                         success: function (response) {
-                            if (response.success) {
-                                // Update the profile picture src attribute with a timestamp
-                                document.querySelector('.profile-data img[data-field="profile_picture"]').src = response.url + '?timestamp=' + new Date().getTime();
-                                // Display the success message
-                                alert('Profile picture uploaded successfully!');
-                            } else {
-                                alert('Error uploading profile picture');
-                            }
-                        },
-                        error: function () {
+                        if (response.success) {
+                            // Update the profile picture src attribute with a timestamp
+                            document.querySelector('.profile-data_top img[data-field="profile_picture"]').src = response.url+ '?timestamp=' + new Date().getTime();;
+                            // Display the success message
+                            alert('Profile picture uploaded successfully!');
+                        } else {
                             alert('Error uploading profile picture');
                         }
+                    },
                     });
                 }
             });
@@ -146,7 +143,7 @@ border:2px white solid;
                             document.querySelector('.profile-data span[data-field="' + field + '"]').innerText = newValue;
 
                             // Add a timestamp to the profile picture URL
-                            document.querySelector('.profile-data img[data-field="profile_picture"]').src = '{{ $student->profile_picture }}' + '?timestamp=' + new Date().getTime();
+                            //document.querySelector('.profile-data_top img[data-field="profile_picture"]').src = '{{ $student->profile_picture }}' + '?timestamp=' + new Date().getTime();
 
                             // Display the success message
                             alert('Profile updated successfully!');

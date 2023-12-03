@@ -28,4 +28,14 @@ class Lecturer extends  Model
     {
         return $this->hasMany(Quiz::class, 'lect_id', 'id');
     }
+
+    public function fortuneWheels()
+    {
+        return $this->hasMany(FortuneWheel::class, 'id_lecturer');
+    }
+
+    public function surveys()
+    {
+        return $this->hasMany(Survey::class, 'id_lecturer');
+    }
 }

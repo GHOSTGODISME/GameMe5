@@ -8,10 +8,11 @@
     }    
 
     .logo{
-        width: 200px;
+        width: 180px;
         height: 50px;
         flex-shrink: 0;
-        margin-top:30px;
+        margin-top:25px;
+        margin-left:50px;
     }
 
     .hamburger{
@@ -87,6 +88,10 @@
     <div class="nav_row">
         <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
         <a href="{{ route('classroom_stud_home') }}" class="nav-link">Classroom</a>
+    </div>
+    <div class="nav_row">
+        <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
+        <a href="{{ route('interactive-session-index') }}" class="nav-link">Session</a>
     </div>
     <!-- Add more navigation links as needed -->
 </div>

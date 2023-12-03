@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Student;
 use App\Models\Lecturer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -120,6 +121,9 @@ class UserAuthController extends Controller{
             // Save lecturer-specific data to the Lecturer model or perform any additional steps
             Lecturer::create(array_merge(['iduser' => $user->id], $lecturerData));
             $request->session()->forget('lecturer_data');
+        }else if ($data['accountType'] == 'student') {
+            // Save lecturer-specific data to the Lecturer model or perform any additional steps
+            Student::create(['iduser' => $user->id]);
         }
 
         // Clear session data

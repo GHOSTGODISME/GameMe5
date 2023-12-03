@@ -74,9 +74,16 @@ margin-bottom:20px;
     height: 10px; /* Adjust the height as needed */
 }
    
-
+.back_icon{
+  width:20px;
+  height:20px;  
+}
 
 </style>
+<a href="javascript:history.back()">
+    <img class="back_icon" src="img/back_icon.png" alt="Back">
+</a>
+
 <h1>Sign Up</h1>
 <img class= progress_bar src="img/progress_bar2.png" alt= "progress_bar"/>
 <form action="{{ route('signup_post') }}" method="POST">

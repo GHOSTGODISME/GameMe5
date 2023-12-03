@@ -32,7 +32,7 @@ use App\Http\Controllers\ClassroomController;
 
 /*Homepage*/
 Route::get('/', function () {
-    return view('home');
+    return view('User/login');
     // return view('chat');
     // return view('quiz.spa');
 });
@@ -173,7 +173,8 @@ Route::post('class_delete_announcement', [ClassroomController::class, 'class_del
 Route::post('class_stud_delete_announcement', [ClassroomController::class, 'class_stud_delete_announcement'])->name('class_stud_delete_announcement');
 
 Route::post('assign_class', [ClassroomController::class,'assign_class'])->name('assign_class');
-
+Route::post('assign_class_survey', [ClassroomController::class,'assign_class_survey'])->name('assign_class_survey');
+Route::get('/get-lecturer-classes', [QuizSessionController::class, 'getLecturerClasses'])->name('get_lecturer_classes');
 //Report
 Route::get('report_home',  [ReportController::class, 'report_home'])->name('report_home');
 Route::get('report_specify/{reportId}',  [ReportController::class, 'report_specify'])->name('report_specify');

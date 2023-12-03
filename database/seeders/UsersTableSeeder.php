@@ -50,5 +50,8 @@ class UsersTableSeeder extends Seeder
             'verification_code' => 0,
             'profile_picture' => null,
         ]);
+
+
+        
     }
 }

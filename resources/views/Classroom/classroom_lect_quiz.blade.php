@@ -122,7 +122,7 @@
                 <div class="ann_content">
                 <p> A new quiz has been assigned. Join the quiz now!</p>
                 {{-- <p>{{ $announcement->annQuiz->quiz_id }}</p> --}}
-                <button class="class_button">Join</button>
+                <button class="class_button" onclick="redirect_quiz({{ $announcement->annQuiz}})">Join</button>
                 </div>
             </div>
             @break
@@ -131,5 +131,21 @@
 @endforeach
 
 <script>
+      function redirect_quiz(annquiz) {
+
+// Replace 'YOUR_BASE_URL' with the actual base URL of your application
+var baseUrl = 'http://localhost:8000';
+
+// Assuming you have the session code available (replace 'sessionCode' accordingly)
+var sessionCode = annquiz.session_code;
+
+// Generate the link with the session code
+var link = baseUrl + '/join-quiz?code=' + sessionCode;
+
+console.log(link);
+// Navigate to the generated link
+window.location.href = link;
+}
+
 </script>
 @endsection

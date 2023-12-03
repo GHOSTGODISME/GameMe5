@@ -23,6 +23,17 @@ const interactiveSessions = new Map();
 const sessionStartTimes = new Map();
 const interactiveSessionStartTimes = new Map();
 
+function initializeSessionData(sessionCode) {
+  sessions.set(sessionCode, {
+    participants: [],
+    leaderboard: [],
+    totalParticipants: 0,
+    sessionStatus: 'waiting',
+    startTime: Date.now(),
+  });
+  sessionStartTimes.set(sessionCode, Date.now());
+}
+
 function initializeInteractiveSessionData(sessionCode) {
   interactiveSessions.set(sessionCode, {
     participants: [],

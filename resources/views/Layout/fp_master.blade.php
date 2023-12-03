@@ -112,6 +112,7 @@
         font-weight: 500;
         line-height: normal;  
         margin-bottom:20px;
+        cursor: pointer;
     }
 
 </style>

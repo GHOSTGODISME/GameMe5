@@ -6,10 +6,13 @@ use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 use App\Models\Quiz;
+use App\Models\User;
 use App\Models\Session;
+use App\Models\Lecturer;
 use App\Models\QuizQuestion;
 use App\Models\QuizResponse;
 use Illuminate\Http\Request;
+use App\Models\Classlecturer;
 use App\Jobs\SendQuizSummaryEmail;
 use App\Models\QuizResponseDetails;
 use Illuminate\Support\Facades\Log;
@@ -44,9 +47,18 @@ class QuizSessionController extends Controller
             'show_leaderboard_flag' => $data['quizSessionSetting']['showLeaderboard'],
             'shuffle_option_flag' => $data['quizSessionSetting']['shuffleOptions'],
         ]);
-
                 // Handle response
         return response()->json(['sessionCode' => $session->code, 'sessionId' => $session->id]);
+    }
+
+
+    public function getLecturerClasses(Request $request)
+    {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        $lecturerClasses = Classlecturer::with('class')->where('idlecturer', $lecturer->id)->get();
+        return response()->json(['lecturerClasses' => $lecturerClasses]);
     }
     
     public function startSession($sessionId) {

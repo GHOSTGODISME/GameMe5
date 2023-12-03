@@ -186,6 +186,10 @@ text-decoration: none;
     width: 0; /* Set the width of the scrollbar to 0 */
 }
 
+.stud_sub_cont a{
+text-decoration: none;
+}
+
 
 </style>
 

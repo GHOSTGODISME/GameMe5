@@ -158,7 +158,7 @@
                         </div>
 
                         <div class="details-container">
-                            <div>FOR assign to classroom</div>
+                            <div>Assign to Class</div>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
                                 Assign to Class
                             </button>
@@ -166,9 +166,8 @@
 
                     </div>
 
-
                     <div class="btn-container">
-                        {{-- <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a> --}}
+                        <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a>
                         <a onclick="startQuiz()" class="btn">Start</a>
 
                     </div>
@@ -176,38 +175,39 @@
             </div>
         </div>
     </div>
-{{-- 
-
-      <!-- assign class Modal -->
-      <div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="assignClassForm" action="{{ route('assign_class') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="class_session_code" id="class_session_code" value="{{ $sessionCode }}">
-                        <div class="form-group">
-                            <label for="class">Select Class:</label>
-                            <select class="form-control" id="class" name="class_id" required>
-                                @foreach($lecturerClasses as $classDetail)
-                                    <option value="{{ $classDetail->class->id }}">{{ $classDetail->class->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-
-                            <button type="submit" class="btn btn-primary">Assign</button>
-                        </div>
+   
+    
+   
+    <!-- assign class Modal -->
+<div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignClassForm" action="{{ route('assign_class') }}" method="post">
+                    @csrf
                     
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <label for="class">Select Class:</label>
+                        <select class="form-control" id="class" name="class_id" required>
+                            <!-- Options will be dynamically added using JavaScript -->
+                        </select>
+                    </div>
+
+                     <!-- Your input field -->
+                    <input type="hidden" name="class_session_code" id="class_session_code" value="">
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Assign Class</button>
+                    </div>
+                </form>
+                
             </div>
         </div>
-    </div> --}}
+    </div>
+</div>
 
     <script></script>
 
@@ -316,6 +316,36 @@
         window.addEventListener('beforeunload', function(event) {
             socket.close();
         });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+        // Fetch lecturerClasses using AJAX
+        fetch('{{ route('get_lecturer_classes') }}')
+            .then(response => response.json())
+            .then(data => {
+                // Populate options in the class selection dropdown
+                const classSelect = document.getElementById('class');
+               
+                if (classSelect) {
+                    data.lecturerClasses.forEach(classDetail => {
+                        const option = document.createElement('option');
+                        option.value = classDetail.class.id;
+                        option.textContent = classDetail.class.name;
+                        classSelect.appendChild(option);
+                    });
+                    
+                }
+            })
+
+            .catch(error => console.error('Error fetching lecturerClasses:', error));
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Parse the JSON and set the value of the input field
+        document.getElementById('class_session_code').value = sessionStorage.getItem('sessionCode');
+    });
+
     </script>
 
 </body>

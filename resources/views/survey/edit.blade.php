@@ -118,8 +118,17 @@
                                                         id="surveyLink" target="_blank"
                                                         style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
 
+
                                                     <i class="fa fa-copy"></i>
                                                 </span>
+                                                
+                                                <div class="details-container">
+                                                    <b style="display: block;">Assign Class</b>
+                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
+                                                        Assign to Class
+                                                    </button>
+                                                </div>
+
                                             @endif
                                         </div>
                                     </div>
@@ -325,7 +334,7 @@
                             <p>Number of response: {{ $surveyResponses->count() }}</p>
 
                             <div class="survey-response-style table-responsive">
-                                <table border="1" class="table table-striped table-bordered table-hover ">
+                                <table style="border:1" class="table table-striped table-bordered table-hover ">
                                     <thead class="thead-light">
                                         <tr>
                                             <th>Response ID</th>
@@ -438,6 +447,37 @@
 
 
 
+      <!-- assign class Modal -->
+<div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignClassForm" action="{{ route('assign_class_survey') }}" method="post">
+                    @csrf
+                    
+                    <div class="form-group">
+                        <label for="class">Select Class:</label>
+                        <select class="form-control" id="class" name="class_id" required>
+                            <!-- Options will be dynamically added using JavaScript -->
+                        </select>
+                    </div>
+
+                     <!-- Your input field -->
+                    <input type="hidden" name="survey_id" id="survey_id" value={{$survey->id}}>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Assign Class</button>
+                    </div>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -539,6 +579,30 @@
                 $('#copyLink').find('i').removeClass('fa-check').addClass('fa-copy');
             }, 2000); // Change back to original text after 2 seconds (adjust as needed)
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+// Fetch lecturerClasses using AJAX
+fetch('{{ route('get_lecturer_classes') }}')
+    .then(response => response.json())
+    .then(data => {
+        // Populate options in the class selection dropdown
+        const classSelect = document.getElementById('class');
+       
+        if (classSelect) {
+            data.lecturerClasses.forEach(classDetail => {
+                const option = document.createElement('option');
+                option.value = classDetail.class.id;
+                option.textContent = classDetail.class.name;
+                classSelect.appendChild(option);
+            });
+            
+        }
+    })
+
+    .catch(error => console.error('Error fetching lecturerClasses:', error));
+});
+
     </script>
 </body>
 

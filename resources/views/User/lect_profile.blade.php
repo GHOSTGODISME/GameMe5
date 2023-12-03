@@ -115,7 +115,7 @@ border:2px white solid;
                         success: function (response) {
                             if (response.success) {
                                 // Update the profile picture src attribute with a timestamp
-                                document.querySelector('.profile-data img[data-field="profile_picture"]').src = response.url + '?timestamp=' + new Date().getTime();
+                                document.querySelector('.profile-data_top img[data-field="profile_picture"]').src = response.url + '?timestamp=' + new Date().getTime();
                                 // Display the success message
                                 alert('Profile picture uploaded successfully!');
                             } else {
@@ -151,7 +151,7 @@ border:2px white solid;
                         // Update the specific field using the data-field attribute
                         document.querySelector('.profile-data span[data-field="' + field + '"]').innerText = newValue;
                         // Add a timestamp to the profile picture URL
-                        document.querySelector('.profile-data img[data-field="profile_picture"]').src = '{{ $lecturer->user->profile_picture }}' + '?timestamp=' + new Date().getTime();
+                        //document.querySelector('.profile-data img[data-field="profile_picture"]').src = '{{ $lecturer->user->profile_picture }}' + '?timestamp=' + new Date().getTime();
                         // Display the success message
                         alert('Profile updated successfully!');
                     } else {

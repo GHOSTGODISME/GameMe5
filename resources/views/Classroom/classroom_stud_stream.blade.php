@@ -154,7 +154,7 @@
             <div class="ann_content">
             <p> A new quiz has been assigned. Join the quiz now!</p>
             {{-- <p>{{ $announcement->annQuiz->quiz_id }}</p> --}}
-            <button class="class_button">Join</button>
+            <button class="class_button" onclick="redirect_quiz({{ $announcement->annQuiz}})">Join</button>
             </div>
         </div>
             @break
@@ -237,7 +237,7 @@
             <div class="ann_content">
             <p> A new feedback has been assigned. Fill it now!</p>
             {{-- <p>{{ $announcement->annFeedback->feedback_id }}</p> --}}
-            <button class="class_button">Fill now</button>
+            <button class="class_button" onclick="redirect_survey({{ $announcement->annFeedback}})">Fill Now!</button>
             </div>
         </div>
             @break
@@ -252,6 +252,32 @@
 function redirect(url) {
         window.location.href = url;
     }
+    function redirect_quiz(annquiz) {
 
+// Replace 'YOUR_BASE_URL' with the actual base URL of your application
+var baseUrl = 'http://localhost:8000';
+
+// Assuming you have the session code available (replace 'sessionCode' accordingly)
+var sessionCode = annquiz.session_code;
+
+// Generate the link with the session code
+var link = baseUrl + '/join-quiz?code=' + sessionCode;
+
+console.log(link);
+// Navigate to the generated link
+window.location.href = link;
+}
+
+    function redirect_survey(annfeedback) {
+        // Replace 'YOUR_BASE_URL' with the actual base URL of your application
+        var baseUrl = 'http://127.0.0.1:8000';
+        // Assuming you have the session code available (replace 'sessionCode' accordingly)
+        var survey_id = annfeedback.survey_id;
+        // Generate the link with the session code
+        var link = baseUrl + '/get-survey-response/' + survey_id;
+        console.log(link);
+        // Navigate to the generated link
+        window.location.href = link;
+        }
 </script>
 @endsection

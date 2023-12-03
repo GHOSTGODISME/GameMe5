@@ -9,13 +9,16 @@
 }    
 
 .logo{
-width: 200px;
-height: 50px;
-flex-shrink: 0;
-margin-top:30px;
+    width: 180px;
+    height: 50px;
+    flex-shrink: 0;
+    margin-top:25px;
+    margin-left:50px;
 }
 
 </style>
 <div class="fp_header">
-<img class="logo" src ="img/logo_header.png" alt="Logo">
+    <a href="{{ route('login') }}">
+        <img class="logo" src="img/logo_header.png" alt="Logo">
+    </a>
 </div>

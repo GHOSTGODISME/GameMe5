@@ -43,7 +43,7 @@ class StudentController extends Controller{
     {
         $field = $request->input('field');
         $value = $request->input('value');
-        $email = $request->session()->get('stud_email');
+        $email = $request->session()->get('email');
         //$email='wongtian628@gmail.com';
         // Assuming your User model has an 'email' column
         $user = User::where('email', $email)->first();
@@ -67,7 +67,6 @@ class StudentController extends Controller{
         ]);
     
         $email = $request->session()->get('email');
-        //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
     
         $uploadedFile = $request->file('profile_picture');
@@ -89,9 +88,9 @@ class StudentController extends Controller{
             $user->profile_picture = $profilePictureUrl;
             $user->save();
     
+            
             // After successfully updating the profile picture in the database
             return response()->json(['success' => true, 'url' => $profilePictureUrl]);
-    
         } else {
             // File with the same hash already exists in storage, update the database only
             $user->profile_picture = asset('storage/' . $path);

@@ -10,15 +10,16 @@ class Quiz extends Model
     use HasFactory;
 
     protected $fillable = 
-    ['id','title', 'description', 'visibility'];
+    ['id','title', 'description', 'visibility','id_lecturer'];
 
     protected $attributes = [
         'title' => 'Quiz Title',
         'visibility' => 'public'
     ];
 
-    public function lecturer(){
-        return $this->belongsTo(Lecturer::class);
+    public function lecturer()
+    {
+        return $this->belongsTo(Lecturer::class, 'id_lecturer');
     }
 
     public function quiz_questions()

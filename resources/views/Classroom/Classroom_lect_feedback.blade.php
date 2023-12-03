@@ -118,7 +118,7 @@
             <div class="ann_content">
             <p> A new feedback has been assigned. Fill it now!</p>
             {{-- <p>{{ $announcement->annFeedback->feedback_id }}</p> --}}
-            <button class="class_button">Fill now</button>
+            <button class="class_button" onclick="redirect_survey({{ $announcement->annFeedback}})">Fill Now!</button>
             </div>
         </div>
             @break
@@ -127,5 +127,17 @@
 @endforeach
 
 <script>
+    
+    function redirect_survey(annfeedback) {
+        // Replace 'YOUR_BASE_URL' with the actual base URL of your application
+        var baseUrl = 'http://127.0.0.1:8000';
+        // Assuming you have the session code available (replace 'sessionCode' accordingly)
+        var survey_id = annfeedback.survey_id;
+        // Generate the link with the session code
+        var link = baseUrl + '/get-survey-response/' + survey_id;
+        console.log(link);
+        // Navigate to the generated link
+        window.location.href = link;
+        }
 </script>
 @endsection

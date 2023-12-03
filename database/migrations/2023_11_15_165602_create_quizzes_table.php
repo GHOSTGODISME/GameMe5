@@ -17,9 +17,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('visibility');
             $table->timestamps();
-
-            $table->integer ('lect_id')->unsigned()->nullable();
-            // $table->foreign('lect_id')->references('id')->on('lecturer')->onDelete('cascade');
+            $table->unsignedBigInteger('id_lecturer'); // Foreign key column
+            $table->foreign('id_lecturer')->references('id')->on('lecturers')->onDelete('cascade');
         });
     }
 

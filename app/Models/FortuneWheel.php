@@ -13,7 +13,8 @@ class FortuneWheel extends Model
     protected $fillable = [
         'title',
         'entries',
-        'results'
+        'results',
+        'id_lecturer'
     ];
 
     // The $casts property specifies how the attributes should be cast
@@ -28,7 +29,8 @@ class FortuneWheel extends Model
         'results' => '[]'
     ];
 
-    public function lecturer(){
-        return $this->belongsTo(Lecture::class);
+    public function lecturer()
+    {
+        return $this->belongsTo(Lecturer::class, 'id_lecturer');
     }
 }

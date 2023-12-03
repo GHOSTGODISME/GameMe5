@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\AnnQna;
+use App\Models\AnnQuiz;
 use App\Models\AnnText;
 use App\Models\Student;
 use App\Models\AnnPolls;
 use App\Models\Lecturer;
 use App\Models\AnnQnaAns;
 use App\Models\Classroom;
+use App\Models\AnnFeedback;
 use App\Models\Announcement;
 use App\Models\Classstudent;
 use Illuminate\Http\Request;
@@ -824,6 +826,7 @@ public function class_update_announcement(Request $request)
     function assign_class(Request $request){
         $request->validate([
             'class_id' => 'required|exists:classroom,id',
+            'class_session_code' => 'required',
         ]);
         $email = $request->session()->get('email');
         //$email = 'aa@gmail.com';
@@ -835,14 +838,42 @@ public function class_update_announcement(Request $request)
         $announcement->type = 'AnnQuiz'; // Set the type to 'quiz'
         $announcement->user_id = $userId;
         $announcement->save();
-
+    
         // Create a new AnnQuiz
         $annQuiz = new AnnQuiz();
         $annQuiz->ann_id = $announcement->id;
-        $annQuiz->session_id =
+        $annQuiz->session_code = $request->input('class_session_code');
+
         // Add other fields as needed
         $annQuiz->save();
+        return redirect()->back()->with('success', 'Assignment successful!');
+    }
+
+
+    function assign_class_survey(Request $request){
+        $request->validate([
+            'class_id' => 'required|exists:classroom,id',
+            'survey_id' => 'required',
+        ]);
+
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
+        $user = User::where('email', $email)->first();
+        $userId =$user->id;
+        // Create a new Announcement
+        $announcement = new Announcement();
+        $announcement->idclass = $request->input('class_id');
+        $announcement->type = 'AnnFeedback'; // Set the type to 'quiz'
+        $announcement->user_id = $userId;
+        $announcement->save();
     
+        // Create a new AnnQuiz
+        $annSurvey= new AnnFeedback();
+        $annSurvey->ann_id = $announcement->id;
+        $annSurvey->survey_id = $request->input('survey_id');
+
+        // Add other fields as needed
+        $annSurvey->save();
         return redirect()->back()->with('success', 'Assignment successful!');
     }
 

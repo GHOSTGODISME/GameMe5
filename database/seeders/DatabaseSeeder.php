@@ -26,6 +26,11 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             StudentsTableSeeder::class,
             LecturersTableSeeder::class,
+            QuizSeeder::class,
+            SurveySeeder::class,
+            FortuneWheelSeeder::class,
+            ClassroomSeeder::class,
+            AnnouncementSeeder::class,
             // Add other seeders here...
         ]);
     }
