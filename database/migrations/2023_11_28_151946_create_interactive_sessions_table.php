@@ -20,6 +20,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unsignedBigInteger('lecture_id')->nullable();
+            $table->foreign('lecture_id')->references('id')->on('lecturer')->onDelete('cascade');
+
         });
     }
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('visibility');
             $table->unsignedBigInteger('id_lecturer'); // Foreign key column
-            $table->foreign('id_lecturer')->references('id')->on('lecturers')->onDelete('cascade');
+            $table->foreign('id_lecturer')->references('id')->on('lecturer')->onDelete('cascade');
         });
     }
 

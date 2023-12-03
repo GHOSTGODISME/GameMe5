@@ -13,6 +13,8 @@ class FortuneWheelSeeder extends Seeder
      */
     public function run(): void
     {
-        FortuneWheel::factory()->count(5)->create();
+        FortuneWheel::factory()->count(5)->create([
+            "id_lecturer" => 1,
+        ]);
     }
 }

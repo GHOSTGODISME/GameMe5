@@ -10,7 +10,7 @@ class QuizResponse extends Model
     use HasFactory;
 
     protected $fillable = [
-        'quiz_session_id',
+        'session_id',
         'username',
         'user_id',
         'accuracy',

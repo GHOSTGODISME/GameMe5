@@ -969,6 +969,8 @@ class ComposerStaticInitd33d60075962a507897bb29ebfe387f3
         'Database\\Factories\\SurveyQuestionFactory' => __DIR__ . '/../..' . '/database/factories/SurveyQuestionFactory.php',
         'Database\\Factories\\SurveyResponseFactory' => __DIR__ . '/../..' . '/database/factories/SurveyResponseFactory.php',
         'Database\\Factories\\SurveyResponseQuestionFactory' => __DIR__ . '/../..' . '/database/factories/SurveyResponseQuestionFactory.php',
+        'Database\\Seeders\\AnnouncementSeeder' => __DIR__ . '/../..' . '/database/seeders/AnnouncementSeeder.php',
+        'Database\\Seeders\\ClassroomSeeder' => __DIR__ . '/../..' . '/database/seeders/ClassroomSeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
         'Database\\Seeders\\FortuneWheelSeeder' => __DIR__ . '/../..' . '/database/seeders/FortuneWheelSeeder.php',
         'Database\\Seeders\\LecturersTableSeeder' => __DIR__ . '/../..' . '/database/seeders/LecturersTableSeeder.php',
