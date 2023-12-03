@@ -385,11 +385,11 @@ class QuizSessionController extends Controller
 
     public function showQuizSummary(Request $request, $userId, $sessionId, $quizId)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
-        $userId = $student->id;
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
+        // $userId = $student->id;
 
         return view('quiz.quiz-summary', compact('userId', 'sessionId', 'quizId'));
     }

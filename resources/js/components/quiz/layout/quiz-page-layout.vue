@@ -109,6 +109,12 @@
             },
 
             postSubmitAction(submitedAns, answeredCorrectly) {
+                if (!Array.isArray(submitedAns)) {
+        submitedAns = [submitedAns]; 
+                }
+                console.log(submitedAns);
+
+
                 const store = useQuizStore();
                 const currentTime = this.timeRemaining;
                 const timeTaken =

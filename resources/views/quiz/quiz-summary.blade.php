@@ -263,23 +263,24 @@
                         <button id="find-new-quiz-button" class="btn btn-primary button-style">Find new quiz</button>
                     </div>
                 </div> --}}
-                
+
                 <div>
                     <hr>
                     <p>This summary has already been sent to your email. Please Wait for a moment.</p>
-                    <a href="{{ route('generate-pdf', ['userId' => $userId, 'sessionId' => $sessionId, 'quizId' => $quizId]) }}" class="btn btn-primary">
+                    <a href="{{ route('generate-pdf', ['userId' => $userId, 'sessionId' => $sessionId, 'quizId' => $quizId]) }}"
+                        class="btn btn-primary">
                         Haven't received? Download it now</a>
-                        <br>
-                        <hr>
+                    <br>
+                    <hr>
                 </div>
 
                 <div>
                     <a href="/" class="btn btn-primary">Back to Homepage</a>
                     <hr>
                 </div>
-                
+
             </div>
-            
+
             <div id="review-question-container">
 
                 <p class="review-question-title">Review Questions</p>
@@ -349,7 +350,7 @@
                     total_points,
                     average_time
                 } = quizResponse;
-                
+
                 document.getElementById('quiz-username').textContent = quizResponse.username;
                 document.getElementById('quiz-rank').textContent = `${rank}/${totalParticipants}`;
                 document.getElementById('quiz-score').textContent = total_points;
@@ -369,13 +370,13 @@
                     userResponses[question_id] = user_response;
                     correctness[question_id] = isCorrect;
                 });
-                
+
                 generateQuizSummaryDetails();
             } else {
                 console.error('Failed to fetch quiz details');
             }
 
-            
+
         }
 
         function generateInputHTML(singleAnswerFlag, option, isChecked, isCorrect) {
@@ -413,8 +414,13 @@
                 } = question;
 
 
-                const userAnswers = userResponses[id] || []; // User's selected answers (array)
+                let userAnswers = userResponses[id] || []; // User's selected answers (array)
+                userAnswers = JSON.parse(userAnswers);
+                console.log(userAnswers);
+
                 const isCorrect = correctness[id];
+                console.log(userAnswers);
+                console.log(options);
 
                 const titleBgClass = isCorrect ? "correct-ans-title-bg" : "incorrect-ans-title-bg";
                 const optionsBgClass = isCorrect ? "correct-ans-options-bg" : "incorrect-ans-options-bg";
@@ -433,7 +439,7 @@
             ${options.map((option) => {
               const optionLowerCase = option.toLowerCase();
               const isChecked = userAnswers?.map(ans => ans?.toLowerCase()).includes(optionLowerCase);
-              
+              console.log(isChecked);
               const isOptionCorrect = correct_ans.map(ans => ans.toLowerCase()).includes(optionLowerCase);
               return generateInputHTML(single_ans_flag, option, isChecked, isOptionCorrect, type);
             }).join("")}
@@ -483,7 +489,6 @@
         }
 
         getQuizSummaryDetails();
-        
     </script>
 
 
