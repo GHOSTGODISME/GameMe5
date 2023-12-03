@@ -312,10 +312,89 @@
     pointer-events: none;
 }
 
+.fp_header{
+    width:100%;
+    height:100px;
+    background: linear-gradient(to right, #13C1B7, #87DFA8);
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+
+}    
+
+.logo{
+    width: 180px;
+    height: 50px;
+    flex-shrink: 0;
+    margin-top:25px;
+    margin-left:50px;
+}
+
+
+.profile-data_logout
+    {
+        width: 200px;
+        height: 30px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        border: 1px solid #D05252;
+        background: #FFF;
+        display: flex;
+        align-items: center; /* Vertically center items */
+        justify-content: space-between;
+        cursor: pointer;
+        margin-right:10px;
+    }
+
+    .profile-big-container{
+        display:flex;
+        justify-content: space-between;
+    }
+
+    .profile-label{
+        color: #FEFEFE;
+        font-family: 'Roboto';
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-left:20px;
+        width:200px;;
+    }
+
+    .profile-label_logout{
+        color: #D05252;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin-left:20px;
+        width:30%;
+    }
+
+    .logout-button{
+        margin-right:10px;
+        width: 20px;
+        height: 20px;
+        background: url('img/logout_icon.png') center/cover no-repeat; 
+        border: none;
+        cursor: pointer;
+    }
 
 </style>
 <body>
-@include('Layout/lect_header')
+<div class="fp_header">
+    <a href="{{ route('login') }}">
+        <img class="logo" src="img/logo_header.png" alt="Logo">
+    </a>
+
+    <div class="profile-data_logout" onclick="confirmLogout()">
+        <label class="profile-label_logout">Log Out</label>
+        <button class="logout-button"></button>
+    </div>
+</div>
 <div class="content">
 <h1 class= "admin_title"> Admin Dashboard </h1>
 <div class = "nav_container">
@@ -336,5 +415,30 @@
     function toggleMenu(icon) {
       const menu = icon.nextElementSibling;
       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    
+function confirmLogout() {
+        if (confirm("Are you sure you want to log out?")) {
+            logout();
+        }
+    }
+
+function logout() {
+        // Make an AJAX request to logout
+        $.ajax({
+            url: "{{ route('logout') }}",
+            method: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+            },
+            success: function (response) {
+                // Handle the logout success, e.g., redirect to the login page
+                window.location.href = "{{ route('login') }}"; // You can change 'login' to your desired route
+            },
+            error: function () {
+                alert('Error logging out');
+            },
+        });
     }
   </script>

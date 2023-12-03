@@ -16,6 +16,8 @@
     margin-left:50px;
 }
 
+
+
 </style>
 <div class="fp_header">
     <a href="{{ route('login') }}">

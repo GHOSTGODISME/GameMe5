@@ -154,26 +154,20 @@ class AdminController extends Controller{
     
     function admin_update_staff(Request $request, $staffId)
     {
-
-       
-       
-
-        $staff = Lecturer::where('id', $staffId)->first();
-        $userId = $staff->user->id;
-     
+        // Validate the request data
         $validatedData = $request->validate([
-            'name' => 'required',
-            'email'=>'required',
-            'new_password' => 'nullable',
-            'dob' => 'required',
-            'gender' => 'required',
-            'position' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $staffId, // Include user ID to exclude the current user from uniqueness check
+            'new_password' => 'nullable|string|min:6',
+            'dob' => 'required|date',
+            'gender' => 'required|in:male,female',
+            'position' => 'required|string',
             // Add other validation rules as needed
         ]);
     
         // Update the student details
-        $user= User::findOrFail($userId);
-        $staff = Lecturer::findOrFail($staffId);
+        $user = User::where('id',$staffId)->first();
+        $staff = Lecturer::where('iduser',$user->id)->first();
         // Check if a new password is provided
         if ($request->filled('new_password')) {
             $user->password = bcrypt($request->input('new_password'));
@@ -208,9 +202,9 @@ class AdminController extends Controller{
     {
         // Find the student with the given ID
         $staffId = $request->input('staffId');
-        $staff = Lecturer::findOrFail($staffId);
-        $user = User::findOrFail($staffId);
-
+        $user = User::where('id',$staffId)->first();
+        $staff = Lecturer::where('iduser',$user->id)->first();
+        // Find the associated user
         $staff->delete();
 
         // Delete the student

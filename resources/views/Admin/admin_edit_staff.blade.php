@@ -25,19 +25,20 @@
     @csrf
     @method('POST') <!-- Add this line to override the HTTP method -->
 
+    <input type="hidden" id="user_id" name="user_id" value={{$user->id}}>
     <!-- Add input fields for editing student details -->
     <div class=admin_row>
         <div class="studE_info">
             <div class="input_group">
                 <p  class="label_admin_stud" id="name" name="name">Name:</p>
             </div>
-            <div><input type="text" class="admin_input"  name="name" value="{{ $user->name }}" required></div>
+            <div><input type="text" class="admin_input"  name="name" value="{{ $user->name }}" ></div>
         </div>
         <div class="studE_info">
             <div class="input_group">
                 <p class="label_admin_stud"  id="email" name="email">Email:</p>
             </div>
-            <div><input type="email" class="admin_input" name="email" value="{{ $user->email }}" required></div>
+            <div><input type="email" class="admin_input" name="email" value="{{ $user->email }}" ></div>
         </div>
     </div>
 
@@ -54,7 +55,7 @@
                 <p class="label_admin_stud" id="dob" name="dob">Date of Birth:</p>
             </div>
             <div class="styled-date-input">
-                <input class="admin_input" type="date" name="dob" value="{{ $user->dob }}" required>
+                <input class="admin_input" type="date" name="dob" value="{{ $user->dob }}" >
             </div>
         </div>
     </div>
