@@ -167,7 +167,7 @@
                     </div>
 
                     <div class="btn-container">
-                        <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a>
+                        {{-- <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a> --}}
                         <a onclick="startQuiz()" class="btn">Start</a>
 
                     </div>

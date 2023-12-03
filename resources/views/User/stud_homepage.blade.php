@@ -195,11 +195,11 @@ text-decoration: none;
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-<form action="{{ route('game_session') }}" method="POST">
+<form action="{{ route('join-quiz') }}" method="GET">
     @csrf
 <div class="stud_big_cont">
     <img src="img/logo_stud.png" alt="logo">
-    <input type="text" id="txt_game_code" name="gamecode" placeholder="Game Code">
+    <input type="text" id="txt_game_code" name="code" placeholder="Game Code">
     <button type="submit" class="button_general">Enter</button>
 </div>
 </form>

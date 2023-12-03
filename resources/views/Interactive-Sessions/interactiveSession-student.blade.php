@@ -138,7 +138,7 @@
         sessionStorage.setItem("stud_id", @json(session("stud_id")));
         sessionStorage.setItem("stud_name", @json(session("stud_name")));
 
-        const id = @json(session("stud_id"));
+        const id = `s-${@json(session("stud_id"))}`;
         const username = @json(session("stud_name"));
 
         console.log(sessionCode);

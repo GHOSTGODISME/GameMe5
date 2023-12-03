@@ -18,105 +18,61 @@ app.use(cors());
 const SESSION_EXPIRY_TIME = 3 * 60 * 60 * 1000; // 3 hours
 const INTERVAL_CHECK_TIME = 5 * 60 * 1000; // every 5 minutes
 
-// const sessions = {};
-// const interactiveSessions = {};
-// const sessionStartTimes = {};
-// const interactiveSessionStartTimes  = {};
+const sessions = {};
+const interactiveSessions = {};
+const sessionStartTimes = {};
+const interactiveSessionStartTimes  = {};
 
 
-// function initializeSessionData(sessionCode) {
-//   sessions[sessionCode] = {
-//     participants: [],
-//     leaderboard: [],
-//     totalParticipants: 0,
-//     sessionStatus: 'waiting',
-//     startTime: Date.now(),
-//   }
-//   sessionStartTimes[sessionCode] = Date.now();
-// }
-
-// function initializeInteractiveSessionData(sessionCode) {
-//   interactiveSessions[sessionCode] = {
-//     participants: [],
-//     messages: [],
-//     votes: {},
-//     sessionStatus: '',
-//     startTime: Date.now(),
-//   }
-//   interactiveSessionStartTimes [sessionCode] = Date.now();
-// }
-
-// function initializePollVotes(sessionCode, pollId, options) {
-//   const interactiveSession = interactiveSessions[sessionCode];
-
-//   interactiveSession.votes[pollId] = {};
-//   options.forEach((option) => {
-//     interactiveSession.votes[pollId][option] = 0; // Initialize votes for each option to 0
-//   });
-// }
-
-
-// function voteForPollOption(sessionCode, pollId, optionSelected) {
-//   const interactiveSession = interactiveSessions[sessionCode];
-
-//   if (interactiveSession && interactiveSession.votes[pollId]) {
-//     console.log("pass1");
-//     if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
-//       console.log("pass2");
-
-//       interactiveSession.votes[pollId][optionSelected]++;
-//       io.to(sessionCode).emit('pollVoteReceived', {
-//         pollId,
-//         optionSelected,
-//         votes: interactiveSession.votes[pollId],
-//       });
-//     }
-//     console.log(interactiveSession.votes);
-
-//   }
-// }
-
-const sessions = new Map();
-const interactiveSessions = new Map();
-const sessionStartTimes = new Map();
-const interactiveSessionStartTimes = new Map();
+function initializeSessionData(sessionCode) {
+  sessions[sessionCode] = {
+    participants: [],
+    leaderboard: [],
+    totalParticipants: 0,
+    sessionStatus: 'waiting',
+    startTime: Date.now(),
+  }
+  sessionStartTimes[sessionCode] = Date.now();
+}
 
 function initializeInteractiveSessionData(sessionCode) {
-  interactiveSessions.set(sessionCode, {
+  interactiveSessions[sessionCode] = {
     participants: [],
     messages: [],
-    votes: new Map(),
+    votes: {},
     sessionStatus: '',
     startTime: Date.now(),
-  });
-  interactiveSessionStartTimes.set(sessionCode, Date.now());
+  }
+  interactiveSessionStartTimes [sessionCode] = Date.now();
 }
 
 function initializePollVotes(sessionCode, pollId, options) {
-  const interactiveSession = interactiveSessions.get(sessionCode);
+  const interactiveSession = interactiveSessions[sessionCode];
 
-  interactiveSession.votes.set(pollId, new Map());
+  interactiveSession.votes[pollId] = {};
   options.forEach((option) => {
-    interactiveSession.votes.get(pollId).set(option, 0); // Initialize votes for each option to 0
+    interactiveSession.votes[pollId][option] = 0; // Initialize votes for each option to 0
   });
 }
 
-function voteForPollOption(sessionCode, pollId, optionSelected) {
-  const interactiveSession = interactiveSessions.get(sessionCode);
 
-  if (interactiveSession && interactiveSession.votes.get(pollId)) {
+function voteForPollOption(sessionCode, pollId, optionSelected) {
+  const interactiveSession = interactiveSessions[sessionCode];
+
+  if (interactiveSession && interactiveSession.votes[pollId]) {
     console.log("pass1");
-    if (interactiveSession.votes.get(pollId).has(optionSelected)) {
+    if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
       console.log("pass2");
 
-      interactiveSession.votes.get(pollId).set(optionSelected, interactiveSession.votes.get(pollId).get(optionSelected) + 1);
+      interactiveSession.votes[pollId][optionSelected]++;
       io.to(sessionCode).emit('pollVoteReceived', {
         pollId,
         optionSelected,
-        votes: interactiveSession.votes.get(pollId),
+        votes: interactiveSession.votes[pollId],
       });
     }
     console.log(interactiveSession.votes);
+
   }
 }
 

@@ -38,7 +38,7 @@ function initializeInteractiveSessionData(sessionCode) {
   interactiveSessions.set(sessionCode, {
     participants: [],
     messages: [],
-    votes: new Map(),
+    votes: {},
     sessionStatus: '',
     startTime: Date.now(),
   });
@@ -48,28 +48,29 @@ function initializeInteractiveSessionData(sessionCode) {
 function initializePollVotes(sessionCode, pollId, options) {
   const interactiveSession = interactiveSessions.get(sessionCode);
 
-  interactiveSession.votes.set(pollId, new Map());
+  interactiveSession.votes[pollId] = {};
   options.forEach((option) => {
-    interactiveSession.votes.get(pollId).set(option, 0); // Initialize votes for each option to 0
+    interactiveSession.votes[pollId][option] = 0; 
   });
 }
 
 function voteForPollOption(sessionCode, pollId, optionSelected) {
   const interactiveSession = interactiveSessions.get(sessionCode);
 
-  if (interactiveSession && interactiveSession.votes.get(pollId)) {
+  if (interactiveSession && interactiveSession.votes[pollId]) {
     console.log("pass1");
-    if (interactiveSession.votes.get(pollId).has(optionSelected)) {
+    if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
       console.log("pass2");
 
-      interactiveSession.votes.get(pollId).set(optionSelected, interactiveSession.votes.get(pollId).get(optionSelected) + 1);
+      interactiveSession.votes[pollId][optionSelected]++;
       io.to(sessionCode).emit('pollVoteReceived', {
         pollId,
         optionSelected,
-        votes: interactiveSession.votes.get(pollId),
+        votes: interactiveSession.votes[pollId],
       });
     }
     console.log(interactiveSession.votes);
+
   }
 }
 
@@ -285,6 +286,7 @@ function handleJoinEvents(socket) {
     socket.join(sessionCode);
 
     const participants = sessions.get(sessionCode).participants;
+    console.log(participants);
     io.to(sessionCode).emit('initial participants', participants);
   });
 
