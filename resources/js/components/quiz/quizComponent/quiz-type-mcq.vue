@@ -24,6 +24,7 @@
             v-if="!submitted"
             id="quiz-submit-button"
             class="btn btn-primary button-style"
+            type="submit"
             @click="submitInput"
         >
             Submit
@@ -54,8 +55,10 @@ export default {
             submitted: false,
         };
     },
-    mounted(){
-        this.$el.focus();
+    mounted() {
+        window.addEventListener("keydown", (e) => {
+            this.handleKeyPress(e);
+        });
     },
     methods: {
         selectOption(option) {
@@ -79,19 +82,20 @@ export default {
         handleKeyPress(event) {
             if (!this.submitted) {
                 const key = event.key;
-                const optionIndex = parseInt(key) - 1;
-                const selectedOption = this.options.find(
-                    (option, index) => index === optionIndex
-                );
+                const optionIndex = parseInt(key);
 
-                if (selectedOption) {
+                if (
+                    !isNaN(optionIndex) &&
+                    optionIndex >= 1 &&
+                    optionIndex <= this.options.length
+                ) {
+                    const selectedOption = this.options[optionIndex - 1];
                     this.selectOption(selectedOption);
                 } else if (key === "Enter") {
                     this.submitInput();
                 }
             }
         },
-
         submitInput() {
             this.submitted = true;
             this.answeredCorrectly = this.checkAnswer();

@@ -11,7 +11,7 @@
                 Press ‘Continue’ button to view your summary.
             </p>
 
-            <button class="btn button-style btn-dark" @click="continueClicked">
+            <button class="btn button-style btn-dark" type="submit" @click="continueClicked">
                 Continue
             </button>
         </div>

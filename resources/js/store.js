@@ -6,11 +6,11 @@ export const useQuizStore = defineStore('quiz', {
     questions: [],
     userResponses: {},
     correctness: {},
-    
+
     questionTimes: {},
     questionPoints: {},
     navigationHistory: [],
-    
+
 
     userRank: null,
     totalPoints: 0,
@@ -24,18 +24,23 @@ export const useQuizStore = defineStore('quiz', {
     username: '',
 
     userId: 0,
-    sessionId:0,
+    sessionId: 0,
     quizId: 0,
 
-    quizAccuracy: 0, 
-    correctAnswersCount: 0, 
-    incorrectAnswersCount: 0, 
-    averageTime:0,
-    
+    quizAccuracy: 0,
+    correctAnswersCount: 0,
+    incorrectAnswersCount: 0,
+    averageTime: 0,
+
     showLeaderboardFlag: 0,
     shuffleOptionFlag: 0,
+
   }),
   actions: {
+    $onAction(mutation) {
+      console.log("trigger update local storage");
+      localStorage.setItem('quizStore', JSON.stringify(this.$state));
+    },
     setCurrentQuestionIndex(index) {
       this.currentQuestionIndex = index;
     },
@@ -53,9 +58,9 @@ export const useQuizStore = defineStore('quiz', {
         ...this.correctness,
         [questionId]: isCorrect,
       };
-      if(isCorrect){
+      if (isCorrect) {
         this.incrementCorrectAnswersCount();
-      }else{
+      } else {
         this.incrementIncorrectAnswersCount();
       }
     },
@@ -67,20 +72,20 @@ export const useQuizStore = defineStore('quiz', {
     },
     storeQuestionPoints(questionId, answeredCorrectly) {
       const question = this.questions.find(question => question.id === questionId);
-      
+
       this.questionPoints = {
         ...this.questionPoints,
         [questionId]: question.points,
       };
 
 
-      if(answeredCorrectly){
-      const points = parseInt(question.points);
-    const totalPoints = parseInt(this.totalPoints);
-    const sum = totalPoints + points;
-    
-      this.setTotalPoints(sum);
-    }
+      if (answeredCorrectly) {
+        const points = parseInt(question.points);
+        const totalPoints = parseInt(this.totalPoints);
+        const sum = totalPoints + points;
+
+        this.setTotalPoints(sum);
+      }
     },
     setQuizState(newState) {
       this.quizState = newState;
@@ -93,6 +98,7 @@ export const useQuizStore = defineStore('quiz', {
     },
     setUsername(username) {
       this.username = username;
+      this.$onAction({ type: 'setUsername', payload: username });
     },
     setSessionCode(sessionCode) {
       this.sessionCode = sessionCode;
@@ -116,11 +122,11 @@ export const useQuizStore = defineStore('quiz', {
       this.quizQuestions = questions;
     },
     incrementCorrectAnswersCount() {
-          this.correctAnswersCount++;
-        },
-        incrementIncorrectAnswersCount() {
-          this.incorrectAnswersCount++;
-        },
+      this.correctAnswersCount++;
+    },
+    incrementIncorrectAnswersCount() {
+      this.incorrectAnswersCount++;
+    },
     setQuestionTime(state, { questionId, timeTaken }) {
       this.questionTimes[questionId] = timeTaken;
       console.log(questionTimes);
@@ -128,7 +134,7 @@ export const useQuizStore = defineStore('quiz', {
     recordQuestionTime({ setQuestionTime }, { questionId, timeTaken }) {
       setQuestionTime({ questionId, timeTaken });
     },
-    
+
     navigateForward({ commit, state }, questionId) {
       commit('addToNavigationHistory', state.currentQuestionIndex);
       commit('setCurrentQuestionIndex', questionId);
@@ -155,6 +161,7 @@ export const useQuizStore = defineStore('quiz', {
     },
     updateUserRank(leaderboard) {
       const userIndex = leaderboard.findIndex((player) => player.id === this.userId);
+      console.log(userIndex);
       if (userIndex !== -1) {
         const userRank = userIndex + 1;
         this.userRank = userRank;
@@ -162,7 +169,7 @@ export const useQuizStore = defineStore('quiz', {
         this.userRank = null;
       }
     },
-    async fetchSessionSettings(){
+    async fetchSessionSettings() {
       try {
         const response = await fetch(`/quiz/settings/${this.sessionId}`);
         console.log(response);
@@ -184,7 +191,7 @@ export const useQuizStore = defineStore('quiz', {
         const details = await response.json();
         console.log(details);
         console.log('Fetched details:', details);
-    
+
         if (details && details.quiz.title) {
           this.setQuizTitle(details.quiz.title); // Update quizTitle using setQuizTitle action
           this.quizId = details.quiz.id;
@@ -207,9 +214,9 @@ export const useQuizStore = defineStore('quiz', {
         console.log('Fetched questions:', this.questions);
 
 
-            } catch (error) {
-              console.error('Failed to fetch questions:', error);
-                  }
+      } catch (error) {
+        console.error('Failed to fetch questions:', error);
+      }
     },
     calculateQuizAccuracy() {
       const totalQuestions = Object.keys(this.correctness).length;
@@ -268,16 +275,15 @@ export const useQuizStore = defineStore('quiz', {
       const randomUserId = Math.floor(Math.random() * 1000) + 1;
       this.userId = randomUserId;
     },
-    resetStore(){
+    resetStore() {
       this.$reset();
     },
     shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
-  },
-    
+    },
   },
   getters: {
     getQuizAccuracy() {
@@ -288,11 +294,16 @@ export const useQuizStore = defineStore('quiz', {
     getAverageTime() {
       this.calculateAverageTime();
       return this.averageTime.toFixed(1); // Display average time up to 2 decimals
-    },  },
-
-    getQuizTitle() {
-      return this.quizTitle;
     },
+  },
+
+  getQuizTitle() {
+    return this.quizTitle;
+  },
+
+  getUsername() {
+    return this.username;
+  }
 });
 
 

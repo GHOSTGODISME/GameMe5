@@ -108,7 +108,7 @@
         </div>
 
         @if ($mode == 'edit' || $mode == 'create')
-            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button">Save Quiz</button>
+            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save Quiz</button>
         @else
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>

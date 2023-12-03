@@ -264,8 +264,6 @@
             document.querySelector('.copy-quiz-link').addEventListener('click', function() {
                 handleCopyClick(quizLinkElement, quizLinkIcon);
             });
-
-            qrInitialize(sessionCode);
         });
 
 

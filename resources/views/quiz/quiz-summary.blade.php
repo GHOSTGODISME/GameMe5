@@ -215,41 +215,41 @@
 <body>
     <div class="header-container">
         <img src="/img/logo_header.png" alt="Logo">
-        <span class="header-quiz-title">Basic Math</span>
+        <span class="header-quiz-title">Title</span>
     </div>
 
     <div class="quiz-body">
         <div id="summary-container">
             <div id="summary-general-container">
                 <h2>Summary</h2>
-                <p id="quiz-username">username</p>
+                <p id="quiz-username">Username</p>
 
                 <div class="summary-container-row">
                     <span>Rank</span>
-                    <span id="quiz-rank">1/20</span>
+                    <span id="quiz-rank">0/0</span>
                 </div>
                 <div class="summary-container-row">
                     <span>Score</span>
-                    <span id="quiz-score">2100</span>
+                    <span id="quiz-score">0</span>
                 </div>
                 <div class="summary-container-row">
                     <span>Accuracy</span>
-                    <span id="quiz-accuracy">88%</span>
+                    <span id="quiz-accuracy">0%</span>
                 </div>
 
                 <div class="summary-color-block">
                     <div class="summary-container-block" style="background: #76C893;">
                         <p class="">Correct</p>
-                        <p id="quiz-correct">11</p>
+                        <p id="quiz-correct">0</p>
                     </div>
                     <div class="summary-container-block" style="background: #D05252;">
                         <p class="">Incorrect</p>
-                        <p id="quiz-incorrect">1</p>
+                        <p id="quiz-incorrect">0</p>
                     </div>
 
                     <div class="summary-container-block" style="background: #168AAD;">
                         <p class="">Avg Time</p>
-                        <p id="quiz-avg-time"></p>
+                        <p id="quiz-avg-time">0</p>
                         <span>s</span>
                     </div>
                 </div>
@@ -432,7 +432,7 @@
           <div class="container-style ${optionsBgClass}">
             ${options.map((option) => {
               const optionLowerCase = option.toLowerCase();
-              const isChecked = userAnswers.map(ans => ans.toLowerCase()).includes(optionLowerCase);
+              const isChecked = userAnswers?.map(ans => ans?.toLowerCase()).includes(optionLowerCase);
               
               const isOptionCorrect = correct_ans.map(ans => ans.toLowerCase()).includes(optionLowerCase);
               return generateInputHTML(single_ans_flag, option, isChecked, isOptionCorrect, type);

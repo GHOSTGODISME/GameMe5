@@ -60,11 +60,20 @@
             this.initializeSocket();
             this.startTimer();
             this.startTimer();
-            // this.socket = io("http://localhost:3000");
         },
         methods: {
             initializeSocket() {
+                const store = useQuizStore();
                 this.socket = io("http://localhost:3000");
+
+                this.socket.emit("rejoinRoom", store.sessionCode);
+                this.socket.emit("get leaderboard", store.sessionCode);
+
+                this.socket.on("update leaderboard", (leaderboard) => {
+                    console.log("Received updated leaderboard:", leaderboard);
+                    this.leaderboardData = leaderboard;
+                    store.updateUserRank(this.leaderboardData);
+                });
             },
             // ... other methods
             startTimer() {
@@ -137,9 +146,9 @@
 
                 this.submitResponseToDatabase(timeTaken, submitedAns, answeredCorrectly);
 
-                this.timeRemaining = 1;
+                this.timeRemaining = 5;
                 this.progressBarValue = 100;
-
+                clearInterval(this.timerInterval);
                 this.timerInterval = setInterval(() => {
                     if (this.timeRemaining > 0) {
                         this.timeRemaining--; // Decrement timeRemaining by 1 every second

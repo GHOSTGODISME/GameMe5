@@ -55,20 +55,6 @@ const router = createRouter({
 const app = createApp(App);
 const pinia = createPinia();
 
-
-// Hook into the store's actions to save state in localStorage
-pinia.use(({ store }) => {
-  store.$onAction((mutation) => {
-    localStorage.setItem('piniaState', JSON.stringify(store.$state));
-  });
-});
-
-// On application startup, retrieve the state from localStorage (if exists)
-const localStorageState = localStorage.getItem('piniaState');
-if (localStorageState) {
-  pinia.state.value = JSON.parse(localStorageState);
-}
-
 app.use(router);
 app.use(pinia);
 

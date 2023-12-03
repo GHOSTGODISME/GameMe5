@@ -54,98 +54,147 @@ import JoinQuizJoinedParticipants from "../join-quiz-joined-participants.vue";
 import axios from "axios";
 
 export default {
-  components: {
-    QuizHeader,
-    JoinQuizJoinedParticipants,
-  },
-  data() {
-    return {
-      title: "test",
-      username: "",
-      joinedQuiz: false,
-      emptyUserNameMsg: false,
-      participantList: [],
-      socket: null,
-    };
-  },
-  created() {
-    // Fetch quiz details and set necessary data
-    const store = useQuizStore();
-    const code = this.$route.query.code;
-
-    store.setRandomUserId();
-    store.setSessionCode(code);
-
-    store.fetchQuizDetails().then(() => {
-      this.title = store.quizTitle;
-    });
-  },
-  mounted() {
-    this.initializeSocket();
-  },
-  beforeDestroy() {
-    // Ensure to disconnect the socket instance when the component is destroyed
-    if (this.socket) {
-      this.socket.disconnect();
-    }
-  },
-  computed: {
-    inputStyle() {
-      // Compute input field style based on error condition
-      return this.emptyUserNameMsg
-        ? {
-            border: "3px solid #CA0000",
-            background: "#FFEDED",
-          }
-        : {};
+    components: {
+        QuizHeader,
+        JoinQuizJoinedParticipants,
     },
-  },
-  methods: {
-    initializeSocket() {
-      this.socket = io("http://localhost:3000");
-
-      this.socket.on("initial participants", (participants) => {
-        this.participantList = participants.map(participant => participant.username);
-      });
-
-      this.socket.on("participant joined", ({ username }) => {
-        this.participantList.push(username);
-      });
-
-      this.socket.on('session status', (sessionStatus) => {
-        // if (this.joinedQuiz) {
-        //   this.$router.push("/quiz/quiz-loading");
-        // } else 
-        if (sessionStatus === "running" && this.joinedQuiz) {
-          this.$router.push("/quiz/quiz-loading");
-        }else if(sessionStatus === "ended"){
-          alert("The session has ended. You will be redirected to the home page.");
-          this.$router.push("/");
-        }
-      });
+    data() {
+        return {
+            title: "",
+            username: "",
+            joinedQuiz: false,
+            emptyUserNameMsg: false,
+            participantList: [],
+            socket: null,
+            username: "",
+        };
     },
-    validateUsername() {
-      if (this.username.trim() === "") {
-        this.emptyUserNameMsg = true;
-      } else {
-        this.emptyUserNameMsg = false;
-        this.joinedQuiz = true;
-
+    created() {
         const store = useQuizStore();
-        store.setUsername(this.username);
+        const code = this.$route.query.code;
 
-        const username = store.username;
-        axios.post("/api/register-name", { "username": username, "sessionId": store.sessionId, "userId": store.userId })
-          .then((response) => {
-            this.socket.emit('join', { sessionCode: store.sessionCode, id: store.userId, username: username });
-            this.socket.emit('get status', store.sessionCode);          
-          })
-          .catch((error) => {
-            console.error("Error joining the quiz:", error);
-          });
-      }
+        if (this.storedState && this.storedState.sessionCode === code) {
+            Object.keys(this.storedState).forEach((key) => {
+                if (store[key] !== undefined) {
+                    store[key] = this.storedState[key];
+                }
+            });
+        } else {
+            store.setRandomUserId();
+            store.setSessionCode(code);
+        }
+
+        store.fetchQuizDetails().then(() => {
+            this.title = store.quizTitle;
+        });
+
+        this.username = store.username || "";
+
+        if (this.username.trim() !== "") {
+            this.joinedQuiz = true;
+        }
+        this.socket = io("http://localhost:3000");
+
+        this.socket.emit(
+            "getSessionParticipants",
+            this.$route.query.code.toString()
+        );
     },
-  },
+    mounted() {
+        this.initializeSocket();
+    },
+    beforeDestroy() {
+        // Ensure to disconnect the socket instance when the component is destroyed
+        if (this.socket) {
+            this.socket.disconnect();
+        }
+    },
+    computed: {
+        storedState() {
+            const localStorageState = localStorage.getItem("quizStore");
+            return localStorageState ? JSON.parse(localStorageState) : {};
+        },
+        inputStyle() {
+            // Compute input field style based on error condition
+            return this.emptyUserNameMsg
+                ? {
+                      border: "3px solid #CA0000",
+                      background: "#FFEDED",
+                  }
+                : {};
+        },
+    },
+    methods: {
+        initializeSocket() {
+            this.socket = io("http://localhost:3000");
+
+            this.socket.emit(
+                "getSessionParticipants",
+                this.$route.query.code.toString()
+            );
+
+            this.socket.on("initial participants", (participants) => {
+                console.log(participants);
+                this.participantList = participants.map(
+                    (participant) => participant.username
+                );
+            });
+
+            this.socket.on("participant joined", ({ username }) => {
+                this.participantList.push(username);
+            });
+
+            this.socket.on("session status", (sessionStatus) => {
+                // if (this.joinedQuiz) {
+                //   this.$router.push("/quiz/quiz-loading");
+                // } else
+                if (sessionStatus === "running" && this.joinedQuiz) {
+                    this.$router.push("/quiz/quiz-loading");
+                } else if (sessionStatus === "ended") {
+                    alert(
+                        "The session has ended. You will be redirected to the home page."
+                    );
+                    this.$router.push("/");
+                }
+            });
+        },
+        validateUsername() {
+            if (this.username.trim() === "") {
+                this.emptyUserNameMsg = true;
+            } else {
+                this.emptyUserNameMsg = false;
+                this.joinedQuiz = true;
+
+                const store = useQuizStore();
+                store.setUsername(this.username);
+                console.log("store.username " + store.username);
+
+                const localStorageState = localStorage.getItem("quizStore");
+                if (localStorageState) {
+                    useQuizStore.$state = JSON.parse(localStorageState);
+                }
+                console.log(localStorageState);
+
+                const username = store.username;
+                axios
+                    .post("/api/register-name", {
+                        username: username,
+                        sessionId: store.sessionId,
+                        userId: store.userId,
+                    })
+                    .then((response) => {
+                        this.socket.emit("join", {
+                            sessionCode: store.sessionCode,
+                            id: store.userId,
+                            username: username,
+                        });
+                        this.socket.emit("get status", store.sessionCode);
+                    })
+                    .catch((error) => {
+                        console.error("Error joining the quiz:", error);
+                    });
+            }
+        },
+    },
 };
 </script>
-
