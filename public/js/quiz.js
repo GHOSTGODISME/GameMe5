@@ -1056,76 +1056,66 @@ document.getElementById('save-quiz-btn').addEventListener('click', function() {
 
 
 
-// check save before leaving
-function compareQuizzes(savedQuiz, modifiedQuiz) {
-    if (savedQuiz.constructor !== modifiedQuiz.constructor) {
-        return false; // Objects are not of the same class
-    }
+// // check save before leaving
+// function compareObject(savedQuiz, modifiedQuiz) {
+//     if (savedQuiz.constructor !== modifiedQuiz.constructor) {
+//         return false; // Objects are not of the same class
+//     }
 
-    for (let key in savedQuiz) {
-        if (typeof savedQuiz[key] === 'object') {
-            // For nested objects or arrays, you may need a deeper comparison
-            // Here, it's assumed properties are not nested objects or arrays
-            if (JSON.stringify(savedQuiz[key]) !== JSON.stringify(modifiedQuiz[key])) {
-                console.log("JSON.stringify(savedQuiz[key]) " + JSON.stringify(savedQuiz[key]));
-                console.log("JSON.stringify(modifiedQuiz[key]) " + JSON.stringify(modifiedQuiz[key]));
-                console.log("false 1");
-                return false; // Detected changes in nested objects or arrays
-            }
-        } else if (savedQuiz[key] !== modifiedQuiz[key]) {
-            console.log("false 2");
-            return false; // Detected changes in top-level properties
-        }
-    }
+//     for (let key in savedQuiz) {
+//         if (typeof savedQuiz[key] === 'object') {
+//             // For nested objects or arrays, you may need a deeper comparison
+//             // Here, it's assumed properties are not nested objects or arrays
+//             if (JSON.stringify(savedQuiz[key]) !== JSON.stringify(modifiedQuiz[key])) {
+//                 console.log("JSON.stringify(savedQuiz[key]) " + JSON.stringify(savedQuiz[key]));
+//                 console.log("JSON.stringify(modifiedQuiz[key]) " + JSON.stringify(modifiedQuiz[key]));
+//                 console.log("false 1");
+//                 return false; // Detected changes in nested objects or arrays
+//             }
+//         } else if (savedQuiz[key] !== modifiedQuiz[key]) {
+//             console.log("false 2");
+//             return false; // Detected changes in top-level properties
+//         }
+//     }
 
-    return true; // No changes detected
-}
+//     return true; // No changes detected
+// }
 
-function compareQuizzes(quiz1, quiz2) {
+function compareObject(obj1, obj2) {
     // Check if both inputs are objects
-    if (typeof quiz1 !== 'object' || typeof quiz2 !== 'object') {
+    if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
         return false;
     }
 
     // Get the keys of the objects
-    const keys1 = Object.keys(quiz1);
-    const keys2 = Object.keys(quiz2);
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
 
-    // Check if the number of keys is the same
     if (keys1.length !== keys2.length) {
         return false;
     }
 
-    // Iterate through keys and compare values
     for (const key of keys1) {
-        const val1 = quiz1[key];
-        const val2 = quiz2[key];
+        const val1 = obj1[key];
+        const val2 = obj2[key];
 
-        // If the value is an object, recursively compare
         if (typeof val1 === 'object' && typeof val2 === 'object') {
-            const objectsEqual = compareQuizzes(val1, val2);
+            const objectsEqual = compareObject(val1, val2);
             if (!objectsEqual) {
                 return false;
             }
         } else if (val1 !== val2) {
-            // If the values are not equal, return false
             return false;
         }
     }
-
-    // All keys and values match
     return true;
 }
 
 // Event listener for beforeunload
 window.addEventListener('beforeunload', function (e) {
-    // if (!compareQuizzes(savedQuiz, quiz)) {
-        if (!compareQuizzes(savedQuiz, quiz)) {
-            // Cancel the event as a safeguard
+        if (!compareObject(savedQuiz, quiz)) {
         e.preventDefault();
-        // Chrome requires returnValue to be set
         e.returnValue = '';
-        // Prompt a confirmation message
         return 'Are you sure you want to leave? Your changes may not be saved.';
     }
 });

@@ -915,3 +915,42 @@ function initializeSurveySubmitBtn_admin() {
         validateSurvey();
     });
 }
+
+function compareObject(obj1, obj2) {
+    // Check if both inputs are objects
+    if (typeof obj1 !== 'object' || typeof obj2 !== 'object') {
+        return false;
+    }
+
+    // Get the keys of the objects
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+
+    for (const key of keys1) {
+        const val1 = obj1[key];
+        const val2 = obj2[key];
+
+        if (typeof val1 === 'object' && typeof val2 === 'object') {
+            const objectsEqual = compareObject(val1, val2);
+            if (!objectsEqual) {
+                return false;
+            }
+        } else if (val1 !== val2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+window.addEventListener('beforeunload', function(e) {
+    if (!compareObject(surveyFromDB, survey)) {
+        e.preventDefault();
+        e.returnValue = '';
+        return 'Are you sure you want to leave? Your changes may not be saved.';
+    }
+});
