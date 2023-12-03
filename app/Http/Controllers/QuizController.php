@@ -2,32 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lecturer;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Models\Lecturer;
 use App\Models\QuizQuestion;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Classlecturer;
 use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $lecturer = Lecturer::where('iduser', $user->id)->first() ?? 1;
+
         $quizzes = Quiz::all();
-        return view('quiz.index', ['quizzes' => $quizzes]);
+        $allQuizzes = Quiz::all();
+
+        // $ownQuizzes = $lecturer->quizzes()->get();
+
+        return view('quiz.index', [
+            'quizzes' => $quizzes,
+            'allQuizzes' => $allQuizzes,
+            // 'ownQuizzes' => $ownQuizzes
+        ]);
     }
 
-    public function create()
+    public function index_own_quiz(Request $request)
+    {
+        $quizzes = Quiz::all();
+        $search = $request->input('search');
+
+        if ($request->has('search')) {
+        $quizzes = Quiz::when($search, function ($query) use ($search) {
+            return $query->where('title', 'like', '%' . $search . '%');
+        })->get();
+        }
+        
+        return view('quiz.index-own-quiz', ['quizzes' => $quizzes]);
+    }
+
+    public function index_all_quiz(Request $request)
+    {
+        $quizzes = Quiz::where('visibility','public')->get();
+        $search = $request->input('search');
+
+        if ($request->has('search')) {
+            $quizzes = $quizzes->when($search, function ($query) use ($search) {
+                return $query->where('title', 'like', '%' . $search . '%');
+            })->get();
+        }    
+
+        return view('quiz.index-all-quiz', ['quizzes' => $quizzes]);
+    }
+
+    public function create(Request $request)
     {
         $quiz = new Quiz();
         $mode = 'create';
-        $questions = $quiz->quiz_questions; 
+        $questions = $quiz->quiz_questions;
 
         return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
-    public function view($id, Request $request)
+    public function view(Request $request, $id)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'view';
@@ -43,7 +85,7 @@ class QuizController extends Controller
         return view('quiz.edit', compact('quiz', 'questions', 'mode','lecturerClasses'));
     }
 
-    public function edit($id, Request $request)
+    public function edit(Request $request, $id)
     {
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'edit';
@@ -133,14 +175,8 @@ class QuizController extends Controller
         }
     }
 
-    public function show($id)
+    public function search(Request $request)
     {
-        $quiz = Quiz::with('quiz_questions')->findOrFail($id);
-
-        return view('play_quiz', ['quizData' => $quiz]);
-    }
-
-    public function search(Request $request){
         $search = $request->input('search');
 
         $quizzes = Quiz::when($search, function ($query) use ($search) {
@@ -149,5 +185,4 @@ class QuizController extends Controller
 
         return view('quiz.index', compact('quizzes'));
     }
-    
 }

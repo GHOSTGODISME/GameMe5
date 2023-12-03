@@ -113,9 +113,10 @@ export default {
       });
 
       this.socket.on('session status', (sessionStatus) => {
-        if (this.joinedQuiz) {
-          this.$router.push("/quiz/quiz-loading");
-        } else if (sessionStatus === "running" && this.joinedQuiz) {
+        // if (this.joinedQuiz) {
+        //   this.$router.push("/quiz/quiz-loading");
+        // } else 
+        if (sessionStatus === "running" && this.joinedQuiz) {
           this.$router.push("/quiz/quiz-loading");
         }else if(sessionStatus === "ended"){
           alert("The session has ended. You will be redirected to the home page.");

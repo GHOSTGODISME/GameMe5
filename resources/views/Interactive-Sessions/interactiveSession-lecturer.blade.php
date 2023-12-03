@@ -66,6 +66,10 @@
             border-bottom: 1px solid black;
         }
 
+        .session-content-container .session-single-message:last-child {
+            border-bottom: none;
+        }
+
         .session-polls-container {
             height: 600px;
             max-height: 600px;
@@ -78,6 +82,13 @@
             font-weight: bold;
             letter-spacing: 5px;
             text-align: center;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-content: center;
         }
     </style>
 </head>
@@ -100,7 +111,10 @@
                 <span class="h2">Session - {{ $title }}<span> <small>(<span
                                 id="concurrentUser">0</span>)</small>
             </div>
-            <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
+            <div>
+                <a id="exportChat" class="btn btn-dark">Export Chat</a>
+                <a id="endBtn" class="btn btn-dark">End Session</a>
+            </div>
         </div>
 
         <div class="container">
@@ -115,19 +129,18 @@
                                 <input type="text" class="form-control" placeholder="Type your reply here"
                                     id="messageInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"
-                                        onclick="sendMessage()">Enter</button>
+                                    <button class="btn btn-dark" type="button" onclick="sendMessage()">Enter</button>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 session-polls-container">
-                    <div style="text-align: end;">
+                    <div class="flex-container">
+                        <h3>Polls</h3>
                         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
                                 class="fa fa-solid fa-plus"></i> New Poll</a>
                     </div>
-
                     <div class="big-polls-container">
                     </div>
 
@@ -195,7 +208,11 @@
         const username = "testname";
 
         console.log(sessionCode);
-        socket.emit("createInteractiveSession", sessionCode);
+        socket.emit("createInteractiveSession", {
+            sessionCode,
+            id,
+            username
+        });
 
         socket.on('chatMessageReceived', (data) => {
             const {
@@ -223,6 +240,23 @@
             concurrentUser.innerText = data;
         });
 
+        socket.on('returnChatMessage', (messages) => {
+            const formattedData = messages.map(entry => `${entry.username} ${entry.time}\n${entry.message}`).join(
+                '\n\n');
+            const blob = new Blob([formattedData], {
+                type: 'text/plain'
+            });
+
+            const url = URL.createObjectURL(blob);
+
+            const currentDate = new Date().toISOString().split('T')[0];
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `${@json($title)}_messsage_${currentDate}.txt`;
+            downloadLink.click();
+        })
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -249,8 +283,18 @@
                 }, 2000);
             }
 
+            document.getElementById('messageInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
             document.getElementById('code-copy-container').addEventListener('click', function(event) {
                 handleCopyClick(codePlaceholder, codeCopyIcon);
+            });
+
+            $('#exportChat').click(function() {
+                socket.emit("exportChatMessage", sessionCode);
             });
 
             $('#endBtn').click(function() {
@@ -260,18 +304,28 @@
                             'X-CSRF-TOKEN': csrfToken
                         }
                     });
-                    $.ajax({
-                        url: '/end-interactive-session/' + sessionId,
-                        type: 'PUT',
-                        success: function(response) {
-                            socket.emit("endInteractiveSession", sessionCode);
-                            console.log('Session ended successfully');
-                            window.location.href = '/';
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Failed to end session:', error);
-                        }
+
+                    socket.emit("saveChatMessage", sessionCode);
+                    socket.on('returnChatMessageSave', message => {
+                        $.ajax({
+                            url: '/end-interactive-session', // Replace with your route
+                            type: 'POST', // Adjust the HTTP method accordingly
+                            data: {
+                                messages: message,
+                                sessionId: sessionId
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                socket.emit("endInteractiveSession", sessionCode);
+                                console.log('Session ended successfully');
+                                // window.location.href = '/';
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Failed to end session:', error);
+                            }
+                        });
                     });
+
                 } else {
                     console.error('Session ID not found');
                 }

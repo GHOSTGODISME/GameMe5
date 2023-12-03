@@ -24,5 +24,8 @@ class Lecturer extends  Model
         return $this->belongsToMany(Lecturer::class, 'class_lecturer', 'idclass', 'idlecturer');
     }
 
-    
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'lect_id', 'id');
+    }
 }

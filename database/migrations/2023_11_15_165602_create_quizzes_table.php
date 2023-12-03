@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('visibility');
             $table->timestamps();
 
+            $table->integer ('lect_id')->unsigned()->nullable();
+            // $table->foreign('lect_id')->references('id')->on('lecturer')->onDelete('cascade');
         });
     }
 

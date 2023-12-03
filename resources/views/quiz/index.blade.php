@@ -18,8 +18,6 @@
             margin-top: 20px;
         }
 
-         
-
         .add-btn {
             display: flex;
             justify-content: center;
@@ -75,7 +73,7 @@
 
         <div class="table-responsive lecturer-index-table-container">
             @if(count($quizzes) > 0)
-            <table class="table ">
+            <table class="table">
                 <thead>
                     <tr>
                         <th width="10%">No.</th>

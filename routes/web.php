@@ -214,6 +214,11 @@ Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('del
 Route::post('/save-quiz', [QuizController::class, 'store']);
 Route::get('/find-quiz', [QuizController::class, 'search'])->name('find-quiz');
 
+Route::get('/quiz-index-own-quiz', [QuizController::class, 'index_own_quiz'])->name('own-quiz');
+Route::get('/quiz-index-own-quiz-search', [QuizController::class, 'index_own_quiz'])->name('own-quiz-search');
+Route::get('/quiz-index-all-quiz', [QuizController::class, 'index_all_quiz'])->name('all-quiz');
+Route::get('/quiz-index-all-quiz-search', [QuizController::class, 'index_all_quiz'])->name('all-quiz-search');
+
 
 Route::get('/join-quiz', [QuizSessionController::class, 'joinQuiz'])->name('join-quiz');
 Route::get('/quiz/details/{code}', [QuizSessionController::class, 'getQuizDetails']);
@@ -232,9 +237,10 @@ Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'gen
 
 
 Route::get('/interactive-session-index', [InteractiveSessionController::class,'index'])->name("interactive-session-index");
-Route::get('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
+Route::post('/create-interactive-session', [InteractiveSessionController::class,'createInteractiveSession'])->name("create-interactive-session");
 Route::get('/join-interactive-session', [InteractiveSessionController::class, 'joinInteractiveSession'])->name('join-interactive-session');
-Route::put('/end-interactive-session/{sessionId}', [InteractiveSessionController::class, 'endInteractiveSession']);
+Route::post('/end-interactive-session', [InteractiveSessionController::class, 'endInteractiveSession']);
+Route::get('/interactive-session-lecturer', [InteractiveSessionController::class, 'showInteractiveSessionLecturer'])->name('interactive-session-lecturer');
 
 // Serve Vue app's entry point
 Route::get('/quiz/{any}', function () {

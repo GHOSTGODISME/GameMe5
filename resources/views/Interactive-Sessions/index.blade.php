@@ -48,7 +48,7 @@
 
     <div class="content-body">
         <div><img src ="img/logo_header.png" alt="Logo"></div>
-        <form method="GET" action="{{ route('create-interactive-session') }}"
+        <form method="POST" action="{{ route('create-interactive-session') }}"
             style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
             @csrf
             <input type="text" name="title" class="form-control input-style" placeholder="Title">

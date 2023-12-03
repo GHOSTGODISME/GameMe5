@@ -63,6 +63,10 @@
             border-bottom: 1px solid black;
         }
 
+        .session-content-container .session-single-message:last-child {
+            border-bottom: none;
+        }
+
         .session-polls-container {
             height: 600px;
             max-height: 600px;
@@ -99,14 +103,14 @@
                                 <input type="text" class="form-control" placeholder="Type your reply here"
                                     id="messageInput">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button"
-                                        onclick="sendMessage()">>Enter</button>
+                                    <button class="btn btn-dark" type="button" onclick="sendMessage()">Enter</button>
                                 </span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 session-polls-container">
+                    <h3>Polls</h3>
                     <div class="big-polls-container">
                     </div>
 
@@ -166,6 +170,13 @@
         socket.on('is-participants-length', (data) => {
             const concurrentUser = document.getElementById('concurrentUser');
             concurrentUser.innerText = data;
+        });
+
+        socket.on('interactiveSessionEnded', () => {
+            if (!alert("This session has ended.")) {
+                window.location.href = '/';
+            }
+
         });
 
         function sendMessage() {
@@ -234,12 +245,12 @@
             <hr>
             <form id="pollForm-${pollId}">
                 ${options.map((option, index) => `
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
-                                <label class="form-check-label" for="option${index + 1}-${pollId}">
-                                    ${option}
-                                </label>
-                            </div>`).join('')}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
+                                        <label class="form-check-label" for="option${index + 1}-${pollId}">
+                                            ${option}
+                                        </label>
+                                    </div>`).join('')}
                 <div style="text-align: end; margin-top: 10px;">
                     <a class="btn btn-primary" onclick="submitVote('${pollId}')">Vote</a>
                 </div>
@@ -252,11 +263,21 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            const leaveBtn = document.getElementById('leaveBtn');
-            leaveBtn.addEventListener('click', function() {
-                io.emit('disconnect');
+            document.getElementById('leaveBtn').addEventListener('click', function() {
+                // socket.emit('disconnect');
+                socket.emit('leaveInteractiveSession', {
+                    sessionCode,
+                    id
+                });
                 window.location.href = '/'; // Redirect to the root route
             });
+
+            document.getElementById('messageInput').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+
         });
     </script>
 

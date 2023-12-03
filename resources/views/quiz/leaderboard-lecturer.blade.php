@@ -667,7 +667,7 @@
                         type: 'PUT',
                         success: function(response) {
                             socket.emit("endSession", sessionCode);
-\                            console.log('Session ended successfully');
+                            console.log('Session ended successfully');
                             window.location.href = '/';
                         },
                         error: function(xhr, status, error) {

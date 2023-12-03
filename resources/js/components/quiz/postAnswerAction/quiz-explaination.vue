@@ -31,7 +31,7 @@ export default {
     },
     methods: {
         startTimer() {
-            this.timeRemaining = 1;
+            this.timeRemaining = 5;
             this.progressBarValue = 100;
             const store = useQuizStore();
 

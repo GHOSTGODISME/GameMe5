@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->bigInteger('code');
-            $table->unsignedBigInteger('lecture_id')->nullable();
             $table->json('messages')->nullable();
             $table->string('status')->default("live");
-            $table->dateTime('start_time')->nullable();
-            $table->dateTime('end_time')->nullable()->default(null);
             $table->timestamps();
+
+            $table->unsignedBigInteger('lecture_id')->nullable();
         });
     }
 

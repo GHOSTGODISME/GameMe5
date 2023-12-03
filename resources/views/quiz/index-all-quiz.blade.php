@@ -1,16 +1,25 @@
-@extends('Layout/index_master')
+@extends('Layout/quiz_index_master')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-@section('title', 'Available Surveys')
+
+@section('title', 'Available Quizzes')
 
 @section('content')
-    <h1 class= "admin_title">Surveys</h1>
+    <style>
+        .admin_subtitle2{
+    text-decoration: underline;
+}
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <div class = "title_bar">
-        <div>
-            <a href="{{ route('create-survey') }}" class="btn btn-dark add-btn"><i
-                class="fa-solid fa-plus"></i>Add Survey</a>
+        <div class="sub_cont">
+            <h1 class="admin_subtitle3">All Quizzes</h1>
         </div>
-        <form action="{{ route('search-survey') }}" method="GET" class="search-form">
+        <form action="{{ route('all-quiz-search') }}" method="GET" class="search-form">
             <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
             <input type="text" name="search" class="search-input" placeholder="Search">
             <button type="submit" class="search-button">Search</button>
@@ -18,7 +27,7 @@
     </div>
 
     <div class="table-responsive ">
-    @if(count($surveys) > 0)
+    @if(count($quizzes) > 0)
     <table class="admin_table">
         <thead>
             <tr>
@@ -30,20 +39,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($surveys as $survey)
+            @foreach ($quizzes as $quiz)
                 <tr>
                     <td class="bordered">{{ $loop->index + 1 }}</td>
-                    <td class="bordered">{{ $survey->title }}</td>
-                    <td class="bordered">{{ ucfirst($survey->visibility) }}</td>
-                    <td class="bordered">{{ $survey->updated_at->format('Y-m-d H:i:s') }}</td>
+                    <td class="bordered">{{ $quiz->title }}</td>
+                    <td class="bordered">{{ ucfirst($quiz->visibility) }}</td>
+                    <td class="bordered">{{ $quiz->updated_at->format('Y-m-d H:i:s') }}</td>
 
                     <td>
-                        <a href="{{ route('student-view-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn">Response</a>
-                        <a href="{{ route('edit-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-danger edit-delete-btn" onclick="confirmDelete({{ $survey->id }})"><i class="fa fa-trash"></i></a>
-            </td>
+                        <a href="{{ route('view-quiz', ['id' => $quiz->id]) }}" class="btn btn-info edit-delete-btn">
+                            View</a>
+                    </td>
                 </tr>
             @endforeach
+            <!-- Add more rows as needed -->
         </tbody>
     </table>
     @else
@@ -58,9 +67,9 @@
 
     <script>
         function confirmDelete(id) {
-            if (confirm('Are you sure you want to delete this survey?')) {
-                // Make an AJAX request to delete the survey
-                axios.delete('{{ url('delete-survey') }}/' + id, {
+            if (confirm('Are you sure you want to delete this quiz?')) {
+                // Make an AJAX request to delete the quiz
+                axios.delete('{{ url('delete-quiz') }}/' + id, {
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -68,12 +77,12 @@
                 })
                 .then(response => {
                     // Handle success, e.g., remove the deleted row from the table
-                    console.log('Survey deleted successfully:', response.data);
+                    console.log('quiz deleted successfully:', response.data);
                     location.reload(); // Reload the page
                 })
                 .catch(error => {
                     // Handle error
-                    console.error('Error deleting survey:', error);
+                    console.error('Error deleting quiz:', error);
                 });
             }
         }

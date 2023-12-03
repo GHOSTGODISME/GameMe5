@@ -96,7 +96,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/session_icon.png') }}" alt="session_icon">
-            <a href="#" class="nav-link">Session</a>
+            <a href="{{ route('interactive-session-index') }}" class="nav-link">Session</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
