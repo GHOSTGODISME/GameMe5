@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\InteractiveSession;
+use App\Models\Lecturer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -21,6 +23,10 @@ class InteractiveSessionController extends Controller
 
     public function createInteractiveSession(Request $request)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+
         $title = $request->input('title');
         
         $sessionCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -28,15 +34,10 @@ class InteractiveSessionController extends Controller
         $session = InteractiveSession::create([
             'title' => $title,
             'code' => $sessionCode,
-            // 'lecture_id' => $request->input('lecture_id'),
+            'lecture_id' => $lecturer->id,
             'status' => 'live',
         ]);
         $session->save();
-        // return view("Interactive-Sessions.interactiveSession-lecturer", [
-        //     "title" => $title,
-        //     "sessionCode" => $sessionCode,
-        //     "sessionId" => $session->id,
-        // ]);
 
         return redirect()->route('interactive-session-lecturer', [
             'title' => $title,

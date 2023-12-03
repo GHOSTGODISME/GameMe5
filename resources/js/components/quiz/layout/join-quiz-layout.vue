@@ -53,6 +53,9 @@ import QuizHeader from "../quiz-header.vue";
 import JoinQuizJoinedParticipants from "../join-quiz-joined-participants.vue";
 import axios from "axios";
 
+
+
+
 export default {
     components: {
         QuizHeader,
@@ -80,7 +83,10 @@ export default {
                 }
             });
         } else {
-            store.setRandomUserId();
+            const studId = sessionStorage.getItem('stud_id');
+            store.setUserId(studId);
+
+            console.log(sessionData);
             store.setSessionCode(code);
         }
 

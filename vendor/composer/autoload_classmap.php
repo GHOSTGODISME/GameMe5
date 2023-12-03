@@ -309,6 +309,8 @@ return array(
     'Database\\Factories\\SurveyQuestionFactory' => $baseDir . '/database/factories/SurveyQuestionFactory.php',
     'Database\\Factories\\SurveyResponseFactory' => $baseDir . '/database/factories/SurveyResponseFactory.php',
     'Database\\Factories\\SurveyResponseQuestionFactory' => $baseDir . '/database/factories/SurveyResponseQuestionFactory.php',
+    'Database\\Seeders\\AnnouncementSeeder' => $baseDir . '/database/seeders/AnnouncementSeeder.php',
+    'Database\\Seeders\\ClassroomSeeder' => $baseDir . '/database/seeders/ClassroomSeeder.php',
     'Database\\Seeders\\DatabaseSeeder' => $baseDir . '/database/seeders/DatabaseSeeder.php',
     'Database\\Seeders\\FortuneWheelSeeder' => $baseDir . '/database/seeders/FortuneWheelSeeder.php',
     'Database\\Seeders\\LecturersTableSeeder' => $baseDir . '/database/seeders/LecturersTableSeeder.php',

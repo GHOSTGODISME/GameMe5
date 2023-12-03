@@ -24,7 +24,9 @@ class QuizSeeder extends Seeder
         // ]);
 
         // Create three sample quizzes
-        $quizzes = Quiz::factory()->count(3)->create();
+        $quizzes = Quiz::factory()->count(3)->create([
+            'id_lecturer' => 1,
+        ]);
 
         // For each quiz, create multiple questions
         $quizzes->each(function ($quiz) {
@@ -32,13 +34,14 @@ class QuizSeeder extends Seeder
 
             QuizQuestion::factory()->count($questionsCount)->create([
                 'quiz_id' => $quiz->id,
+                
             ]);
         });
 
         Session::factory()->count(2)->create();
 
         QuizResponse::create([
-        'quiz_session_id'=> '1',
+        'session_id'=> '1',
         'username' => 'User 1',
         'user_id' => '1',
         'accuracy' => '100.00',
@@ -49,7 +52,7 @@ class QuizSeeder extends Seeder
         ]);
 
         QuizResponse::create([
-            'quiz_session_id'=> '1',
+            'session_id'=> '1',
             'username' => 'User 2',
             'user_id' => '2',
             'accuracy' => '0.00',
@@ -62,7 +65,6 @@ class QuizSeeder extends Seeder
         QuizResponseDetails::create([
             'quiz_response_id'=> '1',
             'question_id' => '1',
-            'user_response'=> '',
             'correctness' => '0',
             'time_usage' => '15',
         ]);
@@ -70,7 +72,6 @@ class QuizSeeder extends Seeder
         QuizResponseDetails::create([
             'quiz_response_id'=> '1',
             'question_id' => '1',
-            'user_response'=> '',
             'correctness' => '0',
             'time_usage' => '10',
         ]);
@@ -78,7 +79,6 @@ class QuizSeeder extends Seeder
         QuizResponseDetails::create([
             'quiz_response_id'=> '1',
             'question_id' => '2',
-            'user_response'=> '',
             'correctness' => '0',
             'time_usage' => '30',
         ]);

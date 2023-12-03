@@ -23,6 +23,7 @@ class SurveyFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'visibility' => $this->faker->randomElement(['public', 'private']),
+            'id_lecturer' => 1,
         ];
     }
 }

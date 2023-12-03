@@ -202,10 +202,12 @@
         socket = io("http://localhost:3000");
         const sessionCode = @json($sessionCode);
         sessionStorage.setItem("interactiveSessionCode", sessionCode);
+        sessionStorage.setItem("lect_id", @json(session("lect_id")));
+        sessionStorage.setItem("lect_name", @json(session("lect_name")));
         let pollIdCounter = 1;
         const sessionId = @json($sessionId);
-        const id = "testid";
-        const username = "testname";
+        const id = @json(session("lect_id"));
+        const username = @json(session("lect_name"));
 
         console.log(sessionCode);
         socket.emit("createInteractiveSession", {
@@ -318,7 +320,8 @@
                                 console.log(response);
                                 socket.emit("endInteractiveSession", sessionCode);
                                 console.log('Session ended successfully');
-                                // window.location.href = '/';
+                                window.location.href = "/lect_homepage";
+
                             },
                             error: function(xhr, status, error) {
                                 console.error('Failed to end session:', error);

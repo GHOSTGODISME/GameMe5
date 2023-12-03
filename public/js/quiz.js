@@ -65,7 +65,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
             let question = new Question();
 
             question.id = questionData.id || "";
-            question.uniqueID = questionData.uniqueID ??  generateUniqueID();
+            question.uniqueID = questionData.uniqueID ?? generateUniqueID();
             question.title = questionData.title || "";
             question.type = questionData.type || "";
             question.options = questionData.options || [];
@@ -75,7 +75,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.points = questionData.points !== undefined ? questionData.points : 0;
             question.duration = questionData.duration !== undefined ? questionData.duration : 0;
             question.quiz_id = questionData.quiz_id || "";
-            
+
             question.index = questionData.index !== undefined ? parseInt(questionData.index) : 0;
             console.log("question");
             return question;
@@ -261,7 +261,7 @@ function updateQuizDetailsShow(quiz) {
 
     $(".quiz-visibility-display").css("text-transform", "capitalize");
 
-    $(".quiz-description-display").text(quiz.description?? "(None)");
+    $(".quiz-description-display").text(quiz.description ?? "(None)");
     if (!quiz.description.trim()) {
         $(".quiz-description-display").text("(None)");
     } else {
@@ -562,7 +562,7 @@ function updateAnswerOption() {
 
 function variableAssignment(uniqueID) {
     let quiz = allQuiz.find(q => q.uniqueID === uniqueID);
-    if(!quiz){
+    if (!quiz) {
         quiz = new Question();
         quiz.index = allQuiz.length + 1;
     }
@@ -831,15 +831,15 @@ function generateQuestionHTML(question, index, mode) {
             <span> - ${QUESTION_TYPE_STRING[question.type]} Question</span>
         </div>`
 
-        if(mode !== 'view'){
-            questionHTML += `        <div class="button-container">
+    if (mode !== 'view' && mode !== "viewWithRestriction") {
+        questionHTML += `        <div class="button-container">
             <button class="btn btn-primary edit-btn" data-question-id="${question.uniqueID}">Edit</button>
             <button class="btn btn-info duplicate-btn" data-question-id="${question.uniqueID}">Duplicate</button>
             <button class="btn btn-danger remove-btn" data-question-id="${question.uniqueID}">Remove</button>
         </div>`;
-        }
+    }
 
-        questionHTML += 
+    questionHTML +=
         `  </div>
             <hr>
             <div class="question-title-container">
@@ -915,7 +915,7 @@ function generateQuestionHTML(question, index, mode) {
     <div class="question-container-footer">
         <div>
             <label for="quiz-duration-show">Duration</label>
-        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" ? "disabled" : ""}>
+        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.duration === 10 ? 'selected' : ''}>10 seconds</option>
             <option value="15" ${question.duration === 15 ? 'selected' : ''}>15 seconds</option>
             <option value="30" ${question.duration === 30 ? 'selected' : ''}>30 seconds</option>
@@ -924,7 +924,7 @@ function generateQuestionHTML(question, index, mode) {
 
         <div>
             <label for="quiz-points-show">Points</label>
-        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" ? "disabled" : ""}>
+        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.points === 10 ? 'selected' : ''}>10</option>
             <option value="15" ${question.points === 15 ? 'selected' : ''}>15</option>
             <option value="30" ${question.points === 30 ? 'selected' : ''}>30</option>
@@ -996,7 +996,7 @@ const sortable = new Sortable(questionsContainer, {
     onEnd: function (evt) {
         const questionElement = questionsContainer.querySelectorAll('.question-container');
         const updatedAllQuiz = [];
-        
+
         questionElement.forEach((question, newIndex) => {
             const uniqueID = question.getAttribute('data-question-id');
 
@@ -1053,7 +1053,7 @@ function saveQuiz() {
         console.log(quiz.quiz_questions);
         console.log(savedQuiz);
         console.log(savedQuiz.quiz_questions);
-        
+
         $.ajax({
             url: '/save-quiz',
             type: 'POST',
@@ -1062,7 +1062,8 @@ function saveQuiz() {
             success: function (response) {
                 ori_quiz = quiz;
                 console.log('Quiz saved successfully:', response);
-                history.back();
+                window.location.href = "/quiz-index-own-quiz";
+                // history.back();
             },
             error: function (xhr, status, error) {
                 console.error('Error saving form:', error);
@@ -1117,9 +1118,9 @@ function compareObject(obj1, obj2) {
 }
 // Event listener for beforeunload
 window.addEventListener('beforeunload', function (e) {
-        if (!compareObject(ori_quiz, quiz)) {
-            console.log(ori_quiz);
-            console.log(quiz);
+    if (!compareObject(ori_quiz, quiz)) {
+        console.log(ori_quiz);
+        console.log(quiz);
         e.preventDefault();
         e.returnValue = '';
         return 'Are you sure you want to leave? Your changes may not be saved.';

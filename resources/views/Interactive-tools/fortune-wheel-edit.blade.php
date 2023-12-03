@@ -376,7 +376,8 @@
                         success: function(response) {
                             ori_fw = fw;
                             console.log('Wheel saved successfully');
-                            history.back();
+                            window.location.href = "/fortune-wheel-main";
+                            // history.back();
                         },
                         error: function(error) {
                             console.error('Error saving wheel:', error);

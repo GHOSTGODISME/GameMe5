@@ -73,6 +73,7 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+        console.log(@json(session('email')));
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete this quiz?')) {
                 // Make an AJAX request to delete the quiz
