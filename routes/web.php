@@ -207,13 +207,11 @@ Route::get('/export-survey',[SurveyController::class, 'exportToPdf'])->name('exp
 Route::get('/export-survey-response/{id}', [SurveyController::class, 'exportSurveyResponses']);
 
 // quiz question related
-Route::get('/quiz-index', [QuizController::class, 'index'])->name('quiz-index');
 Route::get('/create-quiz', [QuizController::class, 'create'])->name('create-quiz');
 Route::get('/edit-quiz/{id}', [QuizController::class, 'edit'])->name('edit-quiz');
 Route::get('/view-quiz/{id}', [QuizController::class, 'view'])->name('view-quiz');
 Route::delete('/delete-quiz/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
 Route::post('/save-quiz', [QuizController::class, 'store']);
-Route::get('/find-quiz', [QuizController::class, 'search'])->name('find-quiz');
 
 Route::get('/quiz-index-own-quiz', [QuizController::class, 'index_own_quiz'])->name('own-quiz');
 Route::get('/quiz-index-own-quiz-search', [QuizController::class, 'index_own_quiz'])->name('own-quiz-search');

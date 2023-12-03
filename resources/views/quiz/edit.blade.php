@@ -109,7 +109,7 @@
 
         @if ($mode == 'edit' || $mode == 'create')
             <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save Quiz</button>
-        @else
+        @elseif($mode == 'view')
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>
             {{-- <button class="btn btn-dark header-edit-btn" id="edit-quiz-btn" type="button">Edit</button> --}}
@@ -129,11 +129,11 @@
                                     class="quiz-description-display"></span></p>
                             <p><b>Visibility: </b><span class="quiz-visibility-display"></span></p>
 
-                            @if (isset($quiz->id))
+                            {{-- @if (isset($quiz->id))
                                 <small class="text-black-50"><span class="num-of-plays">0</span> plays</small>
-                            @endif
+                            @endif --}}
                         </div>
-                        @if ($mode == 'view')
+                        @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
                                 <button class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#liveSessionModal">Start
@@ -150,7 +150,7 @@
                         <div class="d-flex justify-content-between align-items-center flex-wrap">
                             <p class="m-0"><b>Questions (<span id="num_of_question">0</span>)</b></p>
 
-                            @if ($mode == 'edit')
+                            @if ($mode == 'edit' || $mode == 'create')
                                 <button type="button" class="btn btn-primary" id="openQuestionModal"
                                     data-bs-toggle="modal" data-bs-target="#questionModal">
                                     <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question

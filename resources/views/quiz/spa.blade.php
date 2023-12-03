@@ -22,6 +22,12 @@
 <body>
     <div id="app"></div>
 
+    <script>
+        // window.sessionData = @json(session("stud_id"));
+        sessionStorage.setItem("stud_id", @json(session("stud_id")));
+    </script>
+    
+
     @vite('resources/js/app.js')
     @vite('resources/js/initialize-vue-app.js')
 

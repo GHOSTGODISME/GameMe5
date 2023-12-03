@@ -135,9 +135,11 @@
         socket = io("http://localhost:3000");
         const sessionCode = @json($sessionCode);
         sessionStorage.setItem("interactiveSessionCode", sessionCode);
+        sessionStorage.setItem("stud_id", @json(session("stud_id")));
+        sessionStorage.setItem("stud_name", @json(session("stud_name")));
 
-        const id = "student id";
-        const username = "student name";
+        const id = @json(session("stud_id"));
+        const username = @json(session("stud_name"));
 
         console.log(sessionCode);
         socket.emit("joinInteractiveSession", {
@@ -269,7 +271,7 @@
                     sessionCode,
                     id
                 });
-                window.location.href = '/'; // Redirect to the root route
+                window.location.href = "/stud_homepage";
             });
 
             document.getElementById('messageInput').addEventListener('keyup', function(event) {

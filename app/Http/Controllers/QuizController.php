@@ -12,48 +12,34 @@ use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
 {
-    public function index(Request $request)
-    {
-        // $email = $request->session()->get('email');
-        // $user = User::where('email', $email)->first();
-        // $lecturer = Lecturer::where('iduser', $user->id)->first() ?? 1;
-
-        $quizzes = Quiz::all();
-        $allQuizzes = Quiz::all();
-
-        // $ownQuizzes = $lecturer->quizzes()->get();
-
-        return view('quiz.index', [
-            'quizzes' => $quizzes,
-            'allQuizzes' => $allQuizzes,
-            // 'ownQuizzes' => $ownQuizzes
-        ]);
-    }
-
     public function index_own_quiz(Request $request)
     {
-        $quizzes = Quiz::all();
-        $search = $request->input('search');
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        Log::info($lecturer);
 
-        if ($request->has('search')) {
-        $quizzes = Quiz::when($search, function ($query) use ($search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })->get();
+
+        $quizzes = Quiz::where('id_lecturer', $lecturer->id);
+        $search = $request->input('search');
+        if ($search) {
+            $quizzes = $quizzes->where('title', 'like', '%' . $search . '%');
         }
-        
+
+        $quizzes = $quizzes->get();
         return view('quiz.index-own-quiz', ['quizzes' => $quizzes]);
     }
 
     public function index_all_quiz(Request $request)
     {
-        $quizzes = Quiz::where('visibility','public')->get();
+        $quizzes = Quiz::where('visibility', 'public')->get();
         $search = $request->input('search');
 
         if ($request->has('search')) {
             $quizzes = $quizzes->when($search, function ($query) use ($search) {
                 return $query->where('title', 'like', '%' . $search . '%');
             })->get();
-        }    
+        }
 
         return view('quiz.index-all-quiz', ['quizzes' => $quizzes]);
     }
@@ -69,10 +55,19 @@ class QuizController extends Controller
 
     public function view(Request $request, $id)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        Log::info($lecturer);
+
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
-        $mode = 'view';
+        if($quiz->id_lecturer === $lecturer->id) {
+            $mode = 'view';
+        }else{
+            $mode = 'viewWithRestriction';
+        }
         $questions = $quiz->quiz_questions; // Retrieve the related questions
-        
+
         return view('quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
@@ -86,6 +81,10 @@ class QuizController extends Controller
 
     public function store(Request $request)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+
         Log::info('Request Data: ' . json_encode($request->all()));
 
         $data = $request->validate([
@@ -102,7 +101,12 @@ class QuizController extends Controller
             $quiz->update($data);
             Log::info('updated: ' . $quiz);
         } else {
-            $quiz = Quiz::create($data);
+            $quiz = Quiz::create([
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+                'visibility' =>$data['visibility'],
+                'id_lecturer' => $lecturer->id,
+            ]);
             Log::info('created: ' . $quiz);
         }
 
@@ -138,6 +142,7 @@ class QuizController extends Controller
                     'points' => $questionData['points'] ?? null,
                     'duration' => $questionData['duration'] ?? null,
                     'index' => $questionData['index'] ?? 0,
+                    'id_lecturer' => $lecturer->id,
                 ]);
             } else {
                 Log::info('not existing: ');
@@ -152,22 +157,12 @@ class QuizController extends Controller
                     'points' => $questionData['points'] ?? null,
                     'duration' => $questionData['duration'] ?? null,
                     'index' => $questionData['index'] ?? 0,
+                    'id_lecturer' => $lecturer->id,
                 ]);
 
                 Log::info('question: ' . json_encode($question));
                 $quiz->quiz_questions()->save($question);
             }
         }
-    }
-
-    public function search(Request $request)
-    {
-        $search = $request->input('search');
-
-        $quizzes = Quiz::when($search, function ($query) use ($search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })->get();
-
-        return view('quiz.index', compact('quizzes'));
     }
 }

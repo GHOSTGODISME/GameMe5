@@ -275,6 +275,9 @@ export const useQuizStore = defineStore('quiz', {
       const randomUserId = Math.floor(Math.random() * 1000) + 1;
       this.userId = randomUserId;
     },
+    setUserId(id){
+      this.userId = id;
+    },
     resetStore() {
       this.$reset();
     },

@@ -127,6 +127,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
+        
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete this quiz?')) {
                 // Make an AJAX request to delete the quiz

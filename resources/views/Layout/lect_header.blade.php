@@ -84,7 +84,7 @@
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
-            <a href="{{ route('quiz-index') }}" class="nav-link">Quiz</a>
+            <a href="{{ route('own-quiz') }}" class="nav-link">Quiz</a>
         </div>
         <div class="nav_row">
             <img src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">

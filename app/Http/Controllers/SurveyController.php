@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exports\SurveyResponsesExport;
 use App\Jobs\SendSurveyResponseEmail;
+use App\Models\Lecturer;
+use App\Models\Student;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
@@ -13,16 +15,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use League\Flysystem\Visibility;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Browsershot\Browsershot;
 
 
 class SurveyController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $surveys = Survey::all(); // Retrieve all surveys from the database
-        // return view('survey.index', compact('surveys'));
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        
+        $surveys = Survey::where('id_lecturer', $lecturer->id)->get();
         return view('survey.index', ['surveys' => $surveys]);
     }
 
@@ -83,6 +89,10 @@ class SurveyController extends Controller
 
     public function store(Request $request)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+
         Log::info('Request Data: ' . json_encode($request->all()));
 
         // Validate incoming request data
@@ -101,13 +111,20 @@ class SurveyController extends Controller
             $survey->update($data);
             Log::info('updated: ' . $survey);
         } else {
-            $survey = Survey::create($data);
-            Log::info('created: ' . $survey);
+            $survey = Survey::create([
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+                'visibility' =>$data['visibility'],
+                'id_lecturer' => $lecturer->id,
+            ]);
         }
 
         // Get the questions data from the request
         $questionsData = collect($request->input('questions'));
         Log::info('questionsData: ' . $questionsData);
+
+        // 'id_lecturer' => $lecturer->id,
+
 
         // Get IDs of the received questions
         $receivedQuestionIds = $questionsData->pluck('id')->toArray();
@@ -169,12 +186,18 @@ class SurveyController extends Controller
 
     public function search(Request $request)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+
+        $surveys = Survey::where('id_lecturer', $lecturer->id);
+
         $search = $request->input('search');
+        if ($search) {
+            $surveys = $surveys->where('title', 'like', '%' . $search . '%');
+        }
 
-        $surveys = Survey::when($search, function ($query) use ($search) {
-            return $query->where('title', 'like', '%' . $search . '%');
-        })->get();
-
+        $surveys = $surveys->get();
         return view('survey.index', ['surveys' => $surveys]);
     }
 
@@ -199,6 +222,11 @@ class SurveyController extends Controller
 
     public function storeResponse(Request $request)
     {
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $stud = Student::where('iduser', $user->id)->first();
+        $student = Student::with('classrooms')->find($stud->id);
+        
         Log::info('Request Data: ' . json_encode($request->all()));
         try {
             // Validate incoming request data
@@ -215,12 +243,12 @@ class SurveyController extends Controller
             // Log::info('data: ' . json_encode($data));
             // $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['imageData']));
             // $this->returnSurvey($data['surveyResponse']['user_id'], $imageData);
-            $this->returnSurvey($data['surveyResponse']['user_id'], $data['imageData']);
+            $this->returnSurvey($student->id, $data['imageData']);
 
             $survey = Survey::findOrFail($data['surveyResponse']['survey_id']);
             $response = new SurveyResponse([
                 'survey_id' => $survey->id,
-                'user_id' => $data['surveyResponse']['user_id'], // Assuming user ID is obtained from the request
+                'user_id' => $student->id,
             ]);
 
             // Loop through each question response and save it
@@ -256,9 +284,7 @@ class SurveyController extends Controller
 
     public function returnSurvey($userId, $imageData)
     {
-
         $user = User::find($userId);
-
         if ($user) {
             SendSurveyResponseEmail::dispatch($user->email, $imageData);
         }else{
