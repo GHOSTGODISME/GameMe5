@@ -185,26 +185,51 @@
                         <ul>
                             @if ($question->type === '0' || $question->type === '1')
                                 @foreach ($question->options as $option)
-                                    <li>
-                                        @if ($question->type === '0' && $question->single_ans_flag === 1)
-                                            <!-- Single-select MCQ Question -->
+                                    <!-- <li>
+                                        {{-- @if ($question->type === '0' && $question->single_ans_flag === 1) --}}
+                                            <!== Single-select MCQ Question ==>
                                             <input type="radio" name="mcq-single"
                                             {{-- @if (in_array($option, $data->quizResponse->responses[$loop->index]->user_response)) checked @endif> --}}
                                             {{-- @if (in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-                                            @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif>
+                                            {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
 
-                                            @else
-                                            <!-- Multi-select MCQ Question -->
-                                            <input type="checkbox" 
+                                            {{-- @else --}}
+                                            <!== Multi-select MCQ Question ==>
+                                            <input type="checkbox"
                                             {{-- @if (in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-                                            @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif>
+                                            {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
 
+                                        {{-- @endif --}}
+                                        {{-- {{ $option }} --}}
+                                        {{-- @if (in_array($option, $question->correct_ans)) --}}
+                                            {{-- <span class="correct">(Correct)</span> --}}
+                                        {{-- @endif --}}
+                                        {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) --}}
+                                            {{-- <span class="selected">(Selected)</span> --}}
+                                        {{-- @endif --}}
+                                    </li> -->
+
+                                    <li>
+                                        @php
+                                            $userResponse = !empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) ? json_decode($data->quizResponse->quiz_response_details[$loop->index]->user_response) : []; // Convert the string to array
+                                        @endphp
+
+                                        @if ($question->type === '0' && $question->single_ans_flag === 1)
+                                            <!-- Single-select MCQ Question -->
+                                            <input type="radio" name="mcq-single"
+                                                @if (in_array($option, $userResponse)) checked @endif>
+                                        @else
+                                            <!-- Multi-select MCQ Question -->
+                                            <input type="checkbox" @if (in_array($option, $userResponse)) checked @endif>
                                         @endif
+
                                         {{ $option }}
+
                                         @if (in_array($option, $question->correct_ans))
                                             <span class="correct">(Correct)</span>
                                         @endif
-                                        @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response))
+
+                                        @if (!empty($userResponse) && in_array($option, $userResponse))
                                             <span class="selected">(Selected)</span>
                                         @endif
                                     </li>
@@ -247,4 +272,5 @@
         </div>
     </body>
 </body>
+
 </html>

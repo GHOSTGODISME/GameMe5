@@ -79,28 +79,11 @@ export default {
                 "option-incorrect": this.isIncorrectOption(option),
             };
         },
-        handleKeyPress(event) {
-            if (!this.submitted) {
-                const key = event.key;
-                const optionIndex = parseInt(key);
-
-                if (
-                    !isNaN(optionIndex) &&
-                    optionIndex >= 1 &&
-                    optionIndex <= this.options.length
-                ) {
-                    const selectedOption = this.options[optionIndex - 1];
-                    this.selectOption(selectedOption);
-                } else if (key === "Enter") {
-                    this.submitInput();
-                }
-            }
-        },
         submitInput() {
             this.submitted = true;
             this.answeredCorrectly = this.checkAnswer();
             this.$emit("returnValues", {
-                selectedOptions: [],
+                selectedOptions: this.selectedOptions,
                 answeredCorrectly: this.answeredCorrectly,
             });
         },
@@ -141,6 +124,7 @@ export default {
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
+                this.selectedOptions=[];
                 this.submitInput();
             }
         },
