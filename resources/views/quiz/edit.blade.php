@@ -459,11 +459,6 @@
 
     <script src="{{ asset('js/quiz.js') }}"></script>
 
-    {{-- <script>
-        console.log(@json($quiz));
-        console.log(@json($questions));
-    </script> --}}
-
 </body>
 
 </html>

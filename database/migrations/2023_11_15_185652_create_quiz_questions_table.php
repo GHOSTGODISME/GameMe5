@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
 
             $table->string('title')->default('');
-            $table->string('type')->default('');
+            $table->integer('type');
             $table->json('options')->nullable();
             $table->json('correct_ans')->required();
             $table->text('answer_explaination')->nullable();
             $table->boolean('single_ans_flag')->nullable();
             $table->integer('points')->default(0);
             $table->integer('duration')->default(0);
-            $table->string('index');
+            $table->integer('index');
             $table->timestamps();
 
             $table->foreignId('quiz_id')->constrained()->onDelete('cascade');            
