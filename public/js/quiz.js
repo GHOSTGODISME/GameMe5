@@ -1,13 +1,13 @@
 // Constants
 const QUESTION_TYPE_INT = {
-    MULTIPLE_CHOICE: "0",
-    TRUE_FALSE: "1",
-    TEXT_INPUT: "2",
+    MULTIPLE_CHOICE: 0,
+    TRUE_FALSE: 1,
+    TEXT_INPUT: 2,
 };
 
 const QUESTION_TYPE_STRING = {
-    "0": "Multiple Choice",
-    "1": "True/False",
+    0: "Multiple Choice",
+    1: "True/False",
     2: "Text Input",
 };
 
@@ -67,7 +67,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.id = questionData.id || "";
             question.uniqueID = questionData.uniqueID ?? generateUniqueID();
             question.title = questionData.title || "";
-            question.type = questionData.type || "";
+            question.type = questionData.type || 0;
             question.options = questionData.options || [];
             question.correct_ans = questionData.correct_ans || [];
             question.answer_explaination = questionData.answer_explaination || [];

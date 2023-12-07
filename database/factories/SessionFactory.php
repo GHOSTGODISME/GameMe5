@@ -27,7 +27,7 @@ class SessionFactory extends Factory
 
         return [
             'code' => $this->faker->randomNumber(6),
-            'lecture_id' => null,
+            'lecture_id' => 1,
             'start_time' => $this->faker->dateTimeBetween('-1 week', 'now'),
             'end_time' => $this->faker->dateTimeBetween('now', '+1 week'),
             'status' => $status,

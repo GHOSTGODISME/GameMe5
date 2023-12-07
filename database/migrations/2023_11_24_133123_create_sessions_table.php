@@ -19,12 +19,12 @@ return new class extends Migration
             $table->string('status')->default('active');
             $table->timestamps();
 
-            $table->unsignedBigInteger('lecture_id')->nullable();
+            $table->unsignedBigInteger('lecture_id')->required();
             $table->foreign('lecture_id')->references('id')->on('lecturer')->onDelete('cascade');
 
             // $table->foreign('lecture_id')->constrainted()->references('id')->on('lecturees')->onDelete('cascade');
             $table->unsignedBigInteger('quiz_id')->required(); 
-            $table->foreign('quiz_id')->constrainted()->references('id')->on('quizzes')->onDelete('cascade');
+            $table->foreign('quiz_id')->references('id')->on('quizzes')->onDelete('cascade');
 
         });
     }
