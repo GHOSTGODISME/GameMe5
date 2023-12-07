@@ -2,14 +2,16 @@ const QUESTION_TYPE_INT = {
     TEXT_INPUT: 0,
     MULTIPLE_CHOICE: 1,
     CHECKBOX: 2,
-    SCALE: 3,    
+    DROPDOWN: 3,
+    SCALE: 4
 };
 
 const QUESTION_TYPE_STRING = {
     0: "text input",
     1: "multiple choice",
     2: "checkbox",
-    3: "scale",
+    3: "dropdown",
+    4: "scale"
 }
 
 // const QUESTION_PROPERTIES = {
@@ -23,7 +25,7 @@ class Survey{
         this.id = "";
         this.title = "";
         this.description = "";
-        this.status = "";
+        this.visibility = "";
         this.questions = [];
     }
 }
@@ -44,6 +46,8 @@ class SurveyQuestion {
         this.scale_max_label = "";
         this.scale_min_value = ""; 
         this.scale_max_value = ""; 
+
+        // this.properties = "default";
 
         this.index = 0;
     }
@@ -76,10 +80,33 @@ class SurveyQuestion {
         clonedQuestion.scale_min_value = existingQuestion.scale_min_value;
         clonedQuestion.scale_max_value = existingQuestion.scale_max_value;
 
+        // clonedQuestion.properties = existingQuestion.properties;
         return clonedQuestion;
     }
 }
 
+
+
+// class SurveyResponse{
+//     constructor(){
+//         this.id = "";
+//         this.survey_id = "";
+//         this.user_id = "";
+//         this.question_response = [];
+//     }
+// }
+
+// class SurveyQuestionResponse{
+//     constructor(){
+//         this.id = "";
+//         this.question_id = "";
+//         this.answer = [];
+//     }
+// }
+
+// const surveyResponse = new SurveyResponse();
+// const questionResponse = [];
+// surveyResponse.question_response = questionResponse;
 
 const lectureID = 0;
 const surveyID = 0;
@@ -112,7 +139,7 @@ function mapSurveyDataToInstance(fetchedSurveyData) {
     survey.id = fetchedSurveyData.id;
     survey.title = fetchedSurveyData.title;
     survey.description = fetchedSurveyData.description;
-    survey.status = fetchedSurveyData.status;
+    survey.visibility = fetchedSurveyData.visibility;
 
     // Map questions
     if (fetchedSurveyData.survey_questions && Array.isArray(fetchedSurveyData.survey_questions)) {

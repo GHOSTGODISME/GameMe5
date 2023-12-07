@@ -59,6 +59,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
 
     // Map quiz questions
     if (fetchedQuizData.quiz_questions && Array.isArray(fetchedQuizData.quiz_questions)) {
+        console.log("quiz_questions");
         quizInstance.quiz_questions = fetchedQuizData.quiz_questions.map(questionData => {
             // Create Question instance for each question data
             let question = new Question();
@@ -76,6 +77,7 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.quiz_id = questionData.quiz_id || "";
 
             question.index = questionData.index !== undefined ? parseInt(questionData.index) : 0;
+            console.log("question");
             return question;
         });
     }
@@ -101,12 +103,41 @@ function deepCopy(obj) {
 
 
 const quiz = mapQuizDataToInstance(quizFromDB);
-// duplicate quiz for comparision
-let ori_quiz = structuredClone(quiz);
+let ori_quiz = deepCopy(quiz);
+
+let savedQuiz = mapQuizDataToInstance(quizFromDB);
+
+console.log("quizzz");
+console.log(quiz);
+
+// let quiz_questions = quizRecord.quiz_questions;
+// console.log("quiz_questions");
+// console.log(quiz_questions);
 
 // Quiz Details Instance
 const quizDetails = new Question();
+// let allQuiz = [];
 let allQuiz = quiz.quiz_questions;
+// const quiz = new Quiz();
+// let quiz;
+// if(quizRecord.id != null){
+//     quiz = quizRecord;
+// }else{
+//     quiz = new Quiz();
+// }
+// quiz.quiz_questions = allQuiz;
+
+// console.log("quiz");
+// console.log(quiz);
+
+// console.log("test " +quizFromDb );
+// console.log(quizFromDb );
+
+// const quizFromDb = @JSON($quiz);
+// quizDetails.quiz_id = quizFromDb.id;
+// // console.log(@JSON($quiz));
+// console.log(quizFromDb);
+// console.log(quizDetails.quiz_id);
 
 // DOM Ready Event
 $(document).ready(function () {
@@ -116,11 +147,10 @@ $(document).ready(function () {
         }
     });
 
-    if (mode === "create" || mode === "edit") {
-        updateQuizDetailsShow(quiz);
-        initializeEventListeners();
-        initializeOptions();
-    }
+    updateQuizDetailsShow(quiz);
+    initializeEventListeners();
+    initializeOptions();
+
     populateQuiz(allQuiz, mode);
 });
 
@@ -150,7 +180,6 @@ function initializeEventListeners() {
     // Function to reset the modal content when it's closed
     $('#questionModal').on('hidden.bs.modal', function () {
         // Clear input fields and reset modal state here
-        $(".modal-title").text("Create Question");
         $('#quiz-type').val('Multiple Choice').change(); // Reset dropdown to default value
         $('#optionsContainer').empty(); // Clear options
         $('#quiz_title').val(''); // Clear quiz title input
@@ -174,6 +203,8 @@ function initializeEventListeners() {
         }
 
     });
+
+
 
     $('#saveQuestionBtn').click(function () {
         const uniqueID = $('#quiz_unique_id').val();
@@ -245,6 +276,7 @@ function updateInputState(input, checkbox) {
 }
 
 function initializeTooltips() {
+    console.log("triggered");
     $('.correct-answer-radio, .correct-answer-checkbox').each(function () {
         var checkbox = $(this);
         var input = checkbox.siblings('input[name="input_options"]');
@@ -474,6 +506,7 @@ function updateDeleteButtonDisplay() {
 }
 
 function updateQuizDetailsOptions(quizDetails) {
+    console.log(quizDetails);
     quizDetails.options = [];
     quizDetails.correct_ans = [];
 
@@ -484,7 +517,7 @@ function updateQuizDetailsOptions(quizDetails) {
         "#optionsContainer input[name='correct-answer-checkbox']");
 
     options.forEach(function (option, index) {
-        // console.log("option " + option.value + " index " + index);
+        console.log("option " + option.value + " index " + index);
         if (option.value != '') {
             quizDetails.options.push(option.value);
         }
@@ -539,6 +572,8 @@ function variableAssignment(uniqueID) {
     quiz.duration = parseInt($("#quiz-duration").val());
     quiz.points = parseInt($("#quiz-points").val());
 
+    console.log("quiz.durationquiz.duration " + quiz.duration);
+    console.log("quiz.pointsquiz.points " + quiz.points);
     // Update answer explaination, assign null if empty
     quiz.answer_explaination = $("#quiz_answer_explaination").val();
     if (quiz.answer_explaination === "") {
@@ -677,6 +712,8 @@ function initializePointsDurationDDLListeners() {
             const uniqueID = this.getAttribute('data-question-id');
             const questionToUpdate = allQuiz.find(q => q.uniqueID === uniqueID);
             const selectedPoints = $(this).val();
+            console.log(selectedPoints);
+
             if (questionToUpdate) {
                 questionToUpdate.points = parseInt(selectedPoints);
                 console.log(`Question ${uniqueID} duration updated to ${selectedPoints}`);
@@ -695,6 +732,7 @@ function initializePointsDurationDDLListeners() {
             const uniqueID = this.getAttribute('data-question-id');
             const questionToUpdate = allQuiz.find(q => q.uniqueID === uniqueID);
             const selectedDuration = $(this).val();
+            console.log(selectedDuration);
 
             if (questionToUpdate) {
                 questionToUpdate.duration = parseInt(selectedDuration);
@@ -712,9 +750,10 @@ function initializePointsDurationDDLListeners() {
 function loadQuestionDataIntoModal(uniqueID) {
     // Find the question in the allQuiz array
     const question = allQuiz.find(q => q.uniqueID === uniqueID);
-    $('.modal-title').text("Edit Question");
-    $('#quiz_unique_id').val(uniqueID);
+    console.log(question);
+    // <input type="hidden" id="quiz_unique_id" name="quiz_unique_id" value="">
 
+    $('#quiz_unique_id').val(uniqueID);
     if (question) {
         // Set the values of the modal fields with the data of the question
         $('#quiz_title').val(question.title);
@@ -728,6 +767,7 @@ function loadQuestionDataIntoModal(uniqueID) {
             $('#optionsContainer').empty();
             optionCount = 0;
             question.options.forEach(option => {
+                console.log(option);
                 addOption();
                 let optionInput = $('#optionsContainer .format-option:last-child input[name="input_options"]');
                 optionInput.val(option);
@@ -768,11 +808,9 @@ function populateQuiz(questions, mode) {
 
     });
 
-    if (mode === "create" || mode === "edit") {
-        // Reinitialize edit button listeners after populating the quiz
-        initializeEditDeleteButtonListeners();
-        initializePointsDurationDDLListeners();
-    }
+    // Reinitialize edit button listeners after populating the quiz
+    initializeEditDeleteButtonListeners();
+    initializePointsDurationDDLListeners();
 
     document.getElementById("num_of_question").textContent = questions.length;
 
@@ -877,7 +915,7 @@ function generateQuestionHTML(question, index, mode) {
     <div class="question-container-footer">
         <div>
             <label for="quiz-duration-show">Duration</label>
-        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" || mode === "viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.duration === 10 ? 'selected' : ''}>10 seconds</option>
             <option value="15" ${question.duration === 15 ? 'selected' : ''}>15 seconds</option>
             <option value="30" ${question.duration === 30 ? 'selected' : ''}>30 seconds</option>
@@ -886,7 +924,7 @@ function generateQuestionHTML(question, index, mode) {
 
         <div>
             <label for="quiz-points-show">Points</label>
-        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || mode === "viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.points === 10 ? 'selected' : ''}>10</option>
             <option value="15" ${question.points === 15 ? 'selected' : ''}>15</option>
             <option value="30" ${question.points === 30 ? 'selected' : ''}>30</option>
@@ -898,6 +936,12 @@ function generateQuestionHTML(question, index, mode) {
 
     questionHTML += '</div>'; // Close the question-container div
 
+
+    console.log("question.duration " + question.duration);
+    console.log("question.points " + question.points);
+    console.log("1 " + `${question.duration === 10 ? 'selected' : ''}`);
+    console.log("2 " + `${question.duration === 15 ? 'selected' : ''}`);
+    console.log("3 " + `${question.duration === 30 ? 'selected' : ''}`);
     return questionHTML;
 }
 
@@ -927,16 +971,19 @@ function duplicateQuestion(uniqueID) {
         const originalQuestion = allQuiz[indexToDuplicate];
         const duplicatedQuestion = JSON.parse(JSON.stringify(originalQuestion));
 
-        /// update the unique id and the id
-        duplicatedQuestion.uniqueID = generateUniqueID(); 
-        duplicatedQuestion.id = ""; 
+        // Optionally, modify properties if needed (e.g., change uniqueID, reset some values)
+        duplicatedQuestion.uniqueID = generateUniqueID(); // Change uniqueID for the duplicated question
+        duplicatedQuestion.id = ""; // Clear ID or set to another value if required
 
         // Insert the duplicated question right after the original one
         allQuiz.splice(indexToDuplicate + 1, 0, duplicatedQuestion);
 
+        console.log(originalQuestion);
+        console.log(duplicatedQuestion);
         // Update the UI or perform any other necessary actions
-        populateQuiz(allQuiz, mode); 
-
+        populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
+        console.log(allQuiz);
+        console.log(quiz);
     } else {
         console.log('Question not found.');
     }
@@ -998,14 +1045,22 @@ function saveQuiz() {
 
     const validQuiz = validateQuizDetails(quiz);
 
+    console.log(quiz);
+    // Make an AJAX POST request to the backend to save the form data
     if (validQuiz) {
+        savedQuiz = mapQuizDataToInstance(quiz);
+        console.log(quiz);
+        console.log(quiz.quiz_questions);
+        console.log(savedQuiz);
+        console.log(savedQuiz.quiz_questions);
+
         $.ajax({
             url: '/save-quiz',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(quiz),
             success: function (response) {
-                ori_quiz = structuredClone(quiz);
+                ori_quiz = quiz;
                 console.log('Quiz saved successfully:', response);
                 window.location.href = "/quiz-index-own-quiz";
                 // history.back();
@@ -1017,6 +1072,12 @@ function saveQuiz() {
         });
     }
 }
+
+// // Event listener for the "Save Form" button click
+// document.getElementById('save-quiz-btn').addEventListener('click', function() {
+//     saveQuiz(); 
+// });
+
 
 function compareObject(obj1, obj2) {
     // Check if both inputs are objects
@@ -1057,10 +1118,9 @@ function compareObject(obj1, obj2) {
 }
 // Event listener for beforeunload
 window.addEventListener('beforeunload', function (e) {
-    // to ensure both are in same format
-    let new_quiz = structuredClone(quiz);
-
-    if (!compareObject(ori_quiz, new_quiz)) {
+    if (!compareObject(ori_quiz, quiz)) {
+        console.log(ori_quiz);
+        console.log(quiz);
         e.preventDefault();
         e.returnValue = '';
         return 'Are you sure you want to leave? Your changes may not be saved.';

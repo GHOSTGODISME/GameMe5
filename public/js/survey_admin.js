@@ -4,7 +4,22 @@
 
 
 const surveyQuestionContainer = document.getElementById("questions_container");
+
+/// for changing the form arrangement
 const formStructureContainer = document.getElementById("form_structure");
+// const lectureID = 0;
+// const surveyID = 0;
+
+// let questionCount = 0;
+
+// const idPrefix = "s"
+// const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
+
+// const survey = mapSurveyDataToInstance(surveyFromDB);
+// let surveyQuestions = survey.questions;
+
+console.log(surveyQuestions);
+// ${lectureID}-${surveyID}-${questionCount}-${QUESTION_TYPE_INT[0]}
 
 const sortable = new Sortable(formStructureContainer, {
     //handle: '.handle',
@@ -269,7 +284,7 @@ $(document).ready(function () {
     updateFormStructure();
 
     initializeInputListeners();
-    initializeFieldsstatus();
+    initializeFieldsVisibility();
 
     initializeSurveySubmitBtn_admin();
 
@@ -278,13 +293,13 @@ $(document).ready(function () {
 function initializeSurveyFields() {
     document.getElementById('survey_title').value = survey.title;
     document.getElementById('survey_description').value = survey.description;
-    document.getElementById('status').value = survey.status;
+    document.getElementById('visibility').value = survey.visibility;
 
     $('.survey-title-input').val(survey.title);
     $('.survey-title-text').text(survey.title);
     $('.survey-description-input').val(survey.description);
     $('.survey-description-text').text(survey.description);
-    $('.survey_status_input').val(survey.status ?? "public");
+    $('.survey_visibility_input').val(survey.visibility ?? "public");
 
 }
 
@@ -319,7 +334,7 @@ function initializeInputListeners() {
     updateDescription(descriptionInput, descriptionCharLimit);
 }
 
-function initializeFieldsstatus() {
+function initializeFieldsVisibility() {
     const inputOptionFields = document.getElementById("input_option_container");
     const textFields = document.getElementById("text_edit_container");
     const scaleFields = document.getElementById("scale-container");
@@ -367,6 +382,74 @@ function updateDescription(input, maxCharLimit) {
 //==================================================================================
 //====================Updating the title and description for each question component===========
 //==================================================================================
+// to be done in future
+// const questionPropertiesDDL = document.getElementById("question_properties");
+// function populateQuestionProperties() {
+//     for (const key in QUESTION_PROPERTIES) {
+//         const optionElement = document.createElement("option");
+//         optionElement.value = QUESTION_PROPERTIES[key];
+//         optionElement.textContent = QUESTION_PROPERTIES[key];
+//         optionElement.style.textTransform = "capitalize";
+//         questionPropertiesDDL.appendChild(optionElement);
+//     }
+// }
+// populateQuestionProperties();
+
+// questionPropertiesDDL.addEventListener("input", function () {
+//     let questionProperties = questionPropertiesDDL.value;
+
+//     console.log("questionProperties " + questionProperties);
+//     // // Retrieve the selected question container from the DOM
+//     const selectedQuestionContainer = document.querySelector(".selected-question");
+
+//     // Access the question object using the data-survey-question attribute
+//     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
+//     const question = surveyQuestions.find(q => q.id.toString() === questionData);
+
+//     question.properties = questionProperties;
+//     console.log("question.properties "+ question.properties);
+
+//     const questionInput = selectedQuestionContainer.querySelector(".question-input");
+//     const questionTitleElement = selectedQuestionContainer.querySelector(".question-title");
+
+//     switch (question.properties.toLowerCase()) {
+//         case QUESTION_PROPERTIES[0]:
+//             questionTitleElement.classList.remove("required");
+
+//                 switch (parseInt(question.type)) {
+//                 case QUESTION_TYPE_INT.TEXT_INPUT:
+//                     questionInput.required = false;
+//                     questionInput.readOnly = false;
+//             }
+//             break;
+//         case QUESTION_PROPERTIES[1]:
+//             questionTitleElement.classList.add("required");
+//             console.log("questionTitleElement.classList " + questionTitleElement.classList);
+
+//                 switch (parseInt(question.type)) {
+//                 case QUESTION_TYPE_INT.TEXT_INPUT:
+//                     questionInput.required = true;
+//                     questionInput.readOnly = false;
+//                     console.log("triggered");
+//             }
+
+//             break;
+
+//         case QUESTION_PROPERTIES[2]:
+//             questionTitleElement.classList.remove("required");
+
+//                 switch (parseInt(question.type)) {
+//                 case QUESTION_TYPE_INT.TEXT_INPUT:
+//                     questionInput.required = false;
+//                     questionInput.readOnly = true;
+//             }
+//             break;
+//     }
+//     console.log("questionTitleElement.classList " + questionTitleElement.classList);
+
+// });
+
+
 // Add an input event listener to the question title textarea
 const questionTitleInput = document.getElementById("question_title");
 questionTitleInput.addEventListener("input", function () {
@@ -776,7 +859,7 @@ function saveSurveyForm() {
     // Retrieve survey details (title, description, etc.)
     survey.title = document.getElementById('survey_title').value;
     survey.description = document.getElementById('survey_description').value;
-    survey.status = document.getElementById("status").value;
+    survey.visibility = document.getElementById("visibility").value;
 
     survey.questions = surveyQuestions;
 
@@ -808,8 +891,8 @@ function validateDetails(survey) {
         alert("Please enter a title for your survey");
         return false;
     }
-    if (survey.status === null) {
-        alert("Please select the status of your survey");
+    if (survey.visibility === null) {
+        alert("Please select the visibility of your survey");
         return false;
     }
 

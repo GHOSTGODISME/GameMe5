@@ -215,13 +215,12 @@
         console.log(fw);
 
         /////// for fortune wheel -- the actual wheel
-        const segmentColor = ["#5F6F52","#A9B388","#FEFAE0","#B99470","#ECE3CE","#739072","#4F6F52","#3A4D39"];
         const segments = [];
         console.log(fw.entries);
-        fw.entries.forEach((entry, index) => {
+        fw.entries.forEach(entry => {
             segments.push({
                 'text': entry,
-                'fillStyle': segmentColor[index % segmentColor.length] 
+                'fillStyle': 'whitesmoke'
             });
         });
 
@@ -243,7 +242,7 @@
         function startSpin() {
             theWheel.stopAnimation(false);
             theWheel.rotationAngle = 0;
-            theWheel.draw(canvas);;
+            theWheel.draw();
             theWheel.animation.spins = 8;
             theWheel.startAnimation();
         }
@@ -270,18 +269,16 @@
         function updateWheelSegmentsFromEntries() {
             const segments = [];
             if (fw.entries && Array.isArray(fw.entries)) {
-                fw.entries.forEach((entry, index) => {
+                fw.entries.forEach(entry => {
                     console.log(fw.entries);
                     if (entry && typeof entry === 'string') { // Validate entry to be a non-empty string
                         segments.push({
                             'text': entry,
-                            'fillStyle': segmentColor[index % segmentColor.length] 
-
+                            'fillStyle': 'whitesmoke'
                         });
                     }
                 });
             }
-
             theWheel = new Winwheel({
                 'numSegments': segments.length,
                 'outerRadius': 200,
@@ -295,14 +292,16 @@
                 }
             });
 
-            theWheel.draw(canvas);
-        }
+        theWheel.draw();
 
+                // theWheel.draw(canvas);
+            }
+        
 
 
         function removeSegment(selectedEntry) {
             theWheel.deleteSegment(selectedEntry.text);
-            theWheel.draw(canvas);
+            theWheel.draw();
         }
 
         // Function to update entries in the UI

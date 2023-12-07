@@ -228,9 +228,8 @@ display: inline-flex;
 
 
 .tab-style{
-    width: 90%;
+    width: 80%;
     margin: auto;
-    margin-bottom: 100px;
 }
 
 .tab-pane{
