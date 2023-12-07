@@ -11,6 +11,8 @@ integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG
 .admin_subtitle1{
     text-decoration: underline;
 }
+
+
     </style>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -8,7 +8,7 @@
 .feedback-page a {
     text-decoration: underline;
     /* Add any other styles for the current page link */
-    }
+}
 
     .annFeedback{
         border-radius: 8px;

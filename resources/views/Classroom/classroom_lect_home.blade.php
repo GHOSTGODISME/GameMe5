@@ -154,6 +154,8 @@
     </div>
 @endforeach
 
+
+
 <script>
     function confirmAndSubmit(classroomId) {
         if (confirm("Are you sure you want to remove this classroom?")) {

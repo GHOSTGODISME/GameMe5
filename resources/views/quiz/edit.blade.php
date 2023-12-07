@@ -93,7 +93,7 @@
 
 <body>
     <div class="header-container">
-        <img src="img/logo_header.png" alt="Logo">
+        <img src="{{ asset('img/logo_header.png')}}" alt="Logo">
 
         <div class="">
             <!-- <h2 >Quiz Title</h2> -->
@@ -138,9 +138,9 @@
                                 <button class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#liveSessionModal">Start
                                     Live Session </button>
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
+                                    {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
                                         Assign to Class
-                                    </button>
+                                    </button> --}}
                             </div>
                         @endif
                     </div>

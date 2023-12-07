@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Quiz;
 use App\Models\User;
 use App\Models\Lecturer;
 use App\Models\Classroom;
@@ -29,8 +30,22 @@ class LecturerController extends Controller{
 
         // Filter the classrooms to include only those that the lecturer has
         $filteredClassrooms = $classrooms->whereIn('id', $lecturerClasses);
-      
-        return view('User/lect_homepage',  ['classrooms' => $filteredClassrooms ]);
+
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $lecturer = Lecturer::where('iduser', $user->id)->first();
+        Log::info($lecturer);
+
+
+        $quizzes = Quiz::where('id_lecturer', $lecturer->id);
+        $search = $request->input('search');
+        if ($search) {
+            $quizzes = $quizzes->where('title', 'like', '%' . $search . '%');
+        }
+
+        $quizzes = $quizzes->get();
+
+        return view('User/lect_homepage',  ['classrooms' => $filteredClassrooms, 'quizzes' => $quizzes ]);
     }
 
     function getLectInfo(Request $request)
