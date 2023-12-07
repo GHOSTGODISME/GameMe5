@@ -24,7 +24,7 @@
             <tr>
                 <th class="bordered">No</th>
                 <th class="bordered">Title</th>
-                <th class="bordered">Visibility</th>
+                <th class="bordered">Status</th>
                 <th class="bordered">Modified Date</th>
                 <th class="bordered">Action</th>
             </tr>
@@ -34,7 +34,7 @@
                 <tr>
                     <td class="bordered">{{ $loop->index + 1 }}</td>
                     <td class="bordered">{{ $survey->title }}</td>
-                    <td class="bordered">{{ ucfirst($survey->visibility) }}</td>
+                    <td class="bordered">{{ ucfirst($survey->status) }}</td>
                     <td class="bordered">{{ $survey->updated_at->format('Y-m-d H:i:s') }}</td>
 
                     <td>

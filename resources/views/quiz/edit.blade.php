@@ -30,7 +30,7 @@
         }
 
         .edit-quiz-page-body {
-            width: 80%;
+            width: 90%;
         }
 
         body {
@@ -223,7 +223,7 @@
             <div class="modal-content" style="padding: 25px;">
                 <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title">Modify Question</h5>
+                    <h5 class="modal-title">Create Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!-- Modal body -->

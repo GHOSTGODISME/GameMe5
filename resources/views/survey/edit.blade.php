@@ -97,17 +97,17 @@
                                             <span id="description_char_counter"
                                                 class="char_count description_cc">0/0</span>
 
-                                            <b>Visibility</b>
-                                            <label for="visibility"></label>
-                                            <select id="visibility" name="visibility"
-                                                class="input-fields form-control survey_visibility_input"
-                                                title="Survey Visibility">
-                                                <option value="public"
-                                                    {{ $survey->visibility === 'public' ? 'selected' : '' }}>
-                                                    Public (Receive response)</option>
-                                                <option value="private"
-                                                    {{ $survey->visibility === 'private' ? 'selected' : '' }}>
-                                                    Private (Not receive response)</option>
+                                            <b>status</b>
+                                            <label for="status"></label>
+                                            <select id="status" name="status"
+                                                class="input-fields form-control survey_status_input"
+                                                title="Survey status">
+                                                <option value="active"
+                                                    {{ $survey->status === 'active' ? 'selected' : '' }}>
+                                                    Active (Receive response)</option>
+                                                <option value="inactive"
+                                                    {{ $survey->status === 'inactive' ? 'selected' : '' }}>
+                                                    Inactive (Not receive response)</option>
                                             </select>
 
                                             @if (isset($survey->id))
@@ -337,9 +337,9 @@
                                 <table style="border:1" class="table table-striped table-bordered table-hover ">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>Response ID</th>
-                                            <th>Survey ID</th>
-                                            <th>User ID</th>
+                                            <th>No</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
                                             <th>Responded Time</th> 
                                             @foreach ($uniqueQuestions as $question)
                                                 <th>{{ $question->title }}</th>
@@ -349,9 +349,9 @@
                                     <tbody>
                                         @foreach ($surveyResponses as $response)
                                             <tr>
-                                                <td>{{ $response->id }}</td>
-                                                <td>{{ $response->survey_id }}</td>
-                                                <td>{{ $response->user_id }}</td>
+                                                <td>{{ $loop->index + 1 }}</td>
+                                                <td>{{ $response->user->name }}</td>
+                                                <td>{{ $response->user->email }}</td>
                                                 <td>{{ $response->created_at }}</td>
                                                 <!-- Loop through each question response for this response -->
                                                 @foreach ($response->surveyResponseQuestions as $questionResponse)
@@ -416,14 +416,14 @@
                         <span id="description_char_counter" class="char_count description_cc">0/0</span>
                     </div>
                     <div>
-                        <b>Visibility</b>
-                        <label for="visibility"></label>
-                        <select id="visibility_modal" name="visibility"
-                            class="input-fields form-control survey_visibility_input" title="Survey Visibility">
-                            <option value="public" {{ $survey->visibility === 'public' ? 'selected' : '' }}>
-                                Public (Receive response)</option>
-                            <option value="private" {{ $survey->visibility === 'private' ? 'selected' : '' }}>
-                                Private (Not receive response)</option>
+                        <b>status</b>
+                        <label for="status"></label>
+                        <select id="status_modal" name="status"
+                            class="input-fields form-control survey_status_input" title="Survey status">
+                            <option value="active" {{ $survey->status === 'active' ? 'selected' : '' }}>
+                                Active (Receive response)</option>
+                            <option value="inactive" {{ $survey->status === 'inactive' ? 'selected' : '' }}>
+                                Inactive (Not receive response)</option>
                         </select>
                     </div>
                     @if (isset($survey->id))
@@ -512,7 +512,7 @@
         $('#saveSurveyDetailsBtn').click(function() {
             saveSurveyDetails(survey);
 
-            // Add your logic to save quiz details, including the new content (visibility) here
+            // Add your logic to save quiz details, including the new content (status) here
             const validDetails = validateSurveyDetails(survey);
 
             if (validDetails) {
@@ -522,7 +522,7 @@
                 $('.survey-title-text').text(survey.title);
                 $('.survey-description-input').val(survey.description);
                 $('.survey-description-text').text(survey.description);
-                $('.survey_visibility_input').val(survey.visibility ?? "public");
+                $('.survey_status_input').val(survey.status ?? "public");
             }
 
         });
@@ -530,12 +530,12 @@
         function saveSurveyDetails(survey) {
             var surveyTitle = $('#survey_title_modal').val().trim();
             var surveyDescription = $('#survey_description_modal').val().trim();
-            var visibility = $("#visibility_modal").val();
+            var status = $("#status_modal").val();
 
             survey.title = surveyTitle;
             survey.description = surveyDescription;
-            survey.visibility = visibility;
-            console.log("visibility " + visibility);
+            survey.status = status;
+            console.log("status " + status);
         }
 
         function validateSurveyDetails(survey) {
@@ -543,8 +543,8 @@
                 alert("Please enter a title for your survey");
                 return false;
             }
-            if (survey.visibility === null) {
-                alert("Please select the visibility of your survey");
+            if (survey.status === null) {
+                alert("Please select the status of your survey");
                 return false;
             }
             return true;

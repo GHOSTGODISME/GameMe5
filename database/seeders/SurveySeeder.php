@@ -17,7 +17,7 @@ class SurveySeeder extends Seeder
         $survey = Survey::create([
             'title' => 'Sample Survey',
             'description' => 'This is a sample survey for demonstration purposes',
-            'visibility' => 'public',
+            'status' => 'active',
             'id_lecturer' => 1,
         ]);
 
@@ -35,14 +35,13 @@ class SurveySeeder extends Seeder
                 'index' => 2,
             ],
             [
-
                 'type' => 2,
                 'title' => 'Choose your favorite color',
                 'options' => ['Red', 'Blue', 'Green'],
                 'index' => 3,
             ],
             [
-                'type' => 4,
+                'type' => 3,
                 'title' => 'Rate your experience (from 1 to 10)',
                 'scale_min_label' => 'Poor',
                 'scale_max_label' => 'Excellent',
@@ -75,7 +74,7 @@ class SurveySeeder extends Seeder
             return 'John Doe';
         } elseif ($type === 1 || $type === 2) {
             return ['Red'];
-        } elseif ($type === 4) {
+        } elseif ($type === 3) {
             return rand(1, 10);
         }
 

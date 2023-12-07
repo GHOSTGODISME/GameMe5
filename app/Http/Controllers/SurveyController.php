@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\SurveyResponsesExport;
-use App\Jobs\SendSurveyResponseEmail;
-use App\Models\Lecturer;
-use App\Models\Student;
+use App\Models\User;
 use App\Models\Survey;
+use App\Models\Student;
+use App\Models\Lecturer;
+use Illuminate\Http\Request;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
-use App\Models\SurveyResponseEmail;
-use App\Models\SurveyResponseQuestion;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use League\Flysystem\Visibility;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Browsershot\Browsershot;
+use App\Jobs\SendSurveyResponseEmail;
+use App\Exports\SurveyResponsesExport;
+use App\Models\SurveyResponseQuestion;
 
 
 class SurveyController extends Controller
@@ -56,9 +52,11 @@ class SurveyController extends Controller
 
         // Retrieve all responses for the specific survey ID along with related question responses
         $surveyResponses = SurveyResponse::with('surveyResponseQuestions.surveyQuestion')
+            ->with('user')
             ->where('survey_id', $id)
             ->get();
 
+            // dd($surveyResponses);
         $uniqueTitles = SurveyResponseQuestion::whereIn('survey_response_id', $surveyResponses->pluck('id'))
             ->distinct('survey_question_id')
             ->pluck('survey_question_id');
@@ -100,7 +98,7 @@ class SurveyController extends Controller
             'id' => 'nullable|integer',
             'title' => 'required|string',
             'description' => 'nullable|string',
-            'visibility' => 'required|string',
+            'status' => 'required|string',
             // Include other necessary validations for form fields
         ]);
 
@@ -114,7 +112,7 @@ class SurveyController extends Controller
             $survey = Survey::create([
                 'title' => $data['title'],
                 'description' => $data['description'] ?? null,
-                'visibility' =>$data['visibility'],
+                'status' =>$data['status'],
                 'id_lecturer' => $lecturer->id,
             ]);
         }
@@ -222,11 +220,12 @@ class SurveyController extends Controller
 
     public function storeResponse(Request $request)
     {
-        $email = $request->session()->get('email');
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-        $student = Student::with('classrooms')->find($stud->id);
+        // $email = $request->session()->get('email');
+        // $user = User::where('email', $email)->first();
+        // $stud = Student::where('iduser', $user->id)->first();
+        // $student = Student::with('classrooms')->find($stud->id);
         
+        $userId = 1;
         Log::info('Request Data: ' . json_encode($request->all()));
         try {
             // Validate incoming request data
@@ -243,12 +242,14 @@ class SurveyController extends Controller
             // Log::info('data: ' . json_encode($data));
             // $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['imageData']));
             // $this->returnSurvey($data['surveyResponse']['user_id'], $imageData);
-            $this->returnSurvey($student->id, $data['imageData']);
+            // $this->returnSurvey($student->id, $data['imageData']);
+            $this->returnSurvey($userId, $data['imageData']);
 
             $survey = Survey::findOrFail($data['surveyResponse']['survey_id']);
             $response = new SurveyResponse([
                 'survey_id' => $survey->id,
-                'user_id' => $student->id,
+                // 'user_id' => $student->id,
+                'user_id' => $userId,
             ]);
 
             // Loop through each question response and save it

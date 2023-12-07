@@ -87,7 +87,7 @@
 
         $(document).ready(function() {
             const surveyFromDB = @json($survey);
-            if (surveyFromDB.visibility === 'public') {
+            if (surveyFromDB.status === 'active') {
                 $('#survey-form').show();
             } else {
                 $('#survey-form').hide();

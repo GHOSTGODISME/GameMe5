@@ -9,12 +9,12 @@ class Survey extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'visibility','id_lecturer'];
+    protected $fillable = ['title', 'description', 'status','id_lecturer'];
 
     protected $attributes = [
         'title' => 'Survey Title',
         'description' => null,
-        'visibility' => 'public'
+        'status' => 'public'
     ];
 
     public function surveyQuestions()

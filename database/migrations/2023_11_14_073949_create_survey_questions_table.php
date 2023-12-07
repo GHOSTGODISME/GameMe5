@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->string('type');
+            $table->integer('type');
             $table->string('title');
             $table->text('description')->nullable();
             $table->json('options')->nullable();
@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string('scale_min_value')->nullable();
             $table->string('scale_max_value')->nullable();
             // $table->string('properties');
-            $table->string('index');
+            $table->integer('index');
 
-            $table->foreignId('survey_id')->constrained();
+            $table->foreignId('survey_id')->constrained()->references('id')->on('surveys')->onDelete('cascade');
             
         });
     }
