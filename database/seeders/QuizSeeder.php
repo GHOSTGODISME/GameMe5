@@ -17,28 +17,66 @@ class QuizSeeder extends Seeder
      */
     public function run(): void
     {
-        // Quiz::create([
-        //     'title' => 'quiz 1',
-        //     'description' => 'Description for post 1',
-        //     'visibility' => 'public'
-        // ]);
-
-        // Create three sample quizzes
-        $quizzes = Quiz::factory()->count(3)->create([
+        Quiz::create([
+            'title' => 'Quiz 1',
+            'description' => 'Description for Quiz 1',
+            'visibility' => 'public',
             'id_lecturer' => 1,
         ]);
 
-        // For each quiz, create multiple questions
-        $quizzes->each(function ($quiz) {
-            $questionsCount = rand(2, 2); // Random number of questions per quiz
+        QuizQuestion::create([
+            'title' => 'What is the capital city of France?',
+            'type' => 0,
+            'options' => ['London', 'Paris', 'Rome', 'Madrid'],
+            'correct_ans' => ['Paris'],
+            'answer_explaination' => null,
+            'single_ans_flag' => 1,
+            'points' => 10,
+            'duration' => 10,
+            'index' => 0,
+            'quiz_id' => 1,
+        ]);
 
-            QuizQuestion::factory()->count($questionsCount)->create([
-                'quiz_id' => $quiz->id,
-                
-            ]);
-        });
+        QuizQuestion::create([
+            'title' => 'Which of the following are primary colors?',
+            'type' => 0,
+            'options' => ['Red', 'Green', 'Blue', 'Yellow'],
+            'correct_ans' => ['Red','Blue','Yellow'],
+            'answer_explaination' => null,
+            'single_ans_flag' => 0,
+            'points' => 10,
+            'duration' => 10,
+            'index' => 1,
+            'quiz_id' => 1,
+        ]);
 
-        Session::factory()->count(2)->create();
+        QuizQuestion::create([
+            'title' => 'Earth is the fifth planet from the sun.',
+            'type' => 1,
+            'options' => ['True','False'],
+            'correct_ans' => ['False'],
+            'answer_explaination' => null,
+            'single_ans_flag' => 1,
+            'points' => 10,
+            'duration' => 10,
+            'index' => 2,
+            'quiz_id' => 1,
+        ]);
+
+        QuizQuestion::create([
+            'title' => 'Enter a word with 6-8 characters that starts with the letter \'S\'.',
+            'type' => 2,
+            'options' => null,
+            'correct_ans' => ['Silence'],
+            'answer_explaination' => null,
+            'single_ans_flag' => 1,
+            'points' => 10,
+            'duration' => 10,
+            'index' => 3,
+            'quiz_id' => 1,
+        ]);
+
+         Session::factory()->count(2)->create();
 
         QuizResponse::create([
         'session_id'=> '1',

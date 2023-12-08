@@ -58,6 +58,7 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
+// app.use(VueSession);
 
 const store = useQuizStore();
 app.use(store)

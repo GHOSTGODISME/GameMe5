@@ -5,17 +5,17 @@
 
     <div class="quiz-body">
         <div>
-            <template v-if="question.type === '0'">
-                <QuizTypeMCQ :options="question.options" :correctAnswer="question.correct_ans"
+            <template v-if="question.type === 0">
+                <QuizTypeMCQ :options="question.options" :correctAnswer="question.correct_ans" :singleSelectFlag="question.single_ans_flag"
                     :timeRemaining="timeRemaining" @returnValues="handleReturnValues" />
             </template>
 
-            <template v-else-if="question.type === '1'">
+            <template v-else-if="question.type === 1">
                 <QuizTypeTrueFalse :correctAnswer="question.correct_ans" :timeRemaining="timeRemaining"
                     @returnValues="handleReturnValues" />
             </template>
 
-            <template v-else-if="question.type === '2'">
+            <template v-else-if="question.type === 2">
                 <QuizTypeText :correctAnswer="question.correct_ans" :timeRemaining="timeRemaining"
                     @returnValues="handleReturnValues" />
             </template>
@@ -54,17 +54,21 @@
                 timerInterval: null,
                 submitted: false,
                 defaultTime: 10,
+                socket:null,
             };
         },
         mounted() {
             this.initializeSocket();
             this.startTimer();
-            this.startTimer();
+            
+        },
+        created(){
+            this.socket = io("http://localhost:3000");
         },
         methods: {
             initializeSocket() {
                 const store = useQuizStore();
-                this.socket = io("http://localhost:3000");
+                
 
                 this.socket.emit("rejoinRoom", store.sessionCode);
                 this.socket.emit("get leaderboard", store.sessionCode);
@@ -75,7 +79,6 @@
                     store.updateUserRank(this.leaderboardData);
                 });
             },
-            // ... other methods
             startTimer() {
                 const store = useQuizStore();
                 const currentQuestion = store.questions[store.currentQuestionIndex];
@@ -84,7 +87,6 @@
                     this.defaultTime;
 
                 this.timeRemaining = questionDuration;
-                // this.timeRemaining = 5;
                 this.progressBarValue = 100;
 
                 this.timerInterval = setInterval(() => {
@@ -92,11 +94,11 @@
                         this.timeRemaining--; // Decrement timeRemaining by 1 every second
                         this.progressBarValue =
                             (this.timeRemaining / questionDuration) *
-                            100; // Update progress bar value accordingly
+                            100; 
                     } else {
                         clearInterval(this.timerInterval);
                     }
-                }, 1000); // Update every second (1000 milliseconds)
+                }, 1000);
             },
             handleReturnValues(returnedValues) {
                 this.submitted = true;
@@ -109,8 +111,11 @@
             },
 
             postSubmitAction(submitedAns, answeredCorrectly) {
+                console.log("submitedAns " + submitedAns);
                 if (!Array.isArray(submitedAns)) {
-        submitedAns = [submitedAns]; 
+                console.log("not array ");
+
+                    submitedAns = [submitedAns]; 
                 }
                 console.log(submitedAns);
 
@@ -151,10 +156,8 @@
                 });
 
                 this.submitResponseToDatabase(timeTaken, submitedAns, answeredCorrectly);
-
                 this.timeRemaining = 5;
                 this.progressBarValue = 100;
-                clearInterval(this.timerInterval);
                 this.timerInterval = setInterval(() => {
                     if (this.timeRemaining > 0) {
                         this.timeRemaining--; // Decrement timeRemaining by 1 every second
@@ -199,20 +202,6 @@
                 this.timeRemaining = time;
                 this.progressBarValue = 100;
             },
-            setTimer(duration) {
-                this.timeRemaining = duration;
-                this.progressBarValue = 100;
-
-                this.timerInterval = setInterval(() => {
-                    if (this.timeRemaining > 0) {
-                        this.timeRemaining--;
-                        this.progressBarValue =
-                            (this.timeRemaining / duration) * 100;
-                    } else {
-                        clearInterval(this.timerInterval);
-                    }
-                }, 1000);
-            },
         },
         computed: {
             question() {
@@ -222,12 +211,15 @@
                 if(store.shuffleOptionFlag === 1){
                     store.shuffle(store.questions[store.currentQuestionIndex].options);
                 }
+                console.log(store.questions[store.currentQuestionIndex]);
                 return store.questions[store.currentQuestionIndex] || {}; 
             },
         },
-        beforeDestroy() {
+        beforeUnmount() {
             clearInterval(this.timerInterval);
-            this.socket.close();
+            const store = useQuizStore();
+            this.socket.emit("exitRoom", store.sessionCode);
+            // sessionStorage.setItem('quizStore', JSON.stringify(store));
         },
     };
 </script>

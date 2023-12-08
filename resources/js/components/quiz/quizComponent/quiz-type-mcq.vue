@@ -44,6 +44,10 @@ export default {
             type: Array,
             required: true,
         },
+        singleSelectFlag:{
+            type: Number,
+            required: true,
+        },
         timeRemaining: {
             type: Number,
             required: true,
@@ -59,17 +63,35 @@ export default {
         window.addEventListener("keydown", (e) => {
             this.handleKeyPress(e);
         });
+
+        console.log("this.singleSelectFlag " + this.singleSelectFlag);
     },
     methods: {
         selectOption(option) {
+            // if (!this.submitted) {
+            //     const index = this.selectedOptions.indexOf(option);
+            //     if (index !== -1) {
+            //         this.selectedOptions.splice(index, 1);
+            //     } else {
+            //         this.selectedOptions.push(option);
+            //     }
+            // }
+
             if (!this.submitted) {
-                const index = this.selectedOptions.indexOf(option);
-                if (index !== -1) {
-                    this.selectedOptions.splice(index, 1);
+                if (this.singleSelectFlag === 1) {
+                    // Clear selectedOptions if singleSelectFlag is 1 (single answer mode)
+                    this.selectedOptions = [option];
                 } else {
-                    this.selectedOptions.push(option);
+                    // Toggle option selection for multi-answer mode (singleSelectFlag is 0)
+                    const index = this.selectedOptions.indexOf(option);
+                    if (index !== -1) {
+                        this.selectedOptions.splice(index, 1);
+                    } else {
+                        this.selectedOptions.push(option);
+                    }
                 }
             }
+
         },
         optionClasses(option) {
             return {

@@ -113,7 +113,7 @@ function initializeLeaderboard(sessionCode) {
       }
     });
   }
-  io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));
+  // io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));
 }
 
 app.get('/', (req, res) => {
@@ -164,7 +164,12 @@ function handleSession(socket) {
     }
   });
 
-
+  socket.on('exitRoom', (sessionCode)=>{
+    if (sessions.get(sessionCode)) {
+      socket.leave(sessionCode);
+      console.log('user leave the room');
+    }
+  })
 }
 
 function handleInteractiveSession(socket) {
@@ -281,6 +286,20 @@ function broadcastAllIS(sessionCode) {
 }
 
 function handleJoinEvents(socket) {
+  socket.on('checkUser', (data) => {
+    const { sessionCode, id } = data;
+
+    if (sessions.get(sessionCode)) {
+      const participants = sessions.get(sessionCode).participants;
+      const existingUser = participants.find((participant) => participant.id === id);
+
+      if (existingUser) {
+        io.to(sessionCode).emit('same participants');
+      }
+      }
+  });
+
+
   socket.on('getSessionParticipants', (sessionCode)=>{
     console.log("getSessionParticipants");
     socket.join(sessionCode);
@@ -312,6 +331,8 @@ function handleJoinEvents(socket) {
         io.to(sessionCode).emit('participant joined', { id, username });
         io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));
         io.to(sessionCode).emit('initial participants', participants);
+      }else{
+        io.to(sessionCode).emit('same participants');
       }
 
       console.log("start " + sessionCode);
