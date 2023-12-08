@@ -138,9 +138,6 @@
                                 <button class="btn btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#liveSessionModal">Start
                                     Live Session </button>
-                                    {{-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
-                                        Assign to Class
-                                    </button> --}}
                             </div>
                         @endif
                     </div>

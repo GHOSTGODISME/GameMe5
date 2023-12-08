@@ -4,7 +4,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import App from './components/App.vue';
 import {useQuizStore} from './store.js';
 import { createPinia } from 'pinia'
-import VueSession from 'vue-session';
 
 // Import your Vue components
 import JoinQuizLayout from './components/quiz/layout/join-quiz-layout.vue';
@@ -59,7 +58,6 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
-// app.use(VueSession);
 
 const store = useQuizStore();
 app.use(store)
