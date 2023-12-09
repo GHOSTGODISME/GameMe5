@@ -114,11 +114,11 @@ function initializeQuestionOnClickStudent(questionBlock) {
 
         // Retrieve input values based on the question type
         switch (parseInt(question.type)) {
-            case QUESTION_TYPE_INT.TEXT_INPUT:
+            case QUESTION_TYPES.TEXT_INPUT.value:
                 const textInputValue = document.getElementById(`${question.id}-userInput`).value;
                 storeResponse(question.id, textInputValue);
                 break;
-            case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+            case QUESTION_TYPES.MULTIPLE_CHOICE.value:
                 const selectedRadio = document.querySelector(`input[name='${question.id}']:checked`);
                 if (selectedRadio) {
                     const selectedRadioValue = selectedRadio.value;
@@ -127,12 +127,12 @@ function initializeQuestionOnClickStudent(questionBlock) {
                     console.log("No option selected for multiple-choice question.");
                 }               
                 break;
-            case QUESTION_TYPE_INT.CHECKBOX:
+            case QUESTION_TYPES.CHECKBOX.value:
                 const selectedCheckboxes = document.querySelectorAll(`input[name='${question.id}[]']:checked`);
                 const checkboxValues = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
                 storeResponse(question.id, checkboxValues);
                 break;
-            case QUESTION_TYPE_INT.SCALE:
+            case QUESTION_TYPES.SCALE.value:
                 const sliderValue = document.getElementById(`${question.id}-scale`).noUiSlider.get();
                 storeResponse(question.id, sliderValue);
                 break;
@@ -162,11 +162,11 @@ function storeResponse(questionID, answer) {
 function storeResponseOnSubmit(){
     surveyQuestions.forEach(question => {
         switch (parseInt(question.type)) {
-            case QUESTION_TYPE_INT.TEXT_INPUT:
+            case QUESTION_TYPES.TEXT_INPUT.value:
                 const textInputValue = document.getElementById(`${question.id}-userInput`).value;
                 storeResponse(question.id, textInputValue);
                 break;
-            case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+            case QUESTION_TYPES.MULTIPLE_CHOICE.value:
                 const selectedRadio = document.querySelector(`input[name='${question.id}']:checked`);
                 if (selectedRadio) {
                     const selectedRadioValue = selectedRadio.value;
@@ -176,7 +176,7 @@ function storeResponseOnSubmit(){
                     storeResponse(question.id ?? question.id, null);
                 }
                 break;
-            case QUESTION_TYPE_INT.CHECKBOX:
+            case QUESTION_TYPES.CHECKBOX.value:
                 const selectedCheckboxes = document.querySelectorAll(`input[name='${question.id}[]']:checked`);
                 if (selectedCheckboxes) {
                     const checkboxValues = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
@@ -188,7 +188,7 @@ function storeResponseOnSubmit(){
                 }
 
                 break;
-            case QUESTION_TYPE_INT.SCALE:
+            case QUESTION_TYPES.SCALE.value:
                 const sliderValue = document.getElementById(`${question.id}-scale`).noUiSlider.get();
                 storeResponse(question.id, sliderValue);
                 break;
@@ -205,25 +205,25 @@ function validateSurvey() {
 
     surveyQuestions.forEach(question => {
         switch (parseInt(question.type)) {
-            case QUESTION_TYPE_INT.TEXT_INPUT:
+            case QUESTION_TYPES.TEXT_INPUT.value:
                 const textInputValue = document.getElementById(`${question.id}-userInput`).value;
                 if (!textInputValue.trim()) {
                     allQuestionsAnswered = false;
                 }
                 break;
-            case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+            case QUESTION_TYPES.MULTIPLE_CHOICE.value:
                 const selectedRadio = document.querySelector(`input[name='${question.id}']:checked`);
                 if (!selectedRadio) {
                     allQuestionsAnswered = false;
                 }
                 break;
-            case QUESTION_TYPE_INT.CHECKBOX:
+            case QUESTION_TYPES.CHECKBOX.value:
                 const selectedCheckboxes = document.querySelectorAll(`input[name='${question.id}[]']:checked`);
                 if (selectedCheckboxes.length === 0) {
                     allQuestionsAnswered = false;
                 }
                 break;
-            case QUESTION_TYPE_INT.SCALE:
+            case QUESTION_TYPES.SCALE.value:
                 // scale have default value
                 break;
             default:
@@ -300,7 +300,7 @@ function convertImage() {
 function scrollToUnansweredQuestion() {
     surveyQuestions.forEach(question => {
         switch (parseInt(question.type)) {
-            case QUESTION_TYPE_INT.TEXT_INPUT:
+            case QUESTION_TYPES.TEXT_INPUT.value:
                 const textInputValue = document.getElementById(`${question.id}-userInput`).value;
                 if (!textInputValue.trim()) {
                     const questionContainer = document.querySelector(`[data-survey-question='${question.id}']`);
@@ -310,7 +310,7 @@ function scrollToUnansweredQuestion() {
                     }
                 }
                 break;
-            case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+            case QUESTION_TYPES.MULTIPLE_CHOICE.value:
                 const selectedRadio = document.querySelector(`input[name='${question.id}']:checked`);
                 if (!selectedRadio) {
                     const questionContainer = document.querySelector(`[data-survey-question='${question.id}']`);
@@ -320,7 +320,7 @@ function scrollToUnansweredQuestion() {
                     }
                 }
                 break;
-            case QUESTION_TYPE_INT.CHECKBOX:
+            case QUESTION_TYPES.CHECKBOX.value:
                 const selectedCheckboxes = document.querySelectorAll(`input[name='${question.id}[]']:checked`);
                 if (selectedCheckboxes.length === 0) {
                     const questionContainer = document.querySelector(`[data-survey-question='${question.id}']`);
@@ -330,7 +330,7 @@ function scrollToUnansweredQuestion() {
                     }
                 }
                 break;
-            case QUESTION_TYPE_INT.SCALE:
+            case QUESTION_TYPES.SCALE.value:
                 // there is default value for scale input, so no need to check on it
                 break;
             default:

@@ -4,22 +4,7 @@
 
 
 const surveyQuestionContainer = document.getElementById("questions_container");
-
-/// for changing the form arrangement
 const formStructureContainer = document.getElementById("form_structure");
-// const lectureID = 0;
-// const surveyID = 0;
-
-// let questionCount = 0;
-
-// const idPrefix = "s"
-// const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
-
-// const survey = mapSurveyDataToInstance(surveyFromDB);
-// let surveyQuestions = survey.questions;
-
-console.log(surveyQuestions);
-// ${lectureID}-${surveyID}-${questionCount}-${QUESTION_TYPE_INT[0]}
 
 const sortable = new Sortable(formStructureContainer, {
     //handle: '.handle',
@@ -84,7 +69,7 @@ function addQuestion(type) {
     surveyQuestionContainer.appendChild(questionContainer);
 
     surveyQuestions.push(question);
-    const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+    const structure = createStructureElement(question.id, question.type, question.title);
     formStructureContainer.appendChild(structure);
 
 }
@@ -161,13 +146,13 @@ function recreateSameQuestion(question) {
     inputContainer.className = "input-container";
 
     switch (parseInt(question.type)) {
-        case QUESTION_TYPE_INT.TEXT_INPUT:
+        case QUESTION_TYPES.TEXT_INPUT.value:
             inputContainer.innerHTML = `
             <textarea id="${question.id}-userInput" class="question-input form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;
-        case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+        case QUESTION_TYPES.MULTIPLE_CHOICE.value:
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML +=
                     `<label class="input_option">
@@ -177,7 +162,7 @@ function recreateSameQuestion(question) {
             });
 
             break;
-        case QUESTION_TYPE_INT.CHECKBOX:
+        case QUESTION_TYPES.CHECKBOX.value:
             question.options.forEach((option, index) => {
                 inputContainer.innerHTML +=
                     `<label class="input_option">
@@ -186,7 +171,7 @@ function recreateSameQuestion(question) {
             </label>`;
             });
             break;
-        case QUESTION_TYPE_INT.SCALE:
+        case QUESTION_TYPES.SCALE.value:
             const scaleInput = createScaleInput(question);
 
             inputContainer.append(scaleInput);
@@ -198,7 +183,7 @@ function recreateSameQuestion(question) {
     questionContainer.appendChild(inputContainer);
     surveyQuestionContainer.appendChild(questionContainer);
 
-    const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+    const structure = createStructureElement(question.id, question.type, question.title);
     formStructureContainer.appendChild(structure);
 
     return questionContainer;
@@ -232,6 +217,8 @@ function updateQuestionPreview(question) {
 }
 
 function createStructureElement(id, questionType, questionString) {
+    questionType = getKeyByValue(QUESTION_TYPES, questionType);
+
     const structure = document.createElement("div");
     structure.className = "structure";
     structure.setAttribute("data-question-id", id);
@@ -251,7 +238,7 @@ function updateFormStructure() {
 
     // Iterate through surveyQuestions and recreate the structure
     surveyQuestions.forEach(question => {
-        const structure = createStructureElement(question.id, QUESTION_TYPE_STRING[question.type], question.title);
+        const structure = createStructureElement(question.id, question.type, question.title);
         formStructureContainer.appendChild(structure);
         console.log("triggered");
     });
@@ -278,16 +265,12 @@ $(document).ready(function () {
     });
 
     initializeSurveyFields();
-
-    //populateSurveyForm();
-
     updateFormStructure();
 
     initializeInputListeners();
     initializeFieldsVisibility();
 
     initializeSurveySubmitBtn_admin();
-
 });
 
 function initializeSurveyFields() {
@@ -307,8 +290,8 @@ function initializeInputListeners() {
     const titleInput = $(".survey-title-input");
     const descriptionInput = $(".survey-description-input");
 
-    const titleCharLimit = 80;
-    const descriptionCharLimit = 4500;
+    const titleCharLimit = 200;
+    const descriptionCharLimit = 1500;
 
     titleInput.required = true;
 
@@ -382,73 +365,6 @@ function updateDescription(input, maxCharLimit) {
 //==================================================================================
 //====================Updating the title and description for each question component===========
 //==================================================================================
-// to be done in future
-// const questionPropertiesDDL = document.getElementById("question_properties");
-// function populateQuestionProperties() {
-//     for (const key in QUESTION_PROPERTIES) {
-//         const optionElement = document.createElement("option");
-//         optionElement.value = QUESTION_PROPERTIES[key];
-//         optionElement.textContent = QUESTION_PROPERTIES[key];
-//         optionElement.style.textTransform = "capitalize";
-//         questionPropertiesDDL.appendChild(optionElement);
-//     }
-// }
-// populateQuestionProperties();
-
-// questionPropertiesDDL.addEventListener("input", function () {
-//     let questionProperties = questionPropertiesDDL.value;
-
-//     console.log("questionProperties " + questionProperties);
-//     // // Retrieve the selected question container from the DOM
-//     const selectedQuestionContainer = document.querySelector(".selected-question");
-
-//     // Access the question object using the data-survey-question attribute
-//     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
-//     const question = surveyQuestions.find(q => q.id.toString() === questionData);
-
-//     question.properties = questionProperties;
-//     console.log("question.properties "+ question.properties);
-
-//     const questionInput = selectedQuestionContainer.querySelector(".question-input");
-//     const questionTitleElement = selectedQuestionContainer.querySelector(".question-title");
-
-//     switch (question.properties.toLowerCase()) {
-//         case QUESTION_PROPERTIES[0]:
-//             questionTitleElement.classList.remove("required");
-
-//                 switch (parseInt(question.type)) {
-//                 case QUESTION_TYPE_INT.TEXT_INPUT:
-//                     questionInput.required = false;
-//                     questionInput.readOnly = false;
-//             }
-//             break;
-//         case QUESTION_PROPERTIES[1]:
-//             questionTitleElement.classList.add("required");
-//             console.log("questionTitleElement.classList " + questionTitleElement.classList);
-
-//                 switch (parseInt(question.type)) {
-//                 case QUESTION_TYPE_INT.TEXT_INPUT:
-//                     questionInput.required = true;
-//                     questionInput.readOnly = false;
-//                     console.log("triggered");
-//             }
-
-//             break;
-
-//         case QUESTION_PROPERTIES[2]:
-//             questionTitleElement.classList.remove("required");
-
-//                 switch (parseInt(question.type)) {
-//                 case QUESTION_TYPE_INT.TEXT_INPUT:
-//                     questionInput.required = false;
-//                     questionInput.readOnly = true;
-//             }
-//             break;
-//     }
-//     console.log("questionTitleElement.classList " + questionTitleElement.classList);
-
-// });
-
 
 // Add an input event listener to the question title textarea
 const questionTitleInput = document.getElementById("question_title");
@@ -559,7 +475,7 @@ function questionEditOption(question) {
     const scaleField = document.getElementById("scale-container");
 
     // Determine which input fields should be visible based on the selected question type
-    if (selectedType === QUESTION_TYPE_INT.MULTIPLE_CHOICE || selectedType === QUESTION_TYPE_INT.CHECKBOX) {
+    if (selectedType === QUESTION_TYPES.MULTIPLE_CHOICE.value || selectedType === QUESTION_TYPES.CHECKBOX.value) {
         // Show Input Option and hide the others
         inputOptionField.style.display = "block";
         textFields.style.display = "none";
@@ -573,7 +489,7 @@ function questionEditOption(question) {
             questionInputOptionInput.value += "\n";
         }
 
-    } else if (selectedType === QUESTION_TYPE_INT.TEXT_INPUT) {
+    } else if (selectedType === QUESTION_TYPES.TEXT_INPUT.value) {
         // Show Pre-filled Value and Placeholder, hide Input Option
         inputOptionField.style.display = "none";
         textFields.style.display = "block";
@@ -586,7 +502,7 @@ function questionEditOption(question) {
         questionPrefilledInput.value = question.prefilledValue;
 
 
-    } else if (selectedType === QUESTION_TYPE_INT.SCALE) {
+    } else if (selectedType === QUESTION_TYPES.SCALE.value) {
         inputOptionField.style.display = "none";
         textFields.style.display = "none";
         scaleField.style.display = "block";
@@ -650,7 +566,7 @@ questionInputOptionInput.addEventListener("input", function () {
     }
 
     switch (parseInt(question.type)) {
-        case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+        case QUESTION_TYPES.MULTIPLE_CHOICE.value:
             inputOptions.forEach((option, index) => {
                 inputContainer.innerHTML += `
             <label class="input_option">
@@ -662,7 +578,7 @@ questionInputOptionInput.addEventListener("input", function () {
 
             console.log(question);
             break;
-        case QUESTION_TYPE_INT.CHECKBOX:
+        case QUESTION_TYPES.CHECKBOX.value:
             inputOptions.forEach((option, index) => {
                 inputContainer.innerHTML += `
                 <label class="input_option">
@@ -868,6 +784,7 @@ function saveSurveyForm() {
     console.log(survey);
     // Make an AJAX POST request to the backend to save the form data
     if (validSurvey) {
+        ori_survey = deepCopy(survey);
         $.ajax({
             url: '/save-survey',
             type: 'POST',

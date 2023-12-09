@@ -13,7 +13,7 @@
         .nav-link {
             font-size: 18px;
         }
-        
+
         .the_wheel {
             position: relative;
             width: max-content;
@@ -31,6 +31,16 @@
             z-index: 999;
             transform-origin: bottom center;
         }
+
+        .head-fw-1{
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .head-fw-1 #modeSelectorContainer{
+            font-size: 18px;
+            margin: 10px 20px;
+        }
     </style>
 
     <div class="save-btn-container">
@@ -41,8 +51,8 @@
     <input type="hidden" id="fortune-wheel-id" name="fortuneWheel[id]" value="{{ $fortuneWheel->id ?? '' }}">
 
 
-    <div class="container">
-        <div class="input-group">
+    <div class="container ">
+        <div class="input-group head-fw-1">
             <span class="edit-icon" style="cursor: pointer;">
                 <div style="display: flex; align-items: center; justify-content: center; gap:20px;">
                     <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
@@ -51,16 +61,27 @@
                         data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa fa-edit"></i></button>
                 </div>
             </span>
+
+            <div id="modeSelectorContainer">
+            <label for="modeSelector"><b>Type:</b>
+                <select id="modeSelector" class="" onchange="changeMode()">
+                    <option value="standard">Standard</option>
+                    <option value="wheel" selected>Wheel</option>
+                </select>
+            </label>
+        </div>
         </div>
 
         <div class="row">
-            {{-- <div class="col-md-6 col-xl-7 container-style">
+
+
+            <div class="col-md-6 col-xl-7 container-style" id="standard" style="display: none;">
                 <div id="result-box" class="box">Press "Spin" to start</div>
                 <button class="btn btn-dark interactive_btn" id="spin-button" type="button"
                     style="padding: 10px 50px;">Spin</button>
-            </div> --}}
+            </div>
 
-            <div class="col-xl-7 container-style">
+            <div class="col-xl-7 container-style" id="wheel" style="display: block;">
                 <div class="the_wheel">
                     <div class="pointer"></div>
                     <canvas id="canvas" width="500" height="500"></canvas>
@@ -200,6 +221,23 @@
             });
         });
 
+        function changeMode() {
+            const modeSelector = document.getElementById("modeSelector");
+            const selectedValue = modeSelector.value;
+
+            const standard = document.getElementById("standard");
+            const wheel = document.getElementById("wheel");
+
+            if (selectedValue === "standard") {
+                standard.style.display = "block";
+                wheel.style.display = "none";
+            } else if (selectedValue === "wheel") {
+                standard.style.display = "none";
+                wheel.style.display = "block";
+            }
+        }
+
+
         const fw = @json($fortuneWheel);
         let ori_fw = @json($fortuneWheel);
 
@@ -262,8 +300,6 @@
 
             theWheel.draw(canvas);
         }
-
-
 
         function removeSegment(selectedEntry) {
             theWheel.deleteSegment(selectedEntry.text);
@@ -424,50 +460,50 @@
 
         });
 
-        // // Function to randomly select and move an entry to Results
-        // $('#spin-button').click(function() {
-        //     const entriesTextArea = $('#entries_contentholder');
-        //     const resultBox = $('#result-box');
+        // Function to randomly select and move an entry to Results
+        $('#spin-button').click(function() {
+            const entriesTextArea = $('#entries_contentholder');
+            const resultBox = $('#result-box');
 
-        //     fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
-        //     const entries = fw.entries;
-        //     var selectedEntry = null;
-        //     var randomIndex = 0;
+            fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
+            const entries = fw.entries;
+            var selectedEntry = null;
+            var randomIndex = 0;
 
-        //     if (entries.length > 0) {
-        //         let spinDuration = 3000; // 3s
-        //         let spinInterval = 100; // for each 100ms, spin once
+            if (entries.length > 0) {
+                let spinDuration = 3000; // 3s
+                let spinInterval = 100; // for each 100ms, spin once
 
-        //         let spinTimer = setInterval(function() {
-        //             // Randomly select an entry
-        //             randomIndex = Math.floor(Math.random() * entries.length);
-        //             selectedEntry = entries[randomIndex];
+                let spinTimer = setInterval(function() {
+                    // Randomly select an entry
+                    randomIndex = Math.floor(Math.random() * entries.length);
+                    selectedEntry = entries[randomIndex];
 
-        //             // Update the result-box with the selected entry
-        //             resultBox.text(selectedEntry);
-        //         }, spinInterval);
+                    // Update the result-box with the selected entry
+                    resultBox.text(selectedEntry);
+                }, spinInterval);
 
-        //         // Stop the spin after the specified duration
-        //         setTimeout(function() {
-        //             clearInterval(spinTimer);
-        //             // Display the selected name
-        //             alert(selectedEntry + "!!!");
+                // Stop the spin after the specified duration
+                setTimeout(function() {
+                    clearInterval(spinTimer);
+                    // Display the selected name
+                    alert(selectedEntry + "!!!");
 
-        //             // Remove the selected name from Entries and put into result
-        //             entries.splice(randomIndex, 1);
-        //             fw.results.push(selectedEntry);
+                    // Remove the selected name from Entries and put into result
+                    entries.splice(randomIndex, 1);
+                    fw.results.push(selectedEntry);
 
-        //             // Update the UI
-        //             updateResultsUI();
-        //             updateEntriesUI();
+                    // Update the UI
+                    updateResultsUI();
+                    updateEntriesUI();
 
-        //         }, spinDuration);
-        //     } else {
-        //         alert('No more entries to pick.');
-        //     }
+                }, spinDuration);
+            } else {
+                alert('No more entries to pick.');
+            }
 
 
-        // });
+        });
 
         // Function to control the visibility of import button
         $('#excel_file_input').change(function() {

@@ -1060,7 +1060,7 @@ function saveQuiz() {
             contentType: 'application/json',
             data: JSON.stringify(quiz),
             success: function (response) {
-                ori_quiz = quiz;
+                ori_quiz = deepCopy(quiz);
                 console.log('Quiz saved successfully:', response);
                 window.location.href = "/quiz-index-own-quiz";
                 // history.back();

@@ -1,24 +1,25 @@
-const QUESTION_TYPE_INT = {
-    TEXT_INPUT: 0,
-    MULTIPLE_CHOICE: 1,
-    CHECKBOX: 2,
-    DROPDOWN: 3,
-    SCALE: 4
+const QUESTION_TYPES = {
+    TEXT_INPUT: {
+        value: 0,
+        name: "text input"
+    },
+    MULTIPLE_CHOICE: {
+        value: 1,
+        name: "multiple choice"
+    },
+    CHECKBOX: {
+        value: 2,
+        name: "checkbox"
+    },
+    DROPDOWN: {
+        value: 3,
+        name: "dropdown"
+    },
+    SCALE: {
+        value: 4,
+        name: "scale"
+    }
 };
-
-const QUESTION_TYPE_STRING = {
-    0: "text input",
-    1: "multiple choice",
-    2: "checkbox",
-    3: "dropdown",
-    4: "scale"
-}
-
-// const QUESTION_PROPERTIES = {
-//     0: "default",
-//     1: "required",
-//     2: "disabled"
-// }
 
 class Survey{
     constructor(){
@@ -32,8 +33,8 @@ class Survey{
 
 class SurveyQuestion {
     constructor(id, type, title, description) {
-        this.id = id ?? generateUniqueID(); 
-        this.type = type; // Question type (e.g., text input, multiple-choice, etc.)
+        this.id = id || generateUniqueID(); 
+        this.type = parseInt(type); // Question type (e.g., text input, multiple-choice, etc.)
         this.title = title; // Question title
         this.description = description ?? ""; // Question description
 
@@ -47,18 +48,11 @@ class SurveyQuestion {
         this.scale_min_value = ""; 
         this.scale_max_value = ""; 
 
-        // this.properties = "default";
-
         this.index = 0;
     }
     
     updateOptions(options) {
-        // Clear existing options
         this.options = [];
-
-        console.log("trigger update");
-
-        // Add new options
         for (let option of options) {
             this.options.push(option);
         }
@@ -85,49 +79,21 @@ class SurveyQuestion {
     }
 }
 
-
-
-// class SurveyResponse{
-//     constructor(){
-//         this.id = "";
-//         this.survey_id = "";
-//         this.user_id = "";
-//         this.question_response = [];
-//     }
-// }
-
-// class SurveyQuestionResponse{
-//     constructor(){
-//         this.id = "";
-//         this.question_id = "";
-//         this.answer = [];
-//     }
-// }
-
-// const surveyResponse = new SurveyResponse();
-// const questionResponse = [];
-// surveyResponse.question_response = questionResponse;
-
 const lectureID = 0;
 const surveyID = 0;
 let questionCount = 0;
-
 const idPrefix = "s"
 const scaleOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example options
 
 const survey = mapSurveyDataToInstance(surveyFromDB);
-let ori_survey = survey;
+let ori_survey = deepCopy(survey);
 
 let surveyQuestions = survey.questions;
 
-// console.log();
-console.log(survey);
-console.log(surveyQuestions);
-
 // Function to generate a unique ID for unsaved questions
 function generateUniqueID() {
-    const timestamp = new Date().getTime().toString(16); // Timestamp converted to hexadecimal
-    const randomString = Math.random().toString(16).slice(2); // Random string
+    const timestamp = new Date().getTime().toString(16); 
+    const randomString = Math.random().toString(16).slice(2); 
     return `temp-${timestamp}-${randomString}`;
 }
 
@@ -171,7 +137,25 @@ function mapSurveyDataToInstance(fetchedSurveyData) {
     return survey;
 }
 
+function deepCopy(obj) {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj; 
+    }
 
+    let copiedObj = Array.isArray(obj) ? [] : {};
+
+    for (let key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            copiedObj[key] = deepCopy(obj[key]);
+        }
+    }
+
+    return copiedObj;
+}
+
+function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key].value === value);
+  }
 
 function createScaleInput(question) {
     const scaleContainer = document.createElement("div");
@@ -218,13 +202,13 @@ function createSlider(question) {
 
 function createQuestionTypeBlock(type, question, inputContainer){
     switch (type) {
-        case QUESTION_TYPE_INT.TEXT_INPUT:
+        case QUESTION_TYPES.TEXT_INPUT.value:
             inputContainer.innerHTML = `
             <textarea id="${question.id}-userInput" class="question-input form form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;
-        case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+        case QUESTION_TYPES.MULTIPLE_CHOICE.value:
             question.options.push("Option 1");// initialize
             inputContainer.innerHTML = `
             <label class="input_option">
@@ -234,7 +218,7 @@ function createQuestionTypeBlock(type, question, inputContainer){
             `;
 
             break;
-        case QUESTION_TYPE_INT.CHECKBOX:
+        case QUESTION_TYPES.CHECKBOX.value:
             question.options.push("Option 1");// initialize
             inputContainer.innerHTML = `
             <label class="input_option">
@@ -243,7 +227,7 @@ function createQuestionTypeBlock(type, question, inputContainer){
             </label>
             `;
             break;
-        case QUESTION_TYPE_INT.SCALE:
+        case QUESTION_TYPES.SCALE.value:
             // inputContainer.innerHTML = `
             // <input type="range" id="${question.id}-scale" name="scale-question-${questionCount}" min="1" max="5">
             // `;
@@ -256,13 +240,13 @@ function createQuestionTypeBlock(type, question, inputContainer){
 
 function recreateQuestionTypeBlock(question, inputContainer){
     switch (parseInt(question.type)) {
-        case QUESTION_TYPE_INT.TEXT_INPUT:
+        case QUESTION_TYPES.TEXT_INPUT.value:
             inputContainer.innerHTML = `
             <textarea id="${question.id}-userInput" class="question-input form form-control" placeholder="${question.placeholder}">${question.prefilledValue}</textarea>
             <label for="${question.id}-userInput" class="visually-hidden"></label>
             `;
             break;
-        case QUESTION_TYPE_INT.MULTIPLE_CHOICE:
+        case QUESTION_TYPES.MULTIPLE_CHOICE.value:
             // inputContainer.innerHTML = `
             // <label class="input_option">
             //     <input type="radio" id="${question.id}-option1" name="mc-question" value="Option 1">
@@ -279,7 +263,7 @@ function recreateQuestionTypeBlock(question, inputContainer){
                 `;
             });
             break;
-        case QUESTION_TYPE_INT.CHECKBOX:
+        case QUESTION_TYPES.CHECKBOX.value:
             // inputContainer.innerHTML = `
             // // <label class="input_option">
             // //     <input type="checkbox" id="${question.id}-option1" name="cb-question[]" value="Option 1">
@@ -295,7 +279,7 @@ function recreateQuestionTypeBlock(question, inputContainer){
                 `;
             });
             break;
-        case QUESTION_TYPE_INT.SCALE:
+        case QUESTION_TYPES.SCALE.value:
             const scaleInput = createScaleInput(question);
             inputContainer.append(scaleInput);
             break;
