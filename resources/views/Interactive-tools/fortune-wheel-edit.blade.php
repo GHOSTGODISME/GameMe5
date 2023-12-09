@@ -13,7 +13,7 @@
         .nav-link {
             font-size: 18px;
         }
-
+        
         .the_wheel {
             position: relative;
             width: max-content;
@@ -167,7 +167,7 @@
                 var editedTitle = $('#editFortuneWheelTitle').val();
                 if (editedTitle.trim() === '') {
                     alert('Title cannot be empty. Please enter a title.');
-                    return; // Prevents the modal from closing if the title is empty
+                    return;
                 }
 
                 $('#fortune-wheel-title').val(editedTitle);
@@ -200,49 +200,22 @@
             });
         });
 
-        // class FortuneWheel{
-        //     constructor(object){
-        //         this.title = object.title;
-        //         this.entries = object.entries;
-        //         this.results = object.result;
-        //     }
-        // }
-
-        // const fw = new FortuneWheel(@json($fortuneWheel));
-
         const fw = @json($fortuneWheel);
         let ori_fw = @json($fortuneWheel);
-        console.log(fw);
 
         /////// for fortune wheel -- the actual wheel
-        const segments = [];
-        console.log(fw.entries);
-        fw.entries.forEach(entry => {
-            segments.push({
-                'text': entry,
-                'fillStyle': 'whitesmoke'
-            });
-        });
-
-        let theWheel = new Winwheel({
-            'numSegments': segments.length,
-            'outerRadius': 200,
-            'segments': segments,
-            'responsive': true,
-            'animation': {
-                'type': 'spinToStop',
-                'duration': 5,
-                'spins': 8,
-                'callbackFinished': alertPrize
-            }
-        });
         const canvas = document.getElementById('fortuneWheel');
-        theWheel.draw(canvas);
+        let theWheel = null;
+        const segments = [];
+        const segmentColor = [
+            '#88AB8E', '#AFC8AD', '#EEE7DA', '#F2F1EB',
+            '#5F6F52', '#A9B388', '#FEFAE0', '#B99470'
+        ];
 
         function startSpin() {
             theWheel.stopAnimation(false);
             theWheel.rotationAngle = 0;
-            theWheel.draw();
+            theWheel.draw(canvas);
             theWheel.animation.spins = 8;
             theWheel.startAnimation();
         }
@@ -259,8 +232,6 @@
 
                 fw.results.push(selectedEntry.text);
                 updateResultsUI();
-
-                removeSegment(selectedEntry.text);
             }
 
             alert("Selected: " + selectedEntry.text);
@@ -269,14 +240,11 @@
         function updateWheelSegmentsFromEntries() {
             const segments = [];
             if (fw.entries && Array.isArray(fw.entries)) {
-                fw.entries.forEach(entry => {
-                    console.log(fw.entries);
-                    if (entry && typeof entry === 'string') { // Validate entry to be a non-empty string
-                        segments.push({
-                            'text': entry,
-                            'fillStyle': 'whitesmoke'
-                        });
-                    }
+                fw.entries.forEach((entry, index) => {
+                    segments.push({
+                        'text': entry,
+                        'fillStyle': segmentColor[index % segmentColor.length]
+                    });
                 });
             }
             theWheel = new Winwheel({
@@ -292,16 +260,14 @@
                 }
             });
 
-        theWheel.draw();
+            theWheel.draw(canvas);
+        }
 
-                // theWheel.draw(canvas);
-            }
-        
 
 
         function removeSegment(selectedEntry) {
             theWheel.deleteSegment(selectedEntry.text);
-            theWheel.draw();
+            theWheel.draw(canvas);
         }
 
         // Function to update entries in the UI
@@ -351,7 +317,6 @@
 
             // Click event for the "Save Wheel" button
             $('#save-wheel-button').click(function() {
-                // Prompt for confirmation
                 const isConfirmed = confirm('Are you sure you want to save the wheel?');
 
                 // If the user confirms, proceed with saving the wheel
@@ -359,20 +324,11 @@
                     fw.title = $('#fortune-wheel-title').val();
 
                     const fortuneWheelId = $('#fortune-wheel-id').val();
-                    //  const url = fortuneWheelId ? `/update-fortune-wheel/${fortuneWheelId}` :
-                    //      '/create-fortune-wheel';
-
-
-                    console.log(JSON.stringify(fw));
-
                     $.ajax({
                         url: '/save-fortune-wheel',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(fw),
-                        //  data: {
-                        //     fortuneWheel: fw
-                        //  },
                         success: function(response) {
                             ori_fw = fw;
                             console.log('Wheel saved successfully');
@@ -389,10 +345,9 @@
                 }
             });
 
-
-
             // Function to handle copy-paste inputs with delimiters
-            function processCopyPasteData(pasteData, updatedFields) {
+            function handlePaste(e, updatedFields) {
+                const pasteData = e.originalEvent.clipboardData.getData('text');
                 const entries = pasteData.split(/[,|]/).map(entry => entry.trim());
                 const validEntries = entries.filter(entry => entry !== "");
 
@@ -403,21 +358,17 @@
                     fw.results = [...fw.results, ...validEntries];
                     updateResultsUI();
                 }
+
+                e.preventDefault();
             }
 
-            // Handle paste events on the textarea
             $('#entries_contentholder').on('paste', function(e) {
-                const pasteData = e.originalEvent.clipboardData.getData('text');
-                processCopyPasteData(pasteData, "entries");
-                e.preventDefault();
+                handlePaste(e, "entries");
             });
 
             $('#results_contentholder').on('paste', function(e) {
-                const pasteData = e.originalEvent.clipboardData.getData('text');
-                processCopyPasteData(pasteData, "results");
-                e.preventDefault();
+                handlePaste(e, "results");
             });
-
 
         });
 
@@ -435,7 +386,6 @@
             var results = resultTextArea.val().split('\n').filter(result => result.trim() !== '');
             fw.results = results;
         });
-
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -457,10 +407,7 @@
 
         // Click event for the Sort button
         $('#sort-button').click(function() {
-            console.log('sort clicked'); // Check if this message appears in the browser console
-
             const entries = fw.entries;
-            console.log(fw.entries);
             if (isSortedAlphabetically) {
                 // Sort the entries in reverse (anti-alphabetically)
                 entries.sort((a, b) => b.localeCompare(a));
@@ -585,6 +532,9 @@
                         // Update the FortuneWheel entries
                         fw.entries = [...fw.entries, ...nameColumnData];
 
+                        //clear the file input if successfully read the data
+                        $('#excel_file_input').val('');
+
                         // Update the UI
                         updateEntriesUI();
 
@@ -600,8 +550,7 @@
 
         // Show usage instructions when the "Not sure how to use it?" link is clicked
         $('#help-button').click(function() {
-            console.log('Button clicked'); // Check if this message appears in the browser console
-            $('#usage-instructions').toggle(); // Toggle the visibility of the message
+            $('#usage-instructions').toggle();
         });
 
 

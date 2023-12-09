@@ -13,7 +13,7 @@ class FortuneWheelSeeder extends Seeder
         FortuneWheel::create([
             'title' => 'RSW3G5',
             'entries' => ['name1', 'name2', 'name3'],
-            'results' => [''],
+            'results' => [],
             'id_lecturer' => 1,
         ]);
     }
