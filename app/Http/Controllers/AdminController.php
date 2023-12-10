@@ -166,16 +166,19 @@ class AdminController extends Controller{
         ]);
     
         // Update the student details
-        $user = User::where('id',$staffId)->first();
-        $staff = Lecturer::where('iduser',$user->id)->first();
+        // $user = User::where('id',$staffId)->first();
+        // $staff = $staff = Lecturer::where('iduser',$user->id)->first();
         // Check if a new password is provided
+                // Update the student details
+
+        $staff = User::findOrFail($staffId);
         if ($request->filled('new_password')) {
-            $user->password = bcrypt($request->input('new_password'));
+            $staff->password = bcrypt($request->input('new_password'));
         }
-    
+        $lecturer = Lecturer::where('iduser',$staff->id)->first();
         // Update other fields
-        $user->update($validatedData);
-        $staff->update(['position'=> $validatedData['position']]);
+        $staff->update($validatedData);
+        $lecturer->update(['position'=> $validatedData['position']]);
     
         // Redirect or respond as needed (e.g., return a success message)
         return redirect()->route('admin_edit_staff', ['staff' => $staff->id])->with('success_message', 'Staff updated successfully');

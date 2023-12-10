@@ -21,11 +21,11 @@
 <div class = title_bar>
 <h1 class= "admin_title">Update Staff</h1>
 </div>
-<form action="{{ route('admin_update_staff', ['staff' => $staff->id]) }}" method="POST">
+<form action="{{ route('admin_update_staff', ['staff' => $user->id]) }}" method="POST">
     @csrf
     @method('POST') <!-- Add this line to override the HTTP method -->
 
-    <input type="hidden" id="user_id" name="user_id" value={{$user->id}}>
+    {{-- <input type="hidden" id="user_id" name="user_id" value={{$user->id}}> --}}
     <!-- Add input fields for editing student details -->
     <div class=admin_row>
         <div class="studE_info">
