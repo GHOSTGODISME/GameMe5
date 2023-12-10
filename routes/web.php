@@ -122,7 +122,7 @@ Route::get('classroom_lect_home',[ClassroomController::class, 'classroom_lect_ho
 Route::post('join_class',[ClassroomController::class, 'join_class'])->name('join_class');
 Route::post('classroom_quit',[ClassroomController::class, 'classroom_quit'])->name('classroom_quit');
 Route::post('classroom_remove',[ClassroomController::class, 'classroom_remove'])->name('classroom_remove');
-Route::post('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_student'])->name('lect_remove_student');
+Route::get('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_student'])->name('lect_remove_student');
 //Specify Class - Student
 Route::get('class_stud_stream/{classroom}', [ClassroomController::class, 'class_stud_stream'])->name('class_stud_stream');
 Route::get('class_stud_quiz/{classroom}', [ClassroomController::class, 'class_stud_quiz'])->name('class_stud_quiz');
