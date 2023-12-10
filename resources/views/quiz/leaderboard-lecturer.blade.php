@@ -354,12 +354,12 @@
                     <hr>
                 <div>`;
 
-            if (question.type === "0" || question.type === "1") {
+            if (question.type === 0 || question.type === 1) {
                 question.options.forEach((option, index) => {
-                    const icon = (question.type === "0") ? 'fa-circle' : 'fa-square';
+                    const icon = (question.type === 0) ? 'fa-circle' : 'fa-square';
                     questionHTML += `<p><i class="fas ${icon}" style="color: grey;"></i> ${option}</p>`;
                 });
-            } else if (question.type === "2") {
+            } else if (question.type === 2) {
                 questionHTML += '<p>Text input</p>';
             }
 
@@ -373,7 +373,8 @@
         function updateQuestionStatus(questionId, studentResponses) {
             const questionElement = document.getElementById(`ques-${questionId}`);
             const questionStats = calculateQuestionStats(questionId, studentResponses);
-
+            // console.log("questionStats");
+            console.log(questionStats);
             if (questionElement && questionStats) {
                 const {
                     totalResponses,
@@ -441,8 +442,8 @@
                         totalIncorrect++;
                     }
 
-                    const answeredOptions = response.answeredOption;
-                    if (!answeredOptions || answeredOptions.length === 0) {
+                    const answeredOptions = JSON.parse(response.answeredOption);
+                    if (!answeredOptions || answeredOptions[0] == null) {
                         blankCount++; // Increment blank count for each empty or null response
                     } else if (Array.isArray(answeredOptions)) {
                         answeredOptions.forEach(option => {
@@ -489,7 +490,7 @@
             questionTitleText.textContent = question.title;
             blank.textContent = questionStats.blankCount;
 
-            if (question.type === "2") {
+            if (question.type === 2) {
                 questionOptionContainer.classList.add('d-none');
                 textInputContainer.classList.remove('d-none');
 
@@ -509,12 +510,11 @@
                         studentAnsRow.classList.add('incorrect-option');
                     }
 
-                    const answerText = studentAnswer.answeredOption && studentAnswer.answeredOption.length > 0 ?
-                        studentAnswer.answeredOption[0] :
-                        'No answer provided';
-                    const textColor = studentAnswer.answeredOption && studentAnswer.answeredOption.length > 0 ?
-                        'black' :
-                        'grey';
+                    const answeredOption = JSON.parse(studentAnswer.answeredOption);
+                    const answerText = answeredOption && answeredOption[0] !== null ?
+                    answeredOption[0] :'No answer provided';
+                    const textColor = answeredOption && answeredOption[0] !== null ?
+                        'black' :'grey';
 
                     studentAnsRow.innerHTML = `
                         <span>${studentAnswer.username}</span>

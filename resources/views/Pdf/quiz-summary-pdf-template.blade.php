@@ -184,41 +184,16 @@
                         <hr>
                         <ul>
                             @if ($question->type === 0 || $question->type === 1)
+                                @php
+                                    $userResponse = !empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) ? json_decode($data->quizResponse->quiz_response_details[$loop->index]->user_response) : []; // Convert the string to array
+                                @endphp
                                 @foreach ($question->options as $option)
-                                    <!-- <li>
-                                        {{-- @if ($question->type === '0' && $question->single_ans_flag === 1) --}}
-                                            <!== Single-select MCQ Question ==>
-                                            <input type="radio" name="mcq-single"
-                                            {{-- @if (in_array($option, $data->quizResponse->responses[$loop->index]->user_response)) checked @endif> --}}
-                                            {{-- @if (in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-                                            {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-
-                                            {{-- @else --}}
-                                            <!== Multi-select MCQ Question ==>
-                                            <input type="checkbox"
-                                            {{-- @if (in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-                                            {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) checked @endif> --}}
-
-                                        {{-- @endif --}}
-                                        {{-- {{ $option }} --}}
-                                        {{-- @if (in_array($option, $question->correct_ans)) --}}
-                                            {{-- <span class="correct">(Correct)</span> --}}
-                                        {{-- @endif --}}
-                                        {{-- @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) && in_array($option, $data->quizResponse->quiz_response_details[$loop->index]->user_response)) --}}
-                                            {{-- <span class="selected">(Selected)</span> --}}
-                                        {{-- @endif --}}
-                                    </li> -->
-
                                     <li>
-                                        @php
-                                            $userResponse = !empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) ? json_decode($data->quizResponse->quiz_response_details[$loop->index]->user_response) : []; // Convert the string to array
-                                        @endphp
-
-                                        @if ($question->type === 0 && $question->single_ans_flag === 1)
+                                        @if (($question->type === 0 || $question->type === 1) && $question->single_ans_flag === 1)
                                             <!-- Single-select MCQ Question -->
                                             <input type="radio" name="mcq-single"
                                                 @if (in_array($option, $userResponse)) checked @endif>
-                                        @else
+                                        @elseif($question->type === 0 && $question->single_ans_flag === 0)
                                             <!-- Multi-select MCQ Question -->
                                             <input type="checkbox" @if (in_array($option, $userResponse)) checked @endif>
                                         @endif
@@ -229,7 +204,7 @@
                                             <span class="correct">(Correct)</span>
                                         @endif
 
-                                        @if (!empty($userResponse) && in_array($option, $userResponse))
+                                        @if (in_array($option, $userResponse))
                                             <span class="selected">(Selected)</span>
                                         @endif
                                     </li>
@@ -242,21 +217,24 @@
                                     </div>
                                 @endif
                             @elseif ($question->type === 2)
-                                @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response))
+                                @php
+                                    $userAnswer = json_decode($data->quizResponse->quiz_response_details[$loop->index]->user_response);
+                                @endphp
+                                @if ($userAnswer[0] !== null)
                                     @php
-                                        $userResponse = $data->quizResponse->quiz_response_details[$loop->index]->user_response;
-                                        $userResponse = str_replace(['[', ']', '"'], '', $userResponse);
                                         $correctness = $data->quizResponse->quiz_response_details[$loop->index]->correctness;
                                     @endphp
                                     @if ($correctness)
-                                        <p>Answered: {{ $userResponse }} <span class="correct">(Correct)</span></p>
+                                        <p>Answered: {{ $userAnswer[0] }} <span class="correct">(Correct)</span></p>
                                     @else
-                                        <p>Answered: {{ $userResponse }}</p>
+                                        <p>Answered: {{ $userAnswer[0] }}</p>
                                         <hr>
                                         <p>Correct Answer: {{ $question->correct_ans[0] }}</p>
                                     @endif
                                 @else
                                     <p>No response provided</p>
+                                    <hr>
+                                    <p>Correct Answer: {{ $question->correct_ans[0] }}</p>
                                 @endif
                                 @if (!empty($question->answer_explaination))
                                     <div>
