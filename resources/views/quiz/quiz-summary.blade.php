@@ -304,6 +304,16 @@
     </script>
 
     <script>
+        function clearLocalStorageWithPrefix(prefix) {
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(prefix)) {
+                    localStorage.removeItem(key);
+                }
+            }
+        }
+        clearLocalStorageWithPrefix('quiz:');
+
         let questionsData = [];
 
         let userResponseDetails = [];
@@ -414,9 +424,13 @@
                 } = question;
 
 
-                let userAnswers = userResponses[id] || []; // User's selected answers (array)
-                userAnswers = JSON.parse(userAnswers);
+                let userAnswers = userResponses[id] || null; // User's selected answers (array)
                 console.log(userAnswers);
+                if (userAnswers != null) {
+                    userAnswers = JSON.parse(userAnswers);
+                    console.log(userAnswers);
+                }
+
 
                 const isCorrect = correctness[id];
                 console.log(userAnswers);
@@ -428,7 +442,7 @@
                 const questionIndex = index + 1; // Question index (starting from 1)
 
                 let questionHTML = '';
-                if (type === '0' || type === '1') {
+                if (type === 0 || type === 1) {
                     // For radio or checkbox type questions
                     questionHTML = `
         <div class="review-question-container-single">
@@ -446,10 +460,11 @@
           </div>
         </div>
       `;
-                } else if (type === '2') {
+                } else if (type === 2) {
                     // For text input type questions
                     let answerDetails = '';
-                    if (userAnswers.length > 0 && userAnswers[0] !== undefined && userAnswers[0].trim() !== '') {
+                    if (userAnswers.length > 0 && userAnswers[0] !== undefined && userAnswers[0] !== null &&
+                        userAnswers[0].trim() !== '') {
                         const answerIsCorrect = userAnswers[0].toLowerCase() === correct_ans[0].toLowerCase();
                         const answerClass = answerIsCorrect ? "correct-ans" : "incorrect-ans";
 

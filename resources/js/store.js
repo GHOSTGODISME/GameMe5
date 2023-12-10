@@ -1,45 +1,79 @@
 import { defineStore } from 'pinia';
+import { useLocalStorage } from "@vueuse/core"
+
 
 export const useQuizStore = defineStore('quiz', {
   state: () => ({
-    currentQuestionIndex: 0,
-    questions: [],
-    userResponses: {},
-    correctness: {},
+    currentQuestionIndex: useLocalStorage('quiz:currentQuestionIndex', 0),
+    questions: useLocalStorage('quiz:questions', []),
+    userResponses: useLocalStorage('quiz:userResponses', {}),
 
-    questionTimes: {},
-    questionPoints: {},
-    navigationHistory: [],
+    correctness: useLocalStorage('quiz:correctness', {}),
+    questionTimes: useLocalStorage('quiz:questionTimes', {}),
+    questionPoints: useLocalStorage('quiz:questionPoints', {}),
 
+    userRank: useLocalStorage('quiz:userRank', null),
+    totalPoints: useLocalStorage('quiz:totalPoints', 0),
 
-    userRank: null,
-    totalPoints: 0,
+    quizTitle: useLocalStorage('quiz:quizTitle', ''),
+    quizState: useLocalStorage('quiz:quizState', 'notStarted'),
+    quizTimer: useLocalStorage('quiz:quizTimer', 0),
+    quizTotalQuestion: useLocalStorage('quiz:quizTotalQuestion', 0),
 
-    quizTitle: '',
-    quizState: 'notStarted',
-    quizTimer: 0,
-    quizTotalQuestion: 0,
+    sessionCode: useLocalStorage('quiz:sessionCode', ''),
+    username: useLocalStorage('quiz:username', ''),
 
-    sessionCode: '',
-    username: '',
+    userId: useLocalStorage('quiz:userId', 0),
+    sessionId: useLocalStorage('quiz:sessionId', 0),
+    quizId: useLocalStorage('quiz:quizId', 0),
 
-    userId: 0,
-    sessionId: 0,
-    quizId: 0,
+    quizAccuracy: useLocalStorage('quiz:quizAccuracy', 0),
+    correctAnswersCount: useLocalStorage('quiz:correctAnswersCount', 0),
+    incorrectAnswersCount: useLocalStorage('quiz:incorrectAnswersCount', 0),
+    averageTime: useLocalStorage('quiz:averageTime', 0),
 
-    quizAccuracy: 0,
-    correctAnswersCount: 0,
-    incorrectAnswersCount: 0,
-    averageTime: 0,
-
-    showLeaderboardFlag: 0,
-    shuffleOptionFlag: 0,
-
+    showLeaderboardFlag: useLocalStorage('quiz:showLeaderboardFlag', 0),
+    shuffleOptionFlag: useLocalStorage('quiz:shuffleOptionFlag', 0),
   }),
   actions: {
-    $onAction(mutation) {
-      console.log("trigger update local storage");
-      localStorage.setItem('quizStore', JSON.stringify(this.$state));
+    clearPinialocalStorage() {
+      const piniaKeys = Object.keys(localStorage).filter((key) => key.startsWith('quiz:'));
+      piniaKeys.forEach((key) => {
+        console.log("Checking existence of " + key + ":", key in localStorage, " in localStorage");
+        if (key in localStorage) {
+          console.log("Removing " + key);
+          localStorage.removeItem(key);
+        } else {
+          console.log(key + " does not exist in localStorage");
+        }
+      });
+
+      this.resetLocalStorageVariablesToDefault();
+    },
+    resetLocalStorageVariablesToDefault() {
+      this.currentQuestionIndex = 0;
+      this.questions = [];
+      this.userResponses = {};
+      this.correctness = {};
+      this.questionTimes = {};
+      this.questionPoints = {};
+      this.userRank = null;
+      this.totalPoints = 0;
+      this.quizTitle = '';
+      this.quizState = 'notStarted';
+      this.quizTimer = 0;
+      this.quizTotalQuestion = 0;
+      this.sessionCode = '';
+      this.username = '';
+      this.userId = 0;
+      this.sessionId = 0;
+      this.quizId = 0;
+      this.quizAccuracy = 0;
+      this.correctAnswersCount = 0;
+      this.incorrectAnswersCount = 0;
+      this.averageTime = 0;
+      this.showLeaderboardFlag = 0;
+      this.shuffleOptionFlag = 0;
     },
     setCurrentQuestionIndex(index) {
       this.currentQuestionIndex = index;
@@ -98,7 +132,7 @@ export const useQuizStore = defineStore('quiz', {
     },
     setUsername(username) {
       this.username = username;
-      this.$onAction({ type: 'setUsername', payload: username });
+      // this.$onAction({ type: 'setUsername', payload: username });
     },
     setSessionCode(sessionCode) {
       this.sessionCode = sessionCode;
@@ -112,12 +146,7 @@ export const useQuizStore = defineStore('quiz', {
     setUserRank(rank) {
       this.userRank = rank;
     },
-    addToNavigationHistory(questionId) {
-      state.navigationHistory.push(questionId);
-    },
-    removeFromNavigationHistory() {
-      state.navigationHistory.pop();
-    },
+
     setQuizQuestions(questions) {
       this.quizQuestions = questions;
     },
@@ -133,31 +162,6 @@ export const useQuizStore = defineStore('quiz', {
     },
     recordQuestionTime({ setQuestionTime }, { questionId, timeTaken }) {
       setQuestionTime({ questionId, timeTaken });
-    },
-
-    navigateForward({ commit, state }, questionId) {
-      commit('addToNavigationHistory', state.currentQuestionIndex);
-      commit('setCurrentQuestionIndex', questionId);
-    },
-    navigateBackward({ commit, state }) {
-      commit('removeFromNavigationHistory');
-      const previousQuestionId = state.navigationHistory.pop();
-      commit('setCurrentQuestionIndex', previousQuestionId);
-    },
-    navigateToNextQuestion() {
-      const nextQuestionId = this.questions[this.currentQuestionIndex + 1]?.id;
-      if (nextQuestionId) {
-        this.navigateForward(nextQuestionId);
-      } else {
-        this.setQuizState('finished');
-        // Additional logic when the quiz is finished
-      }
-    },
-    navigateToPreviousQuestion() {
-      const prevQuestionId = this.navigationHistory[this.navigationHistory.length - 1];
-      if (prevQuestionId) {
-        this.navigateBackward(prevQuestionId);
-      }
     },
     updateUserRank(leaderboard) {
       const userIndex = leaderboard.findIndex((player) => player.id === this.userId);
@@ -275,7 +279,7 @@ export const useQuizStore = defineStore('quiz', {
       const randomUserId = Math.floor(Math.random() * 1000) + 1;
       this.userId = randomUserId;
     },
-    setUserId(id){
+    setUserId(id) {
       this.userId = id;
     },
     resetStore() {
@@ -288,6 +292,9 @@ export const useQuizStore = defineStore('quiz', {
       }
     },
   },
+  mutation:{
+
+  },
   getters: {
     getQuizAccuracy() {
       this.calculateQuizAccuracy();
@@ -298,15 +305,16 @@ export const useQuizStore = defineStore('quiz', {
       this.calculateAverageTime();
       return this.averageTime.toFixed(1); // Display average time up to 2 decimals
     },
-  },
 
-  getQuizTitle() {
-    return this.quizTitle;
-  },
 
-  getUsername() {
-    return this.username;
-  }
+    getQuizTitle() {
+      return this.quizTitle;
+    },
+
+    getUsername() {
+      return this.username;
+    }
+  },
 });
 
 

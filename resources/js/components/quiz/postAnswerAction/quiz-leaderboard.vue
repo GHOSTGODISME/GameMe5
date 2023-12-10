@@ -1,5 +1,8 @@
 <template>
-    <QuizHeaderWithProgressBar :timeRemaining="timeRemaining" :progressBarValue="progressBarValue" />
+    <QuizHeaderWithProgressBar
+        :timeRemaining="timeRemaining"
+        :progressBarValue="progressBarValue"
+    />
 
     <div class="leaderboard-container">
         <h1>Leaderboard</h1>
@@ -13,10 +16,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(player, index) in leaderboardData" :key="player.id">
+                    <tr
+                        v-for="(player, index) in leaderboardData"
+                        :key="player.id"
+                    >
                         <th scope="row">{{ index + 1 }}</th>
-                        <td>{{ player . username }}</td>
-                        <td>{{ player . score }}</td>
+                        <td>{{ player.username }}</td>
+                        <td>{{ player.score }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -27,73 +33,74 @@
 </template>
 
 <script>
-    // import ForwardBackwardBtn from './forward-backward-btn.vue';
-    import {
-        useQuizStore
-    } from "../../../store.js";
-    import QuizHeaderWithProgressBar from "../quiz-header-with-progress-bar.vue";
+// import ForwardBackwardBtn from './forward-backward-btn.vue';
+import { useQuizStore } from "../../../store.js";
+import QuizHeaderWithProgressBar from "../quiz-header-with-progress-bar.vue";
 
-    export default {
-        components: {
-            QuizHeaderWithProgressBar,
+export default {
+    components: {
+        QuizHeaderWithProgressBar,
+    },
+    data() {
+        return {
+            timeRemaining: 10,
+            progressBarValue: 100,
+            timerInterval: null,
+            leaderboardData: [],
+            socket: null,
+        };
+    },
+    mounted() {
+        this.initializeSocket();
+        this.startTimer();
+    },
+    methods: {
+        initializeSocket() {
+            this.socket = io("http://localhost:3000");
+            const store = useQuizStore();
+
+            this.socket.emit("rejoinRoom", store.sessionCode);
+            this.socket.emit("get leaderboard", store.sessionCode);
+
+            console.log("triggered get leaderboard");
+
+            this.socket.on("update leaderboard", (leaderboard) => {
+                console.log("Received updated leaderboard:", leaderboard);
+                this.leaderboardData = leaderboard;
+                store.updateUserRank(this.leaderboardData);
+            });
         },
-        data() {
-            return {
-                timeRemaining: 10,
-                progressBarValue: 100,
-                timerInterval: null,
-                leaderboardData: [],
-                socket: null,
-            };
-        },
-        mounted() {
-            this.initializeSocket();
-            this.startTimer();
-        },
-        methods: {
-            initializeSocket() {
-                this.socket = io("http://localhost:3000");
-                const store = useQuizStore();
+        startTimer() {
+            this.timeRemaining = 5;
+            this.progressBarValue = 100;
 
-                this.socket.emit("rejoinRoom", store.sessionCode);
-                this.socket.emit("get leaderboard", store.sessionCode);
-    
-                console.log("triggered get leaderboard");
-
-                this.socket.on("update leaderboard", (leaderboard) => {
-                    console.log("Received updated leaderboard:", leaderboard);
-                    this.leaderboardData = leaderboard;
-                    store.updateUserRank(this.leaderboardData);
-                });
-            },
-            startTimer() {
-                this.timeRemaining = 5;
-                this.progressBarValue = 100;
-
-                this.timerInterval = setInterval(() => {
-                    if (this.timeRemaining > 0) {
-                        this.timeRemaining--;
-                this.progressBarValue = (this.timeRemaining / 5) * 100;
-                    } else {
-                        this.handleTimeUp();
-                    }
-                }, 1000);
-            },
-            handleTimeUp() {
-                clearInterval(this.timerInterval);
-                const store = useQuizStore();
-                store.currentQuestionIndex += 1;
-
-                if (store.currentQuestionIndex < store.questions.length) {
-                    this.$router.push("/quiz/quiz-page-layout");
+            this.timerInterval = setInterval(() => {
+                if (this.timeRemaining > 0) {
+                    this.timeRemaining--;
+                    this.progressBarValue = (this.timeRemaining / 5) * 100;
                 } else {
-                    this.$router.push("/quiz/quiz-closure");
+                    this.handleTimeUp();
                 }
-            },
+            }, 1000);
         },
-        beforeDestroy() {
+        handleTimeUp() {
             clearInterval(this.timerInterval);
-            this.socket.disconnect();
+            const store = useQuizStore();
+            // store.currentQuestionIndex += 1;
+            store.setCurrentQuestionIndex(store.currentQuestionIndex+1);
+
+            if (store.currentQuestionIndex < store.questions.length) {
+                this.$router.push("/quiz/quiz-page-layout");
+            } else {
+                this.$router.push("/quiz/quiz-closure");
+            }
         },
-    };
+    },
+    beforeUnmount() {
+        const store = useQuizStore();
+        this.socket.emit("exitRoom", store.sessionCode);
+        // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
+        clearInterval(this.timerInterval);
+    },
+};
 </script>

@@ -95,6 +95,7 @@
                 const sessionId = store.sessionId;
                 const quizId = store.quizId;
                 window.location.href = `/quiz-summary/${userId}/${sessionId}/${quizId}`;
+                store.clearPinialocalStorage();
                 store.resetStore();
             },
         },

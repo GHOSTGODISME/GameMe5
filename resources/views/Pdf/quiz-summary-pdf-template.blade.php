@@ -183,7 +183,7 @@
                         <h4>{{ $loop->iteration }}. {{ $question->title }}</h4>
                         <hr>
                         <ul>
-                            @if ($question->type === '0' || $question->type === '1')
+                            @if ($question->type === 0 || $question->type === 1)
                                 @foreach ($question->options as $option)
                                     <!-- <li>
                                         {{-- @if ($question->type === '0' && $question->single_ans_flag === 1) --}}
@@ -214,7 +214,7 @@
                                             $userResponse = !empty($data->quizResponse->quiz_response_details[$loop->index]->user_response) ? json_decode($data->quizResponse->quiz_response_details[$loop->index]->user_response) : []; // Convert the string to array
                                         @endphp
 
-                                        @if ($question->type === '0' && $question->single_ans_flag === 1)
+                                        @if ($question->type === 0 && $question->single_ans_flag === 1)
                                             <!-- Single-select MCQ Question -->
                                             <input type="radio" name="mcq-single"
                                                 @if (in_array($option, $userResponse)) checked @endif>
@@ -241,10 +241,11 @@
                                         <p>{{ $question->answer_explaination }}</p>
                                     </div>
                                 @endif
-                            @elseif ($question->type === '2')
+                            @elseif ($question->type === 2)
                                 @if (!empty($data->quizResponse->quiz_response_details[$loop->index]->user_response))
                                     @php
-                                        $userResponse = $data->quizResponse->quiz_response_details[$loop->index]->user_response[0];
+                                        $userResponse = $data->quizResponse->quiz_response_details[$loop->index]->user_response;
+                                        $userResponse = str_replace(['[', ']', '"'], '', $userResponse);
                                         $correctness = $data->quizResponse->quiz_response_details[$loop->index]->correctness;
                                     @endphp
                                     @if ($correctness)

@@ -136,19 +136,27 @@ class QuizSessionController extends Controller
     public function joinQuiz(Request $request)
     {
         $code = $request->input('code');
-
-        $session = Session::where('code', $code)
-            ->where('status', '!=', 'ended')
-            ->first();
-
+    
+        $session = Session::where('code', $code)->first();
+    
         if ($session) {
-            return view('quiz.spa', ['sessionCode' => $code]);
+            if ($session->status === 'ended') {
+                // If the session has ended, return an error message
+                LaravelSession::flash('error', 'The session has ended.');
+                return response()->json(['message' => 'Session has ended']);
+            } else {
+                // If the session is active, load the quiz.spa view
+                return view('quiz.spa', ['sessionCode' => $code]);
+            }
         } else {
+            // If no session or an invalid code is provided, return an error message
             LaravelSession::flash('error', 'Please enter a valid session code.');
-            return response()->json(['message' => 'invalid code']);
+            return response()->json(['message' => 'Invalid code']);
+            // Alternatively, you can redirect the user to the homepage or another route
             // return redirect()->to('/');
         }
     }
+    
     public function registerUsername(Request $request)
     {
         // $email = $request->session()->get('email');
@@ -159,7 +167,7 @@ class QuizSessionController extends Controller
         $validatedData = $request->validate([
             'username' => 'required|string|max:255', // Validation rules for username
             'sessionId' => 'required|exists:sessions,id', // Validation for session existence
-            'userId' => 'required'
+            'userId' => 'required|exists:users,id'
             // Add more validation rules if needed
         ]);
 

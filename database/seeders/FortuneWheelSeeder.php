@@ -8,13 +8,13 @@ use Illuminate\Database\Seeder;
 
 class FortuneWheelSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        FortuneWheel::factory()->count(5)->create([
-            "id_lecturer" => 1,
+        FortuneWheel::create([
+            'title' => 'RSW3G5',
+            'entries' => ['name1', 'name2', 'name3'],
+            'results' => [],
+            'id_lecturer' => 1,
         ]);
     }
 }

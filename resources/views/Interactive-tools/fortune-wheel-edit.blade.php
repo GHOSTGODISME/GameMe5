@@ -31,6 +31,16 @@
             z-index: 999;
             transform-origin: bottom center;
         }
+
+        .head-fw-1{
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .head-fw-1 #modeSelectorContainer{
+            font-size: 18px;
+            margin: 10px 20px;
+        }
     </style>
 
     <div class="save-btn-container">
@@ -41,8 +51,8 @@
     <input type="hidden" id="fortune-wheel-id" name="fortuneWheel[id]" value="{{ $fortuneWheel->id ?? '' }}">
 
 
-    <div class="container">
-        <div class="input-group">
+    <div class="container ">
+        <div class="input-group head-fw-1">
             <span class="edit-icon" style="cursor: pointer;">
                 <div style="display: flex; align-items: center; justify-content: center; gap:20px;">
                     <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
@@ -51,16 +61,27 @@
                         data-bs-toggle="modal" data-bs-target="#editModal"><i class="fa fa-edit"></i></button>
                 </div>
             </span>
+
+            <div id="modeSelectorContainer">
+            <label for="modeSelector"><b>Type:</b>
+                <select id="modeSelector" class="" onchange="changeMode()">
+                    <option value="standard">Standard</option>
+                    <option value="wheel" selected>Wheel</option>
+                </select>
+            </label>
+        </div>
         </div>
 
         <div class="row">
-            {{-- <div class="col-md-6 col-xl-7 container-style">
+
+
+            <div class="col-md-6 col-xl-7 container-style" id="standard" style="display: none;">
                 <div id="result-box" class="box">Press "Spin" to start</div>
                 <button class="btn btn-dark interactive_btn" id="spin-button" type="button"
                     style="padding: 10px 50px;">Spin</button>
-            </div> --}}
+            </div>
 
-            <div class="col-xl-7 container-style">
+            <div class="col-xl-7 container-style" id="wheel" style="display: block;">
                 <div class="the_wheel">
                     <div class="pointer"></div>
                     <canvas id="canvas" width="500" height="500"></canvas>
@@ -167,7 +188,7 @@
                 var editedTitle = $('#editFortuneWheelTitle').val();
                 if (editedTitle.trim() === '') {
                     alert('Title cannot be empty. Please enter a title.');
-                    return; // Prevents the modal from closing if the title is empty
+                    return;
                 }
 
                 $('#fortune-wheel-title').val(editedTitle);
@@ -200,49 +221,39 @@
             });
         });
 
-        // class FortuneWheel{
-        //     constructor(object){
-        //         this.title = object.title;
-        //         this.entries = object.entries;
-        //         this.results = object.result;
-        //     }
-        // }
+        function changeMode() {
+            const modeSelector = document.getElementById("modeSelector");
+            const selectedValue = modeSelector.value;
 
-        // const fw = new FortuneWheel(@json($fortuneWheel));
+            const standard = document.getElementById("standard");
+            const wheel = document.getElementById("wheel");
+
+            if (selectedValue === "standard") {
+                standard.style.display = "block";
+                wheel.style.display = "none";
+            } else if (selectedValue === "wheel") {
+                standard.style.display = "none";
+                wheel.style.display = "block";
+            }
+        }
+
 
         const fw = @json($fortuneWheel);
         let ori_fw = @json($fortuneWheel);
-        console.log(fw);
 
         /////// for fortune wheel -- the actual wheel
-        const segments = [];
-        console.log(fw.entries);
-        fw.entries.forEach(entry => {
-            segments.push({
-                'text': entry,
-                'fillStyle': 'whitesmoke'
-            });
-        });
-
-        let theWheel = new Winwheel({
-            'numSegments': segments.length,
-            'outerRadius': 200,
-            'segments': segments,
-            'responsive': true,
-            'animation': {
-                'type': 'spinToStop',
-                'duration': 5,
-                'spins': 8,
-                'callbackFinished': alertPrize
-            }
-        });
         const canvas = document.getElementById('fortuneWheel');
-        theWheel.draw(canvas);
+        let theWheel = null;
+        const segments = [];
+        const segmentColor = [
+            '#88AB8E', '#AFC8AD', '#EEE7DA', '#F2F1EB',
+            '#5F6F52', '#A9B388', '#FEFAE0', '#B99470'
+        ];
 
         function startSpin() {
             theWheel.stopAnimation(false);
             theWheel.rotationAngle = 0;
-            theWheel.draw();
+            theWheel.draw(canvas);
             theWheel.animation.spins = 8;
             theWheel.startAnimation();
         }
@@ -259,8 +270,6 @@
 
                 fw.results.push(selectedEntry.text);
                 updateResultsUI();
-
-                removeSegment(selectedEntry.text);
             }
 
             alert("Selected: " + selectedEntry.text);
@@ -269,14 +278,11 @@
         function updateWheelSegmentsFromEntries() {
             const segments = [];
             if (fw.entries && Array.isArray(fw.entries)) {
-                fw.entries.forEach(entry => {
-                    console.log(fw.entries);
-                    if (entry && typeof entry === 'string') { // Validate entry to be a non-empty string
-                        segments.push({
-                            'text': entry,
-                            'fillStyle': 'whitesmoke'
-                        });
-                    }
+                fw.entries.forEach((entry, index) => {
+                    segments.push({
+                        'text': entry,
+                        'fillStyle': segmentColor[index % segmentColor.length]
+                    });
                 });
             }
             theWheel = new Winwheel({
@@ -292,16 +298,12 @@
                 }
             });
 
-        theWheel.draw();
-
-                // theWheel.draw(canvas);
-            }
-        
-
+            theWheel.draw(canvas);
+        }
 
         function removeSegment(selectedEntry) {
             theWheel.deleteSegment(selectedEntry.text);
-            theWheel.draw();
+            theWheel.draw(canvas);
         }
 
         // Function to update entries in the UI
@@ -351,7 +353,6 @@
 
             // Click event for the "Save Wheel" button
             $('#save-wheel-button').click(function() {
-                // Prompt for confirmation
                 const isConfirmed = confirm('Are you sure you want to save the wheel?');
 
                 // If the user confirms, proceed with saving the wheel
@@ -359,20 +360,11 @@
                     fw.title = $('#fortune-wheel-title').val();
 
                     const fortuneWheelId = $('#fortune-wheel-id').val();
-                    //  const url = fortuneWheelId ? `/update-fortune-wheel/${fortuneWheelId}` :
-                    //      '/create-fortune-wheel';
-
-
-                    console.log(JSON.stringify(fw));
-
                     $.ajax({
                         url: '/save-fortune-wheel',
                         method: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(fw),
-                        //  data: {
-                        //     fortuneWheel: fw
-                        //  },
                         success: function(response) {
                             ori_fw = fw;
                             console.log('Wheel saved successfully');
@@ -389,10 +381,9 @@
                 }
             });
 
-
-
             // Function to handle copy-paste inputs with delimiters
-            function processCopyPasteData(pasteData, updatedFields) {
+            function handlePaste(e, updatedFields) {
+                const pasteData = e.originalEvent.clipboardData.getData('text');
                 const entries = pasteData.split(/[,|]/).map(entry => entry.trim());
                 const validEntries = entries.filter(entry => entry !== "");
 
@@ -403,21 +394,17 @@
                     fw.results = [...fw.results, ...validEntries];
                     updateResultsUI();
                 }
+
+                e.preventDefault();
             }
 
-            // Handle paste events on the textarea
             $('#entries_contentholder').on('paste', function(e) {
-                const pasteData = e.originalEvent.clipboardData.getData('text');
-                processCopyPasteData(pasteData, "entries");
-                e.preventDefault();
+                handlePaste(e, "entries");
             });
 
             $('#results_contentholder').on('paste', function(e) {
-                const pasteData = e.originalEvent.clipboardData.getData('text');
-                processCopyPasteData(pasteData, "results");
-                e.preventDefault();
+                handlePaste(e, "results");
             });
-
 
         });
 
@@ -435,7 +422,6 @@
             var results = resultTextArea.val().split('\n').filter(result => result.trim() !== '');
             fw.results = results;
         });
-
 
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -457,10 +443,7 @@
 
         // Click event for the Sort button
         $('#sort-button').click(function() {
-            console.log('sort clicked'); // Check if this message appears in the browser console
-
             const entries = fw.entries;
-            console.log(fw.entries);
             if (isSortedAlphabetically) {
                 // Sort the entries in reverse (anti-alphabetically)
                 entries.sort((a, b) => b.localeCompare(a));
@@ -477,50 +460,50 @@
 
         });
 
-        // // Function to randomly select and move an entry to Results
-        // $('#spin-button').click(function() {
-        //     const entriesTextArea = $('#entries_contentholder');
-        //     const resultBox = $('#result-box');
+        // Function to randomly select and move an entry to Results
+        $('#spin-button').click(function() {
+            const entriesTextArea = $('#entries_contentholder');
+            const resultBox = $('#result-box');
 
-        //     fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
-        //     const entries = fw.entries;
-        //     var selectedEntry = null;
-        //     var randomIndex = 0;
+            fw.entries = entriesTextArea.val().split('\n').filter(entry => entry.trim() !== '');
+            const entries = fw.entries;
+            var selectedEntry = null;
+            var randomIndex = 0;
 
-        //     if (entries.length > 0) {
-        //         let spinDuration = 3000; // 3s
-        //         let spinInterval = 100; // for each 100ms, spin once
+            if (entries.length > 0) {
+                let spinDuration = 3000; // 3s
+                let spinInterval = 100; // for each 100ms, spin once
 
-        //         let spinTimer = setInterval(function() {
-        //             // Randomly select an entry
-        //             randomIndex = Math.floor(Math.random() * entries.length);
-        //             selectedEntry = entries[randomIndex];
+                let spinTimer = setInterval(function() {
+                    // Randomly select an entry
+                    randomIndex = Math.floor(Math.random() * entries.length);
+                    selectedEntry = entries[randomIndex];
 
-        //             // Update the result-box with the selected entry
-        //             resultBox.text(selectedEntry);
-        //         }, spinInterval);
+                    // Update the result-box with the selected entry
+                    resultBox.text(selectedEntry);
+                }, spinInterval);
 
-        //         // Stop the spin after the specified duration
-        //         setTimeout(function() {
-        //             clearInterval(spinTimer);
-        //             // Display the selected name
-        //             alert(selectedEntry + "!!!");
+                // Stop the spin after the specified duration
+                setTimeout(function() {
+                    clearInterval(spinTimer);
+                    // Display the selected name
+                    alert(selectedEntry + "!!!");
 
-        //             // Remove the selected name from Entries and put into result
-        //             entries.splice(randomIndex, 1);
-        //             fw.results.push(selectedEntry);
+                    // Remove the selected name from Entries and put into result
+                    entries.splice(randomIndex, 1);
+                    fw.results.push(selectedEntry);
 
-        //             // Update the UI
-        //             updateResultsUI();
-        //             updateEntriesUI();
+                    // Update the UI
+                    updateResultsUI();
+                    updateEntriesUI();
 
-        //         }, spinDuration);
-        //     } else {
-        //         alert('No more entries to pick.');
-        //     }
+                }, spinDuration);
+            } else {
+                alert('No more entries to pick.');
+            }
 
 
-        // });
+        });
 
         // Function to control the visibility of import button
         $('#excel_file_input').change(function() {
@@ -585,6 +568,9 @@
                         // Update the FortuneWheel entries
                         fw.entries = [...fw.entries, ...nameColumnData];
 
+                        //clear the file input if successfully read the data
+                        $('#excel_file_input').val('');
+
                         // Update the UI
                         updateEntriesUI();
 
@@ -600,8 +586,7 @@
 
         // Show usage instructions when the "Not sure how to use it?" link is clicked
         $('#help-button').click(function() {
-            console.log('Button clicked'); // Check if this message appears in the browser console
-            $('#usage-instructions').toggle(); // Toggle the visibility of the message
+            $('#usage-instructions').toggle();
         });
 
 

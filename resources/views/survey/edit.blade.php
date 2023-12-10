@@ -89,13 +89,13 @@
                                                 class="input-fields form-control survey-title-input" type="text"
                                                 title="Survey Title" placeholder="Your Survey Title"
                                                 value="{{ $survey->title }}" />
-                                            <span id="title_char_counter" class="char_count title_cc">0/0</span>
+                                            {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                                             <b>Description</b>
                                             <label for="survey_description"></label>
                                             <textarea id="survey_description" class="input-fields form-control survey-description-input" title="Survey Description"
                                                 placeholder="(Optional)">{{ $survey->description }}</textarea>
-                                            <span id="description_char_counter"
-                                                class="char_count description_cc">0/0</span>
+                                            {{-- <span id="description_char_counter"
+                                                class="char_count description_cc">0/0</span> --}}
 
                                             <b>Visibility</b>
                                             <label for="visibility"></label>
@@ -183,21 +183,21 @@
                                                 <p class="fw-bold">Input block</p>
                                                 <div id="form-builder">
                                                     <button class="btn btn-secondary"
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.TEXT_INPUT)"><i
+                                                        onclick="addQuestion(QUESTION_TYPES.TEXT_INPUT.value)"><i
                                                             class="fas fa-font favicon-with-btn"></i>Text
                                                         Input</button>
                                                     <button class="btn btn-secondary"
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.MULTIPLE_CHOICE)"><i
+                                                        onclick="addQuestion(QUESTION_TYPES.MULTIPLE_CHOICE.value)"><i
                                                             class="fas fa-list-ul favicon-with-btn"></i>Multiple
                                                         Choice</button>
                                                     <button class="btn btn-secondary "
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.CHECKBOX)"><i
+                                                        onclick="addQuestion(QUESTION_TYPES.CHECKBOX.value)"><i
                                                             class="far fa-check-square favicon-with-btn"></i>Checkbox</button>
                                                     <!-- <button class="btn btn-secondary d-none"
                                                         onclick="addQuestion(QUESTION_TYPE_INT.DROPDOWN)">Dropdown
                                                         List</button> -->
                                                     <button class="btn btn-secondary"
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.SCALE)"><i
+                                                        onclick="addQuestion(QUESTION_TYPES.SCALE.value)"><i
                                                             class="fas fa-exchange-alt favicon-with-btn"></i>Scale</button>
                                                 </div>
                                             </div>
@@ -406,14 +406,14 @@
                         <input id="survey_title_modal" class="input-fields form-control survey-title-input"
                             type="text" title="Survey Title" placeholder="Your Survey Title"
                             value="{{ $survey->title }}" />
-                        <span id="title_char_counter" class="char_count title_cc">0/0</span>
+                        {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Description</b>
                         <label for="survey_description"></label>
                         <textarea id="survey_description_modal" class="input-fields form-control survey-description-input"
                             title="Survey Description" placeholder="(Optional)">{{ $survey->description }}</textarea>
-                        <span id="description_char_counter" class="char_count description_cc">0/0</span>
+                        {{-- <span id="description_char_counter" class="char_count description_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Visibility</b>

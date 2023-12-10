@@ -99,10 +99,10 @@ export default {
         submitInput() {
             this.submitted = true;
             const combinedText = this.inputValues.join('');
-            console.log(combinedText);
+            console.log("combinedText " + combinedText);
             this.answeredCorrectly = this.checkAnswer(combinedText);
             this.$emit('returnValues', {
-                submitedAns: combinedText,
+                selectedOptions: combinedText,
                 answeredCorrectly: this.answeredCorrectly
             }
             ); // Emit event with combined text
