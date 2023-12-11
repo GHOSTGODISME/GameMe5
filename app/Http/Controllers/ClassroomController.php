@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\AnnQna;
 use App\Models\AnnQuiz;
 use App\Models\AnnText;
+use App\Models\Session;
 use App\Models\Student;
 use App\Models\AnnPolls;
 use App\Models\Lecturer;
@@ -17,10 +18,10 @@ use App\Models\Classstudent;
 use Illuminate\Http\Request;
 use App\Models\Classlecturer;
 use App\Models\AnnPollsResult;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 
 
 class ClassroomController extends Controller{
@@ -880,14 +881,38 @@ public function class_update_announcement(Request $request)
         $annSurvey->save();
         return redirect()->back()->with('success', 'Assignment successful!');
     }
-    function class_redirect_quiz($annquiz) {
-        $sessionId = $annquiz;
-        $session = Session::find($sessionId);
+
+    public function class_redirect_quiz(Request $request) {
+        try {
+            $request->validate([
+                'session_id' => 'required',
+            ]);
     
-        // Convert the session data to JSON
-        $sessionData = json_encode($session);
+            $sessionId = $request->input('session_id');
     
-        // Return the JSON response
-        return Response::json(['session' => $sessionData]);
+            // Retrieve the session
+            $session = Session::where('id', $sessionId)->first();
+    
+            // Check if the session was found
+            if (!$session) {
+                return response()->json(['error' => 'Session not found'], 404);
+            }
+    
+            // Log the session information
+            Log::info($session);
+    
+            // Access session properties
+            $sessionCode = $session->code;
+            $sessionData = json_encode($session);
+    
+            // Return a JSON response with session information
+            return response()->json(['success' => true, 'sessionCode' =>  $sessionCode]);
+        } catch (\Exception $e) {
+            // Log the exception for further investigation
+            Log::error($e);
+    
+            // Return a generic error response
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
     }
 }

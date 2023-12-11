@@ -250,33 +250,44 @@
     @endswitch
 @endforeach
 
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 function redirect(url) {
         window.location.href = url;
     }
 
-function redirect_quiz(annquiz) {
-    // Replace 'YOUR_BASE_URL' with the actual base URL of your application
-    var session_id = annquiz.session_id;
+    function redirect_quiz(annquiz) {
+    var session_id = annquiz;
+    console.log(session_id);
+    if (confirm("Are you sure you want to join the quiz?")) {
+        $.ajax({
+            url: "{{ route('class_redirect_quiz') }}",
+            method: 'GET', // Change this to GET if your route is defined as a GET route
+            data: {
+                session_id: session_id,
+                _token: '{{ csrf_token() }}',
+            },
+            success: function(response) {
+                if (response.success) {
+                    console.log(response);
+                    var sessionCode = response.sessionCode
 
-$.ajax({
-    url: "{{ route('class_redirect_quiz')}}",
-    method: 'POST',
-    data: {
-        session_id: session_id,
-        _token: '{{ csrf_token() }}',
-    },
-    success: function(response) {
-        console.log(response);
-        // Handle the retrieved data here
-    },
-    error: function(error) {
-        console.error(error);
+                        var baseUrl = 'http://localhost:8000';
+                        // Assuming you have the session code available (replace 'sessionCode' accordingly)
+                        // Generate the link with the session code
+                        var link = baseUrl + '/join-quiz?code=' + sessionCode;
+                        console.log(link);
+                        // Navigate to the generated link
+                        window.location.href = link;
+                }
+                ///console.log(response);
+                // Handle the retrieved data here
+            },
+            error: function(response) {
+                console.error(response);
+            }
+        });
     }
-});
-
-
 }
 
 

@@ -59,6 +59,6 @@ class Session extends Model
 
     public function annquiz()
     {
-        return $this->hasOne(AnnQuiz::class);
+        return $this->hasOne(AnnQuiz::class,'id','session_id');
     }
 }
