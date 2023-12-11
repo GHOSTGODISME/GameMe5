@@ -18,9 +18,11 @@ use Illuminate\Http\Request;
 use App\Models\Classlecturer;
 use App\Models\AnnPollsResult;
 use App\Http\Controllers\Controller;
+use App\Models\Session;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 
 class ClassroomController extends Controller{
@@ -880,14 +882,20 @@ public function class_update_announcement(Request $request)
         $annSurvey->save();
         return redirect()->back()->with('success', 'Assignment successful!');
     }
-    function class_redirect_quiz($annquiz) {
-        $sessionId = $annquiz;
-        $session = Session::find($sessionId);
-    
+    public function class_redirect_quiz(Request $request) {
+        // $request->validate([
+        //     'session_id' => 'required',
+        // ]);
+        // $sessionId = $request->input('session_id');
+        dd($request);
+
+        // $session = Session::find($sessionId)->get();
+
+        // Log::info($session);
         // Convert the session data to JSON
-        $sessionData = json_encode($session);
+        // $sessionData = json_encode($session);
     
         // Return the JSON response
-        return Response::json(['session' => $sessionData]);
+        // return Response::json(['session' => $sessionData]);
     }
 }

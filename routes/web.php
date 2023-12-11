@@ -133,7 +133,7 @@ Route::get('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_
 //Specify Class - Student
 Route::get('class_stud_stream/{classroom}', [ClassroomController::class, 'class_stud_stream'])->name('class_stud_stream');
 Route::get('class_stud_quiz/{classroom}', [ClassroomController::class, 'class_stud_quiz'])->name('class_stud_quiz');
-Route::post('class_redirect_quiz/{annquiz}', [ClassroomController::class, 'class_redirect_quiz'])->name('class_redirect_quiz');
+Route::post('class_redirect_quiz', [ClassroomController::class, 'class_redirect_quiz'])->name('class_redirect_quiz');
 
 
 Route::get('class_stud_qna/{classroom}', [ClassroomController::class, 'class_stud_qna'])->name('class_stud_qna');

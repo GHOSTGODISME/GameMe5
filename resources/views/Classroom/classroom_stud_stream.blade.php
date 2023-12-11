@@ -272,7 +272,7 @@ $.ajax({
         // Handle the retrieved data here
     },
     error: function(error) {
-        console.error(error);
+        console.error("Error occurred:", error);
     }
 });
 
