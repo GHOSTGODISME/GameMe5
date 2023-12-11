@@ -269,7 +269,17 @@ $.ajax({
     },
     success: function(response) {
         console.log(response);
-        // Handle the retrieved data here
+        var sessionCode = response.sessionCode;
+        console.log(sessionCode);
+        
+        var baseUrl = 'http://localhost:8000';
+        // Assuming you have the session code available (replace 'sessionCode' accordingly)
+        // Generate the link with the session code
+        var link = baseUrl + '/join-quiz?code=' + sessionCode;
+        console.log(link);
+        // Navigate to the generated link
+        window.location.href = link;
+  
     },
     error: function(error) {
         console.error("Error occurred:", error);
@@ -278,16 +288,6 @@ $.ajax({
 
 
 }
-
-
-    // var baseUrl = 'http://localhost:8000';
-    // // Assuming you have the session code available (replace 'sessionCode' accordingly)
-    // var sessionCode ='790273';
-    // // Generate the link with the session code
-    // var link = baseUrl + '/join-quiz?code=' + sessionCode;
-    // console.log(link);
-    // // Navigate to the generated link
-    // window.location.href = link;
 
     function redirect_survey(annfeedback) {
         // Replace 'YOUR_BASE_URL' with the actual base URL of your application
