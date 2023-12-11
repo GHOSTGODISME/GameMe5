@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\AnnQna;
 use App\Models\AnnQuiz;
 use App\Models\AnnText;
+use App\Models\Session;
 use App\Models\Student;
 use App\Models\AnnPolls;
 use App\Models\Lecturer;
@@ -17,10 +18,11 @@ use App\Models\Classstudent;
 use Illuminate\Http\Request;
 use App\Models\Classlecturer;
 use App\Models\AnnPollsResult;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 
 
 class ClassroomController extends Controller{
@@ -57,29 +59,29 @@ class ClassroomController extends Controller{
     }
 
 
-    function join_class(Request $request){
-        // Validate the form data
-        $request->validate([
-            'class_code' => 'required|exists:classroom,joincode',
-        ]);
-
-        // Get the classroom based on the provided class code
-        $classroom = Classroom::where('joincode', $request->class_code)->first();
-
-        $email = $request->session()->get('email');
-        //$email = 'aa@gmail.com';
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-      
-        Classstudent::create([
-            'idclass' => $classroom->id,
-            'idstudent' => $stud->id, // Assuming you have a relationship set up
-        ]);
-
-        // Redirect or provide a success response
-        return redirect()->route('classroom_stud_home')->with('success', 'Successfully joined the classroom!');
-
-    }
+    public function join_class(Request $request)
+    {
+       
+            // Validate the form data
+            $request->validate([
+                'class_code' => 'required|exists:classroom,joincode',
+            ]);
+    
+            // Get the classroom based on the provided class code
+            $classroom = Classroom::where('joincode', $request->class_code)->firstOrFail();
+    
+            $email = $request->session()->get('email');
+            $user = User::where('email', $email)->firstOrFail();
+            $stud = Student::where('iduser', $user->id)->firstOrFail();
+    
+            Classstudent::create([
+                'idclass' => $classroom->id,
+                'idstudent' => $stud->id,
+            ]);
+    
+            // Return a success JSON response
+            return redirect()->route('classroom_stud_home')->with(['success'=> 'Successfully joined the classroom', 'stud']);
+        }
 
     function classroom_quit(Request $request){
         // Validate the form data
@@ -383,6 +385,10 @@ class ClassroomController extends Controller{
     }
 
     public function class_reply_polls(Request $request){
+        $request->validate([
+            'polls_id' => 'required|exists:ann_polls,id', // Assuming you want to ensure the polls_id exists in the ann_polls table
+            'poll_option' => 'required', // Ensure poll_option is present and not null
+        ]);    
         $pollsId = $request->input('polls_id');
         $selectedOption = $request->input('poll_option');
         $email = $request->session()->get('email');
@@ -525,7 +531,7 @@ class ClassroomController extends Controller{
     }
 
     // Redirect or respond as needed
-    return redirect()->route('class_lect_stream', ['classroom' => $request->classId]);
+    return redirect()->route('class_lect_stream', ['success'=>'Announcement created successfully','classroom' => $request->classId]);
     }
 
 
@@ -606,7 +612,7 @@ class ClassroomController extends Controller{
     }
 
     // Redirect or respond as needed
-    return redirect()->route('class_stud_stream', ['classroom' => $request->classId]);
+    return redirect()->back()->with('success', 'Announcement created successfully');
     }
 
 
@@ -719,7 +725,7 @@ public function class_update_announcement(Request $request)
         }
 
         // Return a response, e.g., a success message or JSON response
-        return back();
+        return redirect()->back()->with('success', 'Announcement updated successfully');
 
 }
 
@@ -826,7 +832,7 @@ public function class_update_announcement(Request $request)
     function assign_class(Request $request){
         $request->validate([
             'class_id' => 'required|exists:classroom,id',
-            'class_session_code' => 'required',
+            'session_id' => 'required',
         ]);
         $email = $request->session()->get('email');
         //$email = 'aa@gmail.com';
@@ -842,11 +848,11 @@ public function class_update_announcement(Request $request)
         // Create a new AnnQuiz
         $annQuiz = new AnnQuiz();
         $annQuiz->ann_id = $announcement->id;
-        $annQuiz->session_code = $request->input('class_session_code');
+        $annQuiz->session_id = $request->input('session_id');
 
         // Add other fields as needed
         $annQuiz->save();
-        return redirect()->back()->with('success', 'Assignment successful!');
+        return redirect()->back()->with('success', 'Assign successfully!');
     }
 
 
@@ -877,6 +883,37 @@ public function class_update_announcement(Request $request)
         return redirect()->back()->with('success', 'Assignment successful!');
     }
 
-
-
+    public function class_redirect_quiz(Request $request) {
+        try {
+            $request->validate([
+                'session_id' => 'required',
+            ]);
+    
+            $sessionId = $request->input('session_id');
+    
+            // Retrieve the session
+            $session = Session::where('id', $sessionId)->first();
+    
+            // Check if the session was found
+            if (!$session) {
+                return response()->json(['error' => 'Session not found'], 404);
+            }
+    
+            // Log the session information
+            Log::info($session);
+    
+            // Access session properties
+            $sessionCode = $session->code;
+            $sessionData = json_encode($session);
+    
+            // Return a JSON response with session information
+            return response()->json(['success' => true, 'sessionCode' =>  $sessionCode]);
+        } catch (\Exception $e) {
+            // Log the exception for further investigation
+            Log::error($e);
+    
+            // Return a generic error response
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
 }

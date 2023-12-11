@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\Session;
 use App\Models\Announcement;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +13,7 @@ class AnnQuiz extends  Model
     protected $fillable = [
         'id', 
         'ann_id', 
-        'session_code',
+        'session_id',
     ];
     // public function announcement()
     // {
@@ -22,6 +23,11 @@ class AnnQuiz extends  Model
     public function announcement()
     {
         return $this->belongsTo(Announcement::class, 'ann_id');
+    }
+
+    public function sessions()
+    {
+        return $this->belongsTo(Session::class, 'session_id');
     }
     
     

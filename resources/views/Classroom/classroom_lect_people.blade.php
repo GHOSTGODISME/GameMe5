@@ -104,17 +104,37 @@
     <div class="people-container">
         <h3>Students</h3>
         @foreach ($students as $student)
-            <div class="person">
-                <img class="profile_picture" src="{{$student->user->profile_picture}}" alt="Person Image">
-                <p class="person_name">{{ $student->user->name }}</p>
-                <a href="#" data-toggle="modal" data-target="#confirmRemoveStudentModal-{{ $student->id }}">
-                    Remove Student
-                </a>
-                <!-- Add other user details as needed -->
+        <div class="person">
+            <img class="profile_picture" src="{{ $student->user->profile_picture }}" alt="Person Image">
+            <p class="person_name">{{ $student->user->name }}</p>
+            <a href="#" data-toggle="modal" data-target="#confirmRemoveStudentModal-{{ $student->id }}">
+                Remove Student
+            </a>
+            <!-- Add other user details as needed -->
+        </div>
+    
+        <!-- Bootstrap Modal for Each Student -->
+        <div class="modal fade" id="confirmRemoveStudentModal-{{ $student->id }}" tabindex="-1" role="dialog" aria-labelledby="confirmRemoveStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmRemoveStudentModalLabel">Remove Student</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to remove {{ $student->user->name }} from the classroom?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <a href="{{ route('lect_remove_student', ['id' => $student->id]) }}" class="btn btn-danger">Remove</a>
+                        <!-- Replace 'route' with the appropriate route for removing the student -->
+                    </div>
+                </div>
             </div>
-            <!-- Bootstrap Modal for Each Student -->
-            <!-- ... Your existing modal code ... -->
-        @endforeach
+        </div>
+    @endforeach
     </div>
 </div>
 

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
        html,body{
@@ -99,9 +100,42 @@
             <button type="submit">Join</button>
         </form>
     </div>
-    <!-- Page Content -->
+    @error('class_code') {{-- Note the correct usage --}}
+    <script>
+         showErrorPopup("{{ __('Invalid Class Code!') }}");
+        function showErrorPopup(errorMessage) {
+    Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+}
+    </script>
+@enderror
 
+@if(session('success'))
+    <script>
+        showSuccessPopup("{{ session('success') }}");
+        function showSuccessPopup(successMessage) {
+            Swal.fire({
+                title: 'Success!',
+                text: successMessage,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        }
+    </script>
+@endif
+
+    <!-- Page Content -->
     @yield('content')
-</div>       
+</div>    
+
+
+<script>   
+ 
+</script>
 </body>
+
 </html>

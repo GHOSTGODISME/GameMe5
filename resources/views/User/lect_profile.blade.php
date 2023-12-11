@@ -10,6 +10,25 @@ height:70px;
 border-radius: 50%;
 border:2px white solid;
 }
+
+
+.profile_output span {
+    text-transform: capitalize; /* Capitalize the text */
+}
+
+h1{
+    margin-bottom:20px;
+}
+
+.profile_output{
+    align-items: center;
+}
+
+.profile_output p{
+    margin:0;
+}
+
+
 </style>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <h1 class="lect_title">Profile</h1>
@@ -28,14 +47,14 @@ border:2px white solid;
     </div>
     
    <!-- Add an identifier (e.g., data-field="email") to each profile data span -->
-<div class="profile-data">
+<div class="profile-data" style="cursor:default;">
     <label class="profile-label">Email</label>
     <div class= "profile_output_email">
         <span data-field="email">{{ $lecturer->user->email }}</span>
     </div>
 </div>
 
-<div class="profile-data" onclick="editProfile('name')">
+<div class="profile-data" onclick="editProfile('Name')">
     <label class="profile-label">Name</label>
     <div class= "profile_output">
         <span data-field="name">{{ $lecturer->user->name }}</span>
@@ -44,7 +63,7 @@ border:2px white solid;
 </div>
 
 
-    <div class="profile-data" onclick="editProfile('gender')">
+    <div class="profile-data" onclick="editProfile('Gender')">
         <label class="profile-label">Gender</label>
         <div class= "profile_output">
             <span data-field="gender">{{ $lecturer->user->gender }}</span>
@@ -86,22 +105,18 @@ border:2px white solid;
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function editProfile(field) {
-        var newValue;
-
         if (field == 'profile_picture') {
-            // If updating the profile picture, trigger the file input dialog
+            // Handle profile picture editing
             var input = document.createElement('input');
             input.type = 'file';
             input.accept = 'image/*';
 
-            // Listen for the change event on the file input
             input.addEventListener('change', function () {
-                // Handle the selected file
                 var file = input.files[0];
                 if (file) {
-                    // Make an AJAX request to upload the profile picture
                     var formData = new FormData();
                     formData.append('profile_picture', file);
                     formData.append('_token', '{{ csrf_token() }}');
@@ -114,149 +129,228 @@ border:2px white solid;
                         processData: false,
                         success: function (response) {
                             if (response.success) {
-                                // Update the profile picture src attribute with a timestamp
                                 document.querySelector('.profile-data_top img[data-field="profile_picture"]').src = response.url + '?timestamp=' + new Date().getTime();
-                                // Display the success message
-                                alert('Profile picture uploaded successfully!');
+                                showSuccessAlert('Profile picture uploaded successfully!');
                             } else {
-                                alert('Error uploading profile picture');
+                                showErrorAlert('Error uploading profile picture');
                             }
                         },
                         error: function () {
-                            alert('Error uploading profile picture');
-                        }
+                            showErrorAlert('Error uploading profile picture');
+                        },
                     });
                 }
             });
 
-            // Trigger the file input dialog
             input.click();
         } else {
-        // If updating other fields, allow the user to input the new value
-        newValue = prompt('Enter new ' + field + ':');
+            // Handle other field editing
+            var promptTitle = 'Enter New ' + field;
+            var promptInputType = 'text';
 
-        if (newValue !== null) {
-            // Make an AJAX request to update the profile
-            var url = "{{ route('update_profile') }}";
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: {
-                    field: field,
-                    value: newValue,
-                    _token: '{{ csrf_token() }}',
+            if (field.toLowerCase() === 'gender') {
+                // For the gender field, show a dropdown
+                promptTitle = 'Select Gender';
+                promptInputType = 'select';
+            } else if (field.toLowerCase() === 'dob') {
+                // For the dob field, show a date picker
+                promptTitle = 'Select Date of Birth';
+                promptInputType = 'date';
+            }
+
+            Swal.fire({
+                title: promptTitle,
+                input: promptInputType,
+                inputValue: field.toLowerCase() === 'dob' ? '{{ $lecturer->user->dob }}' : null,
+                inputOptions: field.toLowerCase() === 'gender' ? { 'male': 'Male', 'female': 'Female' } : null,
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                showLoaderOnConfirm: true,
+                preConfirm: (value) => {
+                    return $.ajax({
+                        url: "{{ route('update_profile') }}",
+                        method: 'POST',
+                        data: {
+                            field: field.toLowerCase(),
+                            value: value,
+                            _token: '{{ csrf_token() }}',
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                document.querySelector('.profile-data span[data-field="' + field.toLowerCase() + '"]').innerText = value;
+                                showSuccessAlert('Profile updated successfully!');
+                            } else {
+                                showErrorAlert('Error updating profile');
+                            }
+                        },
+                        error: function () {
+                            showErrorAlert('Error updating profile');
+                        },
+                    });
                 },
-                success: function (response) {
-                    if (response.success) {
-                        // Update the specific field using the data-field attribute
-                        document.querySelector('.profile-data span[data-field="' + field + '"]').innerText = newValue;
-                        // Add a timestamp to the profile picture URL
-                        //document.querySelector('.profile-data img[data-field="profile_picture"]').src = '{{ $lecturer->user->profile_picture }}' + '?timestamp=' + new Date().getTime();
-                        // Display the success message
-                        alert('Profile updated successfully!');
-                    } else {
-                        alert('Error updating profile');
-                    }
-                },
-                error: function () {
-                    alert('Error updating profile');
+                allowOutsideClick: () => !Swal.isLoading(),
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    showSuccessAlert('Profile updated successfully!');
                 }
             });
         }
     }
-}
 
+    
     function editPassword() {
-    var currentPassword = prompt('Enter your current password:');
-
-    if (currentPassword !== null) {
-        // Make an AJAX request to check the current password
-        $.ajax({
-            url: "{{ route('check_password') }}",
-            method: 'POST',
-            data: {
-                current_password: currentPassword,
-                _token: '{{ csrf_token() }}',
-            },
-            success: function (response) {
-                if (response.success) {
-                    // Password is correct, prompt for new password
-                    var newPassword = prompt('Enter your new password:');
-
-                    if (newPassword !== null) {
-                        var confirmPassword = prompt('Confirm your new password:');
-
-                        if (confirmPassword !== null) {
-                            // Check if new password and confirm password match
-                            if (newPassword === confirmPassword) {
-                                // Make an AJAX request to update the password
-                                $.ajax({
-                                    url: "{{ route('update_password') }}",
-                                    method: 'POST',
-                                    data: {
-                                        new_password: newPassword,
-                                        _token: '{{ csrf_token() }}',
-                                    },
-                                    success: function (response) {
-                                        alert(response.message);
-                                    },
-                                    error: function () {
-                                        alert('Error updating password');
-                                    },
-                                });
-                            } else {
-                                alert('New password and confirm password do not match');
-                            }
-                        }
-                    }
-                } else {
-                    alert('Incorrect current password');
-                }
-            },
-            error: function () {
-                alert('Error checking password');
-            },
-        });
-    }
+    promptCurrentPassword();
 }
-function updateLecturerPosition(newPosition) {
-    var newValue = prompt('Enter ' + newPosition + ':');
-    if (newValue !== null) {
-    $.ajax({
-        url: "{{ route('update_lecturer_position') }}",
+
+function promptCurrentPassword() {
+    Swal.fire({
+        title: 'Enter Current Password:',
+        input: 'password',
+        inputAttributes: {
+            autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Next',
+        showLoaderOnConfirm: true,
+        preConfirm: (currentPassword) => {
+            return checkCurrentPassword(currentPassword);
+        },
+    });
+}
+
+function checkCurrentPassword(currentPassword) {
+    return $.ajax({
+        url: "{{ route('check_password') }}",
         method: 'POST',
         data: {
-            new_position: newValue,
+            current_password: currentPassword,
             _token: '{{ csrf_token() }}',
         },
         success: function (response) {
             if (response.success) {
-                // Update the specific field using the data-field attribute
-                //document.querySelector('span[data-field=position"]').innerText = newValue;
-                // Display the success message
-                var positionElement = document.querySelector('[data-field="position"]');
-                positionElement.innerText = newValue;
-                alert('Profile updated successfully!');
+                promptNewPassword();
             } else {
-                alert('Error updating profile: ' + response.message);
+                showErrorAlert('Incorrect current password');
             }
         },
         error: function () {
-            alert('Error updating profile');
-        }
+            showErrorAlert('Error checking password');
+        },
     });
-
-}
 }
 
-function confirmLogout() {
-        if (confirm("Are you sure you want to log out?")) {
-            logout();
-        }
+function promptNewPassword() {
+    Swal.fire({
+        title: 'Enter New Password:',
+        input: 'password',
+        inputAttributes: {
+            autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Next',
+        showLoaderOnConfirm: true,
+        preConfirm: (newPassword) => {
+            // Perform client-side validation
+            var validationErrors = validatePasswordFormat(newPassword);
+
+            if (validationErrors.length > 0) {
+                showErrorAlert(validationErrors.join('<br>'));
+                return false; // Prevent the Swal from closing
+            }
+
+            // Continue with the Swal
+            return promptConfirmPassword(newPassword);
+        },
+    });
+}
+
+function validatePasswordFormat(password) {
+    // Client-side password format validation
+    var errors = [];
+
+    if (!password || password.length < 8) {
+        errors.push('- Password must be at least 8 characters');
+        if (errors.length > 0) {
+    }
     }
 
-function logout() {
-        // Make an AJAX request to logout
+    if (!/[a-z]/.test(password)) {
+        errors.push('- Password must contain at least one lowercase letter');
+    }
+
+    if (!/[A-Z]/.test(password)) {
+        errors.push('- Password must contain at least one uppercase letter');
+    }
+
+    if (!/\d/.test(password)) {
+        errors.push('- Password must contain at least one digit');
+    }
+
+    if (!/[@$!%*?&.]/.test(password)) {
+        errors.push('- Password must contain at least one special character (@$!%*?&.)');
+    }
+
+    return errors;
+}
+
+
+function promptConfirmPassword(newPassword) {
+    Swal.fire({
+        title: 'Confirm your new password:',
+        input: 'password',
+        inputAttributes: {
+            autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        showLoaderOnConfirm: true,
+        preConfirm: (confirmPassword) => {
+            if (confirmPassword === newPassword) {
+                return updatePassword(newPassword);
+            } else {
+                showErrorAlert('New password and confirm password do not match');
+            }
+        },
+    });
+}
+
+function updatePassword(newPassword) {
+    return $.ajax({
+        url: "{{ route('update_password') }}",
+        method: 'POST',
+        data: {
+            new_password: newPassword,
+            _token: '{{ csrf_token() }}',
+        },
+        success: function (response) {
+            if (response.success) {
+                showSuccessAlert(response.message);
+            } else {
+                showErrorAlert('Error updating password');
+            }
+        },
+        error: function () {
+            showErrorAlert('Error updating password');
+        },
+    });
+}
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will be logged out!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, log me out!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+            }
+        });
+    }
+
+    function logout() {
         $.ajax({
             url: "{{ route('logout') }}",
             method: 'POST',
@@ -264,17 +358,74 @@ function logout() {
                 _token: '{{ csrf_token() }}',
             },
             success: function (response) {
-                // Handle the logout success, e.g., redirect to the login page
-                window.location.href = "{{ route('login') }}"; // You can change 'login' to your desired route
+                window.location.href = "{{ route('login') }}";
             },
             error: function () {
-                alert('Error logging out');
+                showErrorAlert('Error logging out');
             },
         });
     }
+    function updateLecturerPosition(newPosition) {
+    Swal.fire({
+        title: 'Enter ' + newPosition + ':',
+        input: 'text',
+        inputAttributes: {
+            autocapitalize: 'off',
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        showLoaderOnConfirm: true,
+        preConfirm: (newValue) => {
+            return $.ajax({
+                url: "{{ route('update_lecturer_position') }}",
+                method: 'POST',
+                data: {
+                    new_position: newValue,
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Update the specific field using the data-field attribute
+                        var positionElement = document.querySelector('[data-field="position"]');
+                        positionElement.innerText = newValue;
+                        showSuccessAlert('Profile updated successfully!');
+                    } else {
+                        showErrorAlert('Error updating profile: ' + response.message);
+                    }
+                },
+                error: function () {
+                    showErrorAlert('Error updating profile');
+                },
+            });
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+        if (result.isConfirmed) {
+            showSuccessAlert('Profile updated successfully!');
+        }
+    });
+}
 
 
+
+    function showSuccessAlert(message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: message,
+        });
+    }
+
+    function showErrorAlert(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            html: message, // Use the html option to render HTML content
+        });
+    }
 </script>
+
+    </script>
 
 
 

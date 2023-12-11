@@ -135,6 +135,10 @@ class QuizSessionController extends Controller
 
     public function joinQuiz(Request $request)
     {
+        $request->validate([
+            'code' => 'required|exists:sessions,code',
+        ]);
+        
         $code = $request->input('code');
     
         $session = Session::where('code', $code)->first();

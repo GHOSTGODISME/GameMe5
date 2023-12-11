@@ -51,6 +51,30 @@ margin-bottom:20px;
         font-weight: 400;
         line-height: normal;
     }
+     .error_message{
+	background-color: #f9d0d0;
+    padding:10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top:5px;
+    margin-bottom:20px;
+    border-radius:8px;
+    }
+
+    .error_message p{
+        margin-left:15px;
+        font-family: 'Roboto';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        color: #D8000C;
+    }
+    .error_container{
+        height:50px;
+        margin-bottom:15px;
+    }
  
 </style>
 <h1>Sign Up</h1>
@@ -62,6 +86,14 @@ margin-bottom:20px;
     <label for="txt_login_email">Enter Your Institution Email Address</label>
     </div>
     <input type="email" name="email" id="txt_signup_email" placeholder="xxxxx@student.tarc.edu.my"  required>
+    <div class="error_container">
+        @error('email')
+           <div class="error_message">
+               <img src="{{ asset('img/error_icon.png') }}">
+              <p> {{ $message }}</p>
+           </div>
+          @enderror
+       </div>
     <div class=blank></div>
     <!-- Add other fields as needed -->
     <button class=button_general type="submit">Continue</button>

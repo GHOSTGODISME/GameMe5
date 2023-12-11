@@ -11,7 +11,7 @@ font-size: 16px;
 font-style: normal;
 font-weight: 300;
 line-height: normal;
-margin-bottom:20px;
+margin-bottom:10px;
 }
 
 .progress_bar{
@@ -28,7 +28,19 @@ margin-bottom:20px;
         width: 300px;
         height: 34px;
         flex-shrink: 0;
-        margin-bottom:30px;
+        margin-bottom:15px;
+    }
+
+    #txt_signup_password{
+        padding: 15px;
+        border: 1px solid #BFBFBF;
+        border-radius: 10px;
+        box-sizing: border-box;
+        background: #FAFAFA;
+        width: 300px;
+        height: 34px;
+        flex-shrink: 0;
+        margin-bottom:10px;
     }
 
     #txt_signup_gender{
@@ -40,7 +52,7 @@ margin-bottom:20px;
         width: 300px;
         height: 36px;
         flex-shrink: 0;
-        margin-bottom:30px;
+        margin-bottom:15px;
     }
 
     #txt_signup_name:focus,#txt_signup_password:focus,#txt_signup_gender:focus,#txt_signup_dob:focus{
@@ -79,8 +91,32 @@ margin-bottom:20px;
   height:20px;  
 }
 
+
+    .error_message{
+        background-color: #f9d0d0;
+        padding:10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius:8px;
+
+        }
+
+    .error_message p{
+        margin-left:15px;
+        font-family: 'Roboto';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        color: #D8000C;
+    }
+    .button_general{
+        margin-top:20px;
+    }
+  
 </style>
-<a href="javascript:history.back()">
+<a href="{{ url()->previous() }}">
     <img class="back_icon" src="img/back_icon.png" alt="Back">
 </a>
 
@@ -114,9 +150,28 @@ margin-bottom:20px;
             <img class="eye-icon" id="togglePassword" src="img/eye_icon.png" alt="Toggle Password Visibility">
         </div>
         
-
-    <div class=blank></div>
-
+        @php
+        $errorMessage = [
+            'name' => $errors->first('name'),
+            'gender' => $errors->first('gender'),
+            'dob' => $errors->first('dob'),
+            'password' => $errors->first('password'),
+            // Add more fields if needed
+        ];
+    @endphp
+    
+    <div class="error_container">
+        @foreach($errorMessage as $error)
+            @if($error)
+                <div class="error_message">
+                    <img src="{{ asset('img/error_icon.png') }}">
+                    <p>{!! nl2br($error) !!}</p>
+                </div>
+                @break
+            @endif
+        @endforeach
+    </div>
+    
     <button type="submit" class="button_general">Sign Up</button>
 </form>
 <span class = help_txt >Already have an account?<a href="{{route('login')}}">{{ __('Login')}}</a><span>

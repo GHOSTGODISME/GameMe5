@@ -61,6 +61,20 @@
     pointer-events:none; /* Ensure the arrow doesn't interfere with the select */
 }
 
+/* Style for the options in the select box */
+.select_acc option {
+    background: #ffffff;
+    color: #000000;
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-weight: 400;
+}
+
+/* Style for the options' hover state */
+.select_acc option:hover {
+    background: #4E5166;
+}
+
 .signup_title{
     color: #000;
     font-family: 'Roboto';

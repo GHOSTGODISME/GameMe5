@@ -92,7 +92,7 @@
 
 
 
-@foreach ($announcements as $announcement)
+@foreach ($announcements as $index=>$announcement)
     @switch($announcement->type)
         @case('AnnQna')
             <!-- Display AnnQuiz content -->
@@ -103,12 +103,12 @@
                     <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
                     @if($announcement->user_id == $currentUser->id)
                     <div class="button-container">
-                        <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <div class="menu-icon"  id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                             <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                         </div>
-                        <div class="action-menu">
+                        <div class="action-menu" id="actionMenu{{ $index }}">
                             <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                            <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                            <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                         </div>
                        
                     </div>

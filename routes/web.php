@@ -54,11 +54,16 @@ Route::post('login',[UserAuthController::class, 'login_post'])->name('login_post
 
 /*Sign Up*/
 Route::get('signup_1',[UserAuthController::class, 'signup'])->name('signup');
+Route::get('signup_2_view',[UserAuthController::class, 'signup_2_view'])->name('signup_2_view');
+Route::get('signup_3_view',[UserAuthController::class, 'signup_3_view'])->name('signup_3_view');
+Route::get('signup_lecturer_view',[UserAuthController::class, 'signup_lecturer_view'])->name('signup_lecturer_view');
+
 Route::post('signup_1',[UserAuthController::class, 'signup_1'])->name('signup_1');
 Route::post('signup_2',[UserAuthController::class, 'signup_2'])->name('signup_2');
 Route::post('signup_lecturer', [UserAuthController::class, 'signup_lecturer'])->name('signup_lecturer');
 Route::post('signup_3',[UserAuthController::class, 'signup_post'])->name('signup_post');
 Route::get('successful_signup',[UserAuthController::class, 'successful_signup'])->name('successful_signup');
+Route::get('successful_signup_view',[UserAuthController::class, 'successful_signup_view'])->name('successful_signup_view');
 
 
 /*Forgot Password*/
@@ -86,6 +91,8 @@ Route::post('update_password', [StudentController::class, 'update_password'])->n
 /*Lecturer*/
 //Homepage
 Route::get('lect_homepage',[LecturerController::class, 'lect_homepage'])->name('lect_homepage');
+Route::get('lecturer_search_class', [LecturerController::class, 'lect_homepage'])->name('lecturer_search_class');
+Route::get('lecturer_search_quiz', [LecturerController::class, 'lect_homepage'])->name('lecturer_search_quiz');
 //Profile
 Route::get('lect_profile',[LecturerController::class, 'getLectInfo'])->name('lect_profile');
 Route::post('update_lecturer_position',[LecturerController::class, 'update_lecturer_position'])->name('update_lecturer_position');
@@ -122,10 +129,13 @@ Route::get('classroom_lect_home',[ClassroomController::class, 'classroom_lect_ho
 Route::post('join_class',[ClassroomController::class, 'join_class'])->name('join_class');
 Route::post('classroom_quit',[ClassroomController::class, 'classroom_quit'])->name('classroom_quit');
 Route::post('classroom_remove',[ClassroomController::class, 'classroom_remove'])->name('classroom_remove');
-Route::post('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_student'])->name('lect_remove_student');
+Route::get('lect_remove_student/{id}',[ClassroomController::class, 'lect_remove_student'])->name('lect_remove_student');
 //Specify Class - Student
 Route::get('class_stud_stream/{classroom}', [ClassroomController::class, 'class_stud_stream'])->name('class_stud_stream');
 Route::get('class_stud_quiz/{classroom}', [ClassroomController::class, 'class_stud_quiz'])->name('class_stud_quiz');
+Route::post('class_redirect_quiz', [ClassroomController::class, 'class_redirect_quiz'])->name('class_redirect_quiz');
+
+
 Route::get('class_stud_qna/{classroom}', [ClassroomController::class, 'class_stud_qna'])->name('class_stud_qna');
 Route::get('class_stud_polls/{classroom}', [ClassroomController::class, 'class_stud_polls'])->name('class_stud_polls');
 Route::get('class_stud_feedback/{classroom}', [ClassroomController::class, 'class_stud_feedback'])->name('class_stud_feedback');
@@ -142,6 +152,7 @@ Route::post('class_reply_qna/{qna}', [ClassroomController::class, 'class_reply_q
 
 Route::get('class_lect_specify_polls/{polls}', [ClassroomController::class, 'class_lect_specify_polls'])->name('class_lect_specify_polls');
 Route::post('class_reply_polls', [ClassroomController::class, 'class_reply_polls'])->name('class_reply_polls');
+
 
 
 
@@ -162,6 +173,7 @@ Route::post('lect_update_classroom/{classroom}', [ClassroomController::class, 'l
 
 
 Route::get('lect_search_class', [ClassroomController::class, 'classroom_lect_home'])->name('lect_search_class');
+
 Route::post('class_add_announcement', [ClassroomController::class, 'class_add_announcement'])->name('class_add_announcement');
 Route::post('class_stud_add_announcement', [ClassroomController::class, 'class_stud_add_announcement'])->name('class_stud_add_announcement');
 
