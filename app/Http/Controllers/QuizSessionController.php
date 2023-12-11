@@ -220,6 +220,19 @@ class QuizSessionController extends Controller
 
         return response()->json($questions);
     }
+
+    public function checkUserQualification(Request $request){
+        $session_id = $request->input('session_id');
+        $user_id = $request->input('user_id');
+
+        $completedQuizResponse = QuizResponse::where('session_id', $session_id)
+            ->where('user_id', $user_id)
+            ->whereNotNull('accuracy') // Assuming accuracy is only recorded upon completion
+            ->first();
+
+        return response()->json($completedQuizResponse ? true : false);
+    }
+    
     public function storeIndividualResponse(Request $request)
     {
         // $email = $request->session()->get('email');
@@ -229,7 +242,7 @@ class QuizSessionController extends Controller
 
         // Retrieve data from the request
         $sessionId = $request->input('session_id');
-        $quizId = $request->input('quiz_id');
+        // $quizId = $request->input('quiz_id');
         $userId = $request->input('user_id');
         // $userId = $student->id;
         $questionId = $request->input('question_id');

@@ -31,7 +31,7 @@ function initializeSessionData(sessionCode) {
     sessionStatus: 'waiting',
     startTime: Date.now(),
   });
-  sessionStartTimes.set(sessionCode, Date.now()); 
+  sessionStartTimes.set(sessionCode, Date.now());
 }
 
 function initializeInteractiveSessionData(sessionCode) {
@@ -50,7 +50,7 @@ function initializePollVotes(sessionCode, pollId, options) {
 
   interactiveSession.votes[pollId] = {};
   options.forEach((option) => {
-    interactiveSession.votes[pollId][option] = 0; 
+    interactiveSession.votes[pollId][option] = 0;
   });
 }
 
@@ -164,7 +164,7 @@ function handleSession(socket) {
     }
   });
 
-  socket.on('exitRoom', (sessionCode)=>{
+  socket.on('exitRoom', (sessionCode) => {
     if (sessions.get(sessionCode)) {
       socket.leave(sessionCode);
       console.log('user leave the room');
@@ -246,9 +246,9 @@ function handleInteractiveSession(socket) {
       interactiveSessions.get(sessionCode).participants =
         participants.filter((participant) => participant.id !== id);
 
-        console.log(id);
-        console.log(participants);
-        console.log(participants.filter((participant) => participant.id !== id));
+      console.log(id);
+      console.log(participants);
+      console.log(participants.filter((participant) => participant.id !== id));
       broadcastAllIS(sessionCode);
     }
   });
@@ -293,14 +293,14 @@ function handleJoinEvents(socket) {
       const participants = sessions.get(sessionCode).participants;
       const existingUser = participants.find((participant) => participant.id === id);
 
-      if (existingUser) {
+      // if (existingUser) {
         io.to(sessionCode).emit('same participants', existingUser);
-      }
-      }
+      // }
+    }
   });
 
 
-  socket.on('getSessionParticipants', (sessionCode)=>{
+  socket.on('getSessionParticipants', (sessionCode) => {
     console.log("getSessionParticipants");
     socket.join(sessionCode);
 
@@ -331,7 +331,7 @@ function handleJoinEvents(socket) {
         io.to(sessionCode).emit('participant joined', { id, username });
         io.to(sessionCode).emit('update leaderboard', Object.values(leaderboard));
         io.to(sessionCode).emit('initial participants', participants);
-      }else{
+      } else {
         io.to(sessionCode).emit('same participants');
       }
 
