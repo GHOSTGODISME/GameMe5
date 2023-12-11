@@ -72,7 +72,7 @@ export default {
     created() {
         this.socket = io("http://localhost:3000");
         this.store = useQuizStore();
-        this.store.clearPinialocalStorage();
+        // this.store.clearPinialocalStorage();
         const code = this.$route.query.code.toString();
 
         // if (this.storedState && this.storedState.sessionCode === code) {
@@ -143,6 +143,7 @@ export default {
             });
 
             this.socket.on("session status", (sessionStatus) => {
+                this.store.quizState = sessionStatus;
                 // if (this.joinedQuiz) {
                 //   this.$router.push("/quiz/quiz-loading");
                 // } else
@@ -164,12 +165,16 @@ export default {
                 id: this.store.userId,
             });
 
-            this.socket.on("same participants", () => {
-                alert(
-                    "You have participated to this session.\n" +
-                        " You will be redirected to the homepage."
-                );
-                window.location.href = '/';
+            this.socket.on("same participants", (existingUser) => {
+                console.log(existingUser.username);
+                // if(this.sessionStatus)
+                // this.store.setUsername(existingUser.username);
+                // alert(
+                //     existingUser + 
+                //     "You have participated to this session.\n" +
+                //         " You will be redirected to the homepage."
+                // );
+                // window.location.href = '/';
             });
         },
         validateUsername() {

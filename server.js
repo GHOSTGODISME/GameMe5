@@ -294,7 +294,7 @@ function handleJoinEvents(socket) {
       const existingUser = participants.find((participant) => participant.id === id);
 
       if (existingUser) {
-        io.to(sessionCode).emit('same participants');
+        io.to(sessionCode).emit('same participants', existingUser);
       }
       }
   });
