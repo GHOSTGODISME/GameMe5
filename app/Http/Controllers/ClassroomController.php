@@ -57,29 +57,29 @@ class ClassroomController extends Controller{
     }
 
 
-    function join_class(Request $request){
-        // Validate the form data
-        $request->validate([
-            'class_code' => 'required|exists:classroom,joincode',
-        ]);
-
-        // Get the classroom based on the provided class code
-        $classroom = Classroom::where('joincode', $request->class_code)->first();
-
-        $email = $request->session()->get('email');
-        //$email = 'aa@gmail.com';
-        $user = User::where('email', $email)->first();
-        $stud = Student::where('iduser', $user->id)->first();
-      
-        Classstudent::create([
-            'idclass' => $classroom->id,
-            'idstudent' => $stud->id, // Assuming you have a relationship set up
-        ]);
-
-        // Redirect or provide a success response
-        return redirect()->route('classroom_stud_home')->with('success', 'Successfully joined the classroom!');
-
-    }
+    public function join_class(Request $request)
+    {
+       
+            // Validate the form data
+            $request->validate([
+                'class_code' => 'required|exists:classroom,joincode',
+            ]);
+    
+            // Get the classroom based on the provided class code
+            $classroom = Classroom::where('joincode', $request->class_code)->firstOrFail();
+    
+            $email = $request->session()->get('email');
+            $user = User::where('email', $email)->firstOrFail();
+            $stud = Student::where('iduser', $user->id)->firstOrFail();
+    
+            Classstudent::create([
+                'idclass' => $classroom->id,
+                'idstudent' => $stud->id,
+            ]);
+    
+            // Return a success JSON response
+            return redirect()->route('classroom_stud_home')->with(['success'=> 'Successfully joined the classroom', 'stud']);
+        }
 
     function classroom_quit(Request $request){
         // Validate the form data
@@ -383,6 +383,10 @@ class ClassroomController extends Controller{
     }
 
     public function class_reply_polls(Request $request){
+        $request->validate([
+            'polls_id' => 'required|exists:ann_polls,id', // Assuming you want to ensure the polls_id exists in the ann_polls table
+            'poll_option' => 'required', // Ensure poll_option is present and not null
+        ]);    
         $pollsId = $request->input('polls_id');
         $selectedOption = $request->input('poll_option');
         $email = $request->session()->get('email');
@@ -525,7 +529,7 @@ class ClassroomController extends Controller{
     }
 
     // Redirect or respond as needed
-    return redirect()->route('class_lect_stream', ['classroom' => $request->classId]);
+    return redirect()->route('class_lect_stream', ['success'=>'Announcement created successfully','classroom' => $request->classId]);
     }
 
 
@@ -606,7 +610,7 @@ class ClassroomController extends Controller{
     }
 
     // Redirect or respond as needed
-    return redirect()->route('class_stud_stream', ['classroom' => $request->classId]);
+    return redirect()->back()->with('success', 'Announcement created successfully');
     }
 
 
@@ -719,7 +723,7 @@ public function class_update_announcement(Request $request)
         }
 
         // Return a response, e.g., a success message or JSON response
-        return back();
+        return redirect()->back()->with('success', 'Announcement updated successfully');
 
 }
 
@@ -826,7 +830,7 @@ public function class_update_announcement(Request $request)
     function assign_class(Request $request){
         $request->validate([
             'class_id' => 'required|exists:classroom,id',
-            'class_session_code' => 'required',
+            'session_id' => 'required',
         ]);
         $email = $request->session()->get('email');
         //$email = 'aa@gmail.com';
@@ -842,11 +846,11 @@ public function class_update_announcement(Request $request)
         // Create a new AnnQuiz
         $annQuiz = new AnnQuiz();
         $annQuiz->ann_id = $announcement->id;
-        $annQuiz->session_code = $request->input('class_session_code');
+        $annQuiz->session_id = $request->input('session_id');
 
         // Add other fields as needed
         $annQuiz->save();
-        return redirect()->back()->with('success', 'Assignment successful!');
+        return redirect()->back()->with('success', 'Assign successfully!');
     }
 
 
@@ -876,7 +880,14 @@ public function class_update_announcement(Request $request)
         $annSurvey->save();
         return redirect()->back()->with('success', 'Assignment successful!');
     }
-
-
-
+    function class_redirect_quiz($annquiz) {
+        $sessionId = $annquiz;
+        $session = Session::find($sessionId);
+    
+        // Convert the session data to JSON
+        $sessionData = json_encode($session);
+    
+        // Return the JSON response
+        return Response::json(['session' => $sessionData]);
+    }
 }

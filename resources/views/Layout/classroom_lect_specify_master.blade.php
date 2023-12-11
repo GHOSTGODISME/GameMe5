@@ -295,7 +295,7 @@
 
                     <!-- Add other specific fields for different announcement types -->
 
-                    <button type="submit" class="btn btn-primary">Save Announcement</button>
+                    <button type="submit" class="btn btn-primary">Create Announcement</button>
                 </form>
             </div>
         </div>

@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('ann_id');
             $table->foreign('ann_id')->references('id')->on('announcement')->onDelete('cascade');
-            $table->string('session_code');
+            $table->unsignedBigInteger('session_id');
+            $table->foreign('session_id')->references('id')->on('sessions')->onDelete('cascade');
         
         });
     }

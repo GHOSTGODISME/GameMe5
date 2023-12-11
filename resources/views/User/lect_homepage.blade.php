@@ -132,6 +132,7 @@
         flex-direction:row;
         width:100%;
         align-items: center;
+
     }
 
     .title_container a{
@@ -156,7 +157,7 @@
     .class_subtitle{
         color: #5C5C5C;
         font-family: 'Roboto';
-        font-size: 16px;
+        font-size: 14px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -164,6 +165,17 @@
         margin-right:75%;
         align-self: flex-end;
       
+    }
+    .class_subtitle:hover{
+        color: #5C5C5C;
+        font-family: 'Roboto';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-decoration:underline;
+        margin-right:75%;
+        align-self: flex-end;
     }
 
 
@@ -223,7 +235,7 @@
     }
     .admin_subtitle1{
     text-decoration: underline;
-}
+    }
 
 .nav_container {
         display: flex;
@@ -318,6 +330,7 @@
         line-height: normal;
     }
 
+    
     .admin_subtitle1 a:visited,
     .admin_subtitle2 a:visited {
         color: #5C5C5C;
@@ -354,6 +367,16 @@
         margin: 0;
     }
 
+    .sub_container{
+        margin-left:auto;
+        margin-right:20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+ 
+
 </style>
 
     <div class="title_container">
@@ -362,13 +385,16 @@
     </div>
         <div class="title_container">
             <h3 class="class_subtitle"></h3>
-            <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
+            <div class=sub_container>
+          
+            {{-- <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
                 <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
                 <input type="text" name="search" class="search-input" placeholder="Search">
-            </form>
-            <a href="{{ route('lect_add_class') }}">
+            </form> --}}
+            {{-- <a href="{{ route('lect_add_class') }}">
                 <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
-            </a>
+            </a> --}}
+        </div>
         </div>
     
 
@@ -410,32 +436,21 @@
     <h1 class="class_title">Quiz</h1>
     <a href="{{ route('own-quiz')}}" class="class_subtitle">View More</a>
     </div>
-        <div class="title_container">
+        <div class="title_container" style="margin-top:30px;">
             <h3 class="class_subtitle">Created</h3>
-            <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
-                <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
-                <input type="text" name="search" class="search-input" placeholder="Search">
-            </form>
-            <a href="{{ route('lect_add_class') }}">
-                <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
-            </a>
+        <div class=sub_container>
+                {{-- <form action="{{ route('lect_search_class') }}" method="GET" class="search-form">
+                    <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
+                    <input type="text" name="search" class="search-input" placeholder="Search">
+                </form> --}}
+                {{-- <a href="{{ route('lect_add_class') }}">
+                    <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
+                </a> --}}
         </div>
+    </div>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        {{-- <div class = "title_bar">
-            <div class="sub_cont">
-                <h1 class="admin_subtitle3">Owned Quizzes</h1>
-                <a class="add_link" href="{{ route('create-quiz') }}">
-                    <img class="add_icon" src="img/add_icon.png" alt="add_favicon">
-                </a>
-            </div>
-            <form action="{{ route('own-quiz-search') }}" method="GET" class="search-form">
-                <img class="search_icon" src="img/search_icon.png" alt="search_favicon">
-                <input type="text" name="search" class="search-input" placeholder="Search">
-                <button type="submit" class="search-button">Search</button>
-            </form>
-        </div> --}}
     
         <!-- In your Blade view (resources/views/admin/students/index.blade.php) -->
         @if(count($quizzes) > 0)
@@ -482,7 +497,6 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 
-console.log(@json(session('email')));
         function confirmDelete(id) {
             if (confirm('Are you sure you want to delete this quiz?')) {
                 // Make an AJAX request to delete the quiz
@@ -530,7 +544,15 @@ console.log(@json(session('email')));
     });
 
     function confirmAndSubmit(classroomId) {
-        if (confirm("Are you sure you want to remove this classroom?")) {
+    swal({
+        title: 'Are you sure?',
+        text: 'Once deleted, you will not be able to recover this classroom!',
+        icon: 'warning',
+        buttons: ['Cancel', 'Delete'],
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
             $.ajax({
                 url: "{{ route('classroom_remove') }}",
                 method: 'POST',
@@ -540,18 +562,23 @@ console.log(@json(session('email')));
                 },
                 success: function (response) {
                     if (response.success) {
-                        alert('You have successfully removed the classroom!');
+                        swal('Poof! Your classroom has been deleted!', {
+                            icon: 'success',
+                        });
                         location.reload();
                     } else {
-                        alert('Error removing classroom. ' + response.message);
+                        swal('Error!', 'Error removing classroom. ' + response.message, 'error');
                     }
                 },
                 error: function () {
-                    alert('Error removing classroom');
+                    swal('Error!', 'Error removing classroom', 'error');
                 }
             });
+        } else {
+            swal('Your classroom is safe!');
         }
-    }
+    });
+}
 
     function redirect(url) {
         window.location.href = url;

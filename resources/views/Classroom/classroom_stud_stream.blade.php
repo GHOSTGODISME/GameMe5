@@ -3,6 +3,8 @@
 @section('title', 'Classroom')
 
 @section('content')
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <style>
 
 .stream-page a {
@@ -60,20 +62,20 @@
     }
 
     .ann_content{
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 1px solid #BFBFBF;
-    cursor: pointer;
-    border-radius: 0px 0px 8px 8px;
-    background: #FAFAFA;
-    font-family: 'Roboto';
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-align: center;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #BFBFBF;
+        cursor: pointer;
+        border-radius: 0px 0px 8px 8px;
+        background: #FAFAFA;
+        font-family: 'Roboto';
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-align: center;
     }
 
     .ann_content p{
@@ -100,7 +102,7 @@
 </style>
 
 
-@foreach ($announcements as $announcement)
+@foreach ($announcements as $index=>$announcement)
     @switch($announcement->type)
         @case('AnnText')
             <!-- Display AnnText content -->
@@ -112,12 +114,13 @@
                     
                     @if($announcement->user_id == $currentUser->id)
                     <div class="button-container">
-                        <div class="menu-icon" onclick="toggleMenu(this, event)">
+                        <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                             <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                         </div>
-                        <div class="action-menu">
+                        <div class="action-menu" id="actionMenu{{ $index }}">
                             <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                            <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                            <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
+
                         </div>
                        
                     </div>
@@ -139,11 +142,11 @@
                 
                 @if($announcement->user_id == $currentUser->id)
                 <div class="button-container">
-                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                    <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
-                    <div class="action-menu">
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    <div class="action-menu" id="actionMenu{{ $index }}">
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -168,12 +171,12 @@
                 
                 @if($announcement->user_id == $currentUser->id)
                 <div class="button-container">
-                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                    <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
-                    <div class="action-menu">
+                    <div class="action-menu" id="actionMenu{{ $index }}">
                         <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -196,12 +199,12 @@
                 
                 @if($announcement->user_id == $currentUser->id)
                 <div class="button-container">
-                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                    <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
-                    <div class="action-menu">
+                    <div class="action-menu" id="actionMenu{{ $index }}">
                         <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -223,11 +226,11 @@
                 
                 @if($announcement->user_id == $currentUser->id)
                 <div class="button-container">
-                    <div class="menu-icon" onclick="toggleMenu(this, event)">
+                    <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
-                    <div class="action-menu">
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                    <div class="action-menu" id="actionMenu{{ $index }}">
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -252,21 +255,39 @@
 function redirect(url) {
         window.location.href = url;
     }
-    function redirect_quiz(annquiz) {
 
-// Replace 'YOUR_BASE_URL' with the actual base URL of your application
-var baseUrl = 'http://localhost:8000';
+function redirect_quiz(annquiz) {
+    // Replace 'YOUR_BASE_URL' with the actual base URL of your application
+    var session_id = annquiz.session_id;
 
-// Assuming you have the session code available (replace 'sessionCode' accordingly)
-var sessionCode = annquiz.session_code;
+$.ajax({
+    url: "{{ route('class_redirect_quiz')}}",
+    method: 'POST',
+    data: {
+        session_id: session_id,
+        _token: '{{ csrf_token() }}',
+    },
+    success: function(response) {
+        console.log(response);
+        // Handle the retrieved data here
+    },
+    error: function(error) {
+        console.error(error);
+    }
+});
 
-// Generate the link with the session code
-var link = baseUrl + '/join-quiz?code=' + sessionCode;
 
-console.log(link);
-// Navigate to the generated link
-window.location.href = link;
 }
+
+
+    // var baseUrl = 'http://localhost:8000';
+    // // Assuming you have the session code available (replace 'sessionCode' accordingly)
+    // var sessionCode ='790273';
+    // // Generate the link with the session code
+    // var link = baseUrl + '/join-quiz?code=' + sessionCode;
+    // console.log(link);
+    // // Navigate to the generated link
+    // window.location.href = link;
 
     function redirect_survey(annfeedback) {
         // Replace 'YOUR_BASE_URL' with the actual base URL of your application
@@ -279,5 +300,8 @@ window.location.href = link;
         // Navigate to the generated link
         window.location.href = link;
         }
+
+
+        
 </script>
 @endsection

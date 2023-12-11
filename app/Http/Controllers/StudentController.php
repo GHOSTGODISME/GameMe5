@@ -40,25 +40,52 @@ class StudentController extends Controller{
     }
 
     public function update_Profile(Request $request)
-    {
-        $field = $request->input('field');
-        $value = $request->input('value');
-        $email = $request->session()->get('email');
-        //$email='wongtian628@gmail.com';
-        // Assuming your User model has an 'email' column
-        $user = User::where('email', $email)->first();
+{
+    $field = $request->input('field');
+    $value = $request->input('value');
+    $email = $request->session()->get('email');
 
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
+    // Assuming your User model has an 'email' column
+    $user = User::where('email', $email)->first();
 
-        // Update the user's profile
-        $user->$field = $value;
-        $user->save();
-
-        return response()->json(['success' => 'Profile updated successfully']);
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
     }
 
+    // Validation rules
+    $validationRules = [];
+
+    switch ($field) {
+        case 'name':
+            $validationRules['value'] = 'required|string|max:255|regex:/^[^\d]+$/';
+            break;
+
+        case 'gender':
+            $validationRules['value'] = 'required|in:male,female';
+            break;
+
+        case 'dob':
+            $validationRules['value'] = 'required|date|before:today';
+            break;
+
+        // Add more cases for other fields as needed
+
+        default:
+            return response()->json(['error' => 'Invalid field'], 400);
+    }
+
+    // Perform validation
+    $request->validate($validationRules, [
+        'name.regex' => 'The name field must not contain digits.',
+        'dob.before' => 'The date of birth must be before today.',
+    ]);
+
+    // Update the user's profile
+    $user->$field = $value;
+    $user->save();
+
+    return response()->json(['success' => 'Profile updated successfully']);
+}
    
     function upload_profile_picture(Request $request)
     {
@@ -104,35 +131,41 @@ class StudentController extends Controller{
     public function check_Password(Request $request)
     {
         $currentPassword = $request->input('current_password');
-
+    
         // Retrieve the user's hashed password from the database
         $email = $request->session()->get('email');
         //$email = 'aa@gmail.com';
         $user = User::where('email', $email)->first();
         $hashedPassword = $user->password;
-
+    
         // Check if the entered current password matches the hashed password
         if (Hash::check($currentPassword, $hashedPassword)) {
             return response()->json(['success' => true]);
         } else {
-            return response()->json(['success' => false]);
+            return response()->json(['error' => 'Incorrect current password']);
         }
     }
 
     public function update_Password(Request $request)
-{
-    $request->validate([
-        'new_password' => 'required|min:6',
-    ]);
-
-    $email = $request->session()->get('email');
-    //$email = 'aa@gmail.com';
-    $user = User::where('email', $email)->first();
-    // Update the password
-    $user->password = bcrypt($request->input('new_password'));
-    $user->save();
-    return response()->json(['success' => true, 'message' => 'Password updated successfully']);
-}
+    {
+        $request->validate([
+            'new_password' => [
+                'required',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]/',
+            ],
+        ]);
+    
+        $email = $request->session()->get('email');
+        //$email = 'aa@gmail.com';
+        $user = User::where('email', $email)->first();
+    
+        // Update the password
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+    
+        return response()->json(['success' => true, 'message' => 'Password updated successfully']);
+    }
 
 
     

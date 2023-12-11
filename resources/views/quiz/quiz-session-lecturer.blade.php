@@ -198,7 +198,7 @@
                     </div>
 
                      <!-- Your input field -->
-                    <input type="hidden" name="class_session_code" id="class_session_code" value="">
+                    <input type="hidden" name="session_id" id="session_id" value="">
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Assign Class</button>
                     </div>
@@ -341,7 +341,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         // Parse the JSON and set the value of the input field
-        document.getElementById('class_session_code').value = sessionStorage.getItem('sessionCode');
+        document.getElementById('session_id').value = sessionStorage.getItem('sessionId');
     });
 
     </script>

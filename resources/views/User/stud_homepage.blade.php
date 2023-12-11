@@ -152,11 +152,12 @@ text-decoration: none;
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #D9D9D9;
+    background-color: #ffffff;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     display: none;
     width:200px;
+    border-radius: 8px;
 
   }
 
@@ -173,7 +174,8 @@ text-decoration: none;
   }
 
   .action-menu a:hover {
-    background-color: #f2f2f2;
+    background-color: #e3e3e3;
+    border-radius: 8px;
   }
 
 
@@ -190,11 +192,26 @@ text-decoration: none;
 text-decoration: none;
 }
 
+.custom-title-class {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    /* Add any other title styles you want */
+}
+
+.custom-content-class {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    /* Add any other content styles you want */
+}
 
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <form action="{{ route('join-quiz') }}" method="GET">
     @csrf
 <div class="stud_big_cont">
@@ -204,33 +221,44 @@ text-decoration: none;
 </div>
 </form>
 
+@error('code') 
+<script>
+    // Use SweetAlert2 to display a modal
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Invalid Code. Please enter a valid session code.',
+        customClass: {
+        title: 'custom-title-class',
+        content: 'custom-content-class',
+    },
+    });
+</script>
+@enderror
+
 <div class="stud_sub_cont">
 <a href="{{ route('classroom_stud_home') }}" class="stud_sub_header">Classroom</a>
 <div class="stud_small_cont">
-    @foreach ($student->classrooms as $classroom)
-
+    @foreach ($student->classrooms as $index => $classroom)
     <div class="classroom_container" onclick="redirect('{{ route('class_stud_stream', ['classroom' => $classroom->id]) }}')">
         <div class="class_container_row1">
-        <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
+            <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
 
-        <div class="button-container">
-            <div class="menu-icon" onclick="toggleMenu(this, event)">
-                <img src="img/threedot_white.png" alt="three_dot">
+            <div class="button-container">
+                <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
+                    <img src="img/threedot_white.png" alt="three_dot">
+                </div>
+                <div class="action-menu" id="actionMenu{{ $index }}">
+                    <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Leave Class</a>
+                </div>
             </div>
-            <div class="action-menu">
-                <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Leave Class</a>
-            </div>
-        </div>
-
         </div>
         <div class="class_container_row2">
-        <p>{{ $classroom->name }}</p>
+            <p>{{ $classroom->name }}</p>
         </div>
-
         <div class="class_container_row3">
             <p> {{ $classroom->creator->user->name }}</p>
         </div>
-
     </div>
 @endforeach
 </div>
@@ -307,8 +335,61 @@ function handleBodyClick() {
 
 // Add a click event listener to the document body
 document.body.addEventListener('click', handleBodyClick);
+$(document).ready(function () {
+    var menuTimers = {}; // Object to store the timer IDs for each menu
+    var inactivityTimer; // Variable to store the inactivity timer ID
 
+    function showMenu(menuId) {
+        clearTimeout(menuTimers[menuId]); // Clear any existing timer
+        $("#" + menuId).slideDown(200); // Show the menu
+    }
 
+    function hideMenu(menuId) {
+        menuTimers[menuId] = setTimeout(function () {
+            $("#" + menuId).slideUp(200); // Hide the menu after 5 seconds
+        }, 500);
+    }
+
+    function handleInactivity() {
+        inactivityTimer = setTimeout(function () {
+            hideAllMenus();
+        }, 1000);
+    }
+
+    function hideAllMenus() {
+        Object.keys(menuTimers).forEach(function (menuId) {
+            hideMenu(menuId);
+        });
+    }
+
+    $("[id^='menuIcon']").click(function () {
+        var menuId = $(this).attr("id").replace("menuIcon", "");
+        showMenu("actionMenu" + menuId);
+        handleInactivity();
+    });
+
+    // Handle hover events for the action menus
+    $("[id^='actionMenu']").hover(
+        function () {
+            // Mouse enters the action menu
+            var menuId = $(this).attr("id");
+            clearTimeout(menuTimers[menuId]); // Clear the timer
+            clearTimeout(inactivityTimer); // Clear the inactivity timer
+        },
+        function () {
+            // Mouse leaves the action menu
+            var menuId = $(this).attr("id");
+            hideMenu(menuId);
+            handleInactivity();
+        }
+    );
+
+    // Automatically close all menus after 3 seconds of inactivity
+    $("body").on("mousemove", function () {
+        clearTimeout(inactivityTimer);
+        handleInactivity();
+    });
+});
 
 </script>
 @endsection

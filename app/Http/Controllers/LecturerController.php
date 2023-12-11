@@ -72,14 +72,25 @@ class LecturerController extends Controller{
         return response()->json(['error' => 'User is not a lecturer'], 404);
     }
 
-    public function update_lecturer_position(Request $request)
+public function update_lecturer_position(Request $request)
 {
     $email = $request->session()->get('email');
     //$email = 'wongtian628@gmail.com';
     $user = User::where('email', $email)->first();
     
     $request->validate([
-        'new_position' => 'required',
+        'new_position' => [
+            'required',
+            'string',
+            'max:255',
+            'regex:/^[^\d]+$/',
+        ],
+    ], [
+        'new_position.required' => 'The new position field is required.',
+        'new_position.string' => 'The new position must be a valid string.',
+        'new_position.max' => 'The new position must not exceed 255 characters.',
+        'new_position.regex' => 'The new position must not contain digits.', // Error message for the regex rule
+        // Add more error messages as needed
     ]);
 
     $newPosition = $request->input('new_position');

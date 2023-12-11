@@ -94,11 +94,12 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #D9D9D9;
+    background-color: #ffffff;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     display: none;
     width:200px;
+    border-radius: 8px;
 
   }
 
@@ -115,14 +116,14 @@
   }
 
   .action-menu a:hover {
-    background-color: #f2f2f2;
+    background-color: #e3e3e3;
+    border-radius: 8px;
   }
-
 
 </style>
 
 <!-- Display classrooms associated with the  student -->
-@foreach ($student->classrooms as $classroom)
+@foreach ($student->classrooms as $index => $classroom )
 
 @php
 $randomColors = ['#168AAD', '#52B69A', '#B876C8'];
@@ -134,11 +135,11 @@ $randomColor = $randomColors[array_rand($randomColors)];
         <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
 
         <div class="button-container">
-            <div class="menu-icon" onclick="toggleMenu(this, event)">
+            <div class="menu-icon"  id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                 <img src="img/threedot_white.png" alt="three_dot">
             </div>
-            <div class="action-menu">
-                <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Leave Class</a>
+            <div class="action-menu" id="actionMenu{{ $index }}">
+                <a href="#" onclick="confirmAndSubmit({{ $classroom->id }}, event)">Leave Class</a>
             </div>
         </div>
 
@@ -157,28 +158,54 @@ $randomColor = $randomColors[array_rand($randomColors)];
 
 
 <script>
-    function confirmAndSubmit(classroomId) {
-    if (confirm("Are you sure you want to leave this classroom?")) {
-        $.ajax({
-            url: "{{ route('classroom_quit') }}",
-            method: 'POST',
-            data: {
-                class_id: classroomId, // Update this line
-                _token: '{{ csrf_token() }}',
-            },
-            success: function (response) {
-                if (response.success) {
-                    alert('You have successfully left the classroom!');
-                    location.reload();
-                } else {
-                    alert('Error leaving classroom: ' + response.message);
+   function confirmAndSubmit(classroomId, event) {
+    // Stop the event propagation to prevent the click event from reaching the div behind
+    event.stopPropagation();
+
+    Swal.fire({
+        title: 'Leave Class',
+        text: 'Are you sure you want to leave this classroom?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, leave!',
+        cancelButtonText: 'Cancel',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User clicked "Yes, leave!" button
+            $.ajax({
+                url: "{{ route('classroom_quit') }}",
+                method: 'POST',
+                data: {
+                    class_id: classroomId,
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'You have successfully left the classroom!',
+                            icon: 'success',
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error leaving classroom: ' + response.message,
+                            icon: 'error',
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error leaving classroom',
+                        icon: 'error',
+                    });
                 }
-            },
-            error: function () {
-                alert('Error leaving classroom');
-            }
-        });
-    }
+            });
+        }
+    });
 }
 
 function redirect(url) {
@@ -228,6 +255,64 @@ function handleBodyClick() {
 // Add a click event listener to the document body
 document.body.addEventListener('click', handleBodyClick);
 
+
+// Add a click event listener to the document body
+document.body.addEventListener('click', handleBodyClick);
+$(document).ready(function () {
+    var menuTimers = {}; // Object to store the timer IDs for each menu
+    var inactivityTimer; // Variable to store the inactivity timer ID
+
+    function showMenu(menuId) {
+        clearTimeout(menuTimers[menuId]); // Clear any existing timer
+        $("#" + menuId).slideDown(200); // Show the menu
+    }
+
+    function hideMenu(menuId) {
+        menuTimers[menuId] = setTimeout(function () {
+            $("#" + menuId).slideUp(200); // Hide the menu after 5 seconds
+        }, 500);
+    }
+
+    function handleInactivity() {
+        inactivityTimer = setTimeout(function () {
+            hideAllMenus();
+        }, 1000);
+    }
+
+    function hideAllMenus() {
+        Object.keys(menuTimers).forEach(function (menuId) {
+            hideMenu(menuId);
+        });
+    }
+
+    $("[id^='menuIcon']").click(function () {
+        var menuId = $(this).attr("id").replace("menuIcon", "");
+        showMenu("actionMenu" + menuId);
+        handleInactivity();
+    });
+
+    // Handle hover events for the action menus
+    $("[id^='actionMenu']").hover(
+        function () {
+            // Mouse enters the action menu
+            var menuId = $(this).attr("id");
+            clearTimeout(menuTimers[menuId]); // Clear the timer
+            clearTimeout(inactivityTimer); // Clear the inactivity timer
+        },
+        function () {
+            // Mouse leaves the action menu
+            var menuId = $(this).attr("id");
+            hideMenu(menuId);
+            handleInactivity();
+        }
+    );
+
+    // Automatically close all menus after 3 seconds of inactivity
+    $("body").on("mousemove", function () {
+        clearTimeout(inactivityTimer);
+        handleInactivity();
+    });
+});
 
 
 

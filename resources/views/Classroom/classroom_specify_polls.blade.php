@@ -227,13 +227,17 @@ input[type="submit"] {
 
 }
 
-.info_txt{
-    margin-top:5px;
-    margin-left:30px;
+.info_txt {
+    margin-top: 5px;
+    margin-left: 30px;
+    color: rgb(3, 172, 3);
 }
+
 </style>
 
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="row">
 <div class="col-md-12">
@@ -242,12 +246,12 @@ input[type="submit"] {
     <p class="author">{{$announcement->user->name}}</p>
         <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
         <div class="button-container">
-            <div class="menu-icon" onclick="toggleMenu(this, event)">
+            <div class="menu-icon"  id="menuIcon2" onclick="toggleMenu(this, event)">
                 <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
             </div>
-            <div class="action-menu">
+            <div class="action-menu" id="actionMenu2">
                 <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
             </div>
            
         </div>
@@ -312,6 +316,22 @@ input[type="submit"] {
 @else
     <p class="info_txt">You have already voted for this poll.</p>
 @endif
+
+@error('poll_option') {{-- Note the correct usage --}}
+    <script>
+         showErrorPopup("{{ __('Please select an option!') }}");
+        function showErrorPopup(errorMessage) {
+    Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+}
+    </script>
+
+
+@enderror
 </div>
 </div>
 </div>

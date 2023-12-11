@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\AnnQuiz;
 use App\Models\Lecturer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,5 +55,10 @@ class Session extends Model
     public function leaderboards()
     {
         return $this->hasOne(Leaderboard::class);
+    }
+
+    public function annquiz()
+    {
+        return $this->hasOne(AnnQuiz::class);
     }
 }
