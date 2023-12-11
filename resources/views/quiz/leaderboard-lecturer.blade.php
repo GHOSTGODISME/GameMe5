@@ -209,7 +209,7 @@
 <body>
     <!-- header -->
     <div class="header-style">
-        <div><img href="img/logo_header.png" /></div>
+        <div><img src="{{ asset('img/logo_header.png') }}" /></div>
         <div id="code-copy-container" style="cursor: pointer;">
             <span id="codePlaceholder"></span>
             <span id="codeCopyIcon" class="fas fa-copy"></span>

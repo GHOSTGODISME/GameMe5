@@ -94,7 +94,7 @@
         @case('AnnFeedback')
         <div class="annFeedback">
             <div class="ann_header">
-            <h1 class="ann_category">Feedback</h1>
+            <h1 class="ann_category">Survey</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
                 @if($announcement->user_id == $currentUser->id)
@@ -111,7 +111,7 @@
             
             </div>
             <div class="ann_content">
-            <p> A new feedback has been assigned. Fill it now!</p>
+            <p> A new survey has been assigned. Fill it now!</p>
             {{-- <p>{{ $announcement->annFeedback->feedback_id }}</p> --}}
             <button class="class_button" onclick="redirect_survey({{ $announcement->annFeedback}})">Fill Now!</button>
             </div>

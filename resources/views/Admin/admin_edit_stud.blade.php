@@ -18,8 +18,32 @@
     text-decoration: underline;
     /* Add any other styles for the current page link */
     }
+    .error_message{
+        background-color: #f9d0d0;
+        padding:10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-radius:8px;
 
+        }
+
+    .error_message p{
+        margin-left:15px;
+        font-family: 'Roboto';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        color: #D8000C;
+    }
+
+    .error_container{
+        margin-top:20px;
+    }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class = title_bar>
 <h1 class= "admin_title">Update Student</h1>
 </div>
@@ -49,7 +73,7 @@
         <div class="input_group">
    <p class="label_admin_stud" for="new_password">New Password:</p>
 </div>
-<div><input class="admin_input" type="password" name="new_password"></div>
+<div><input class="admin_input" type="password" id ="new_password" name="new_password"></div>
 </div>
 
 <div class="studE_info">
@@ -87,7 +111,41 @@
     </div>
 </div>
 </form>
+@if(session('success'))
+<script>
+    showSuccessPopup("{{ session('success') }}");
+    function showSuccessPopup(successMessage) {
+        Swal.fire({
+            title: 'Success!',
+            text: successMessage,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    }
+</script>
+@endif
 
+@php
+$errorMessage = [
+'name' => $errors->first('name'),
+'gender' => $errors->first('gender'),
+'dob' => $errors->first('dob'),
+'new_password' => $errors->first('new_password'),
+// Add more fields if needed
+];
+@endphp
+
+<div class="error_container">
+@foreach($errorMessage as $error)
+@if($error)
+    <div class="error_message">
+        <img src="{{ asset('img/error_icon.png') }}">
+        <p>{!! nl2br($error) !!}</p>
+    </div>
+    @break
+@endif
+@endforeach
+</div>
 
 
 @endsection

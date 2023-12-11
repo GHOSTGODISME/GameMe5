@@ -10,9 +10,7 @@
 
 @section('content')
     <style scoped>
-        .nav-link {
-            font-size: 18px;
-        }
+     
 
         .the_wheel {
             position: relative;
@@ -81,12 +79,13 @@
                     style="padding: 10px 50px;">Spin</button>
             </div>
 
-            <div class="col-xl-7 container-style" id="wheel" style="display: block;">
+            <div class="col-xl-7 container-style" id="wheel" style="display: flex;flex-direction:column;justify-content:center;align-items:center;">
                 <div class="the_wheel">
                     <div class="pointer"></div>
                     <canvas id="canvas" width="500" height="500"></canvas>
-                    <button type="button" id="spinBtn" class="btn btn-dark" onclick="startSpin();">Spin</button>
+
                 </div>
+                <button type="button" id="spinBtn" class="btn btn-dark" style="width:200px;" onclick="startSpin();">Spin</button>
             </div>
 
             {{-- <div class="col-md-6 col-xl-5 container-style"> --}}
@@ -95,9 +94,9 @@
                 <div>
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item" role="presentation"><a class="nav-link active" role="tab"
-                                data-bs-toggle="tab" href="#tab-1">Entries (<span id="entries_count"></span>)</a></li>
+                                data-bs-toggle="tab" href="#tab-1" style="font-size:16px; color: rgb(33, 37, 41);">Entries (<span id="entries_count" style="color: rgb(33, 37, 41);"></span>)</a></li>
                         <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
-                                href="#tab-2"><span style="color: rgb(33, 37, 41);">Results (<span
+                                href="#tab-2" style="font-size:16px;"><span style="color: rgb(33, 37, 41);">Results (<span
                                         id="results_count"></span>)</span></a></li>
                     </ul>
                     <div class="tab-content">
@@ -176,6 +175,7 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <script>
         $(document).ready(function() {
@@ -272,8 +272,13 @@
                 updateResultsUI();
             }
 
-            alert("Selected: " + selectedEntry.text);
+            Swal.fire({
+                title: 'Congratulations!',
+                text: selectedEntry.text + ' has been selected.',
+                icon: 'success',
+            });
         }
+
 
         function updateWheelSegmentsFromEntries() {
             const segments = [];

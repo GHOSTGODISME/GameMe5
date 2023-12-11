@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
        html,body{
@@ -113,6 +114,15 @@
         cursor: pointer;
         font-size: 14px;
     }
+
+    .noResultMsg{
+        color: #5C5C5C;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
     
 </style>
 
@@ -132,8 +142,41 @@
             </a>
         </div>
         <!-- Page Content -->
+        @error('class_code') {{-- Note the correct usage --}}
+        <script>
+             showErrorPopup("{{ __('Invalid Class Code!') }}");
+            function showErrorPopup(errorMessage) {
+        Swal.fire({
+            title: 'Error!',
+            text: errorMessage,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+        </script>
+    @enderror
     
+    @if(session('success'))
+        <script>
+            showSuccessPopup("{{ session('success') }}");
+            function showSuccessPopup(successMessage) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: successMessage,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            }
+        </script>
+    @endif
+    
+    {{-- Check if the search results are empty --}}
+    @if($filteredClassrooms->isEmpty())
+        <p class="noResultMsg">No results found.</p>
+    @else
+        {{-- Display your search results --}}
         @yield('content')
+    @endif
     </div>       
 </body>
 </html>

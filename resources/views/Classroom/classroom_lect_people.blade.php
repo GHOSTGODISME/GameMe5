@@ -82,6 +82,15 @@
         margin-right:auto;
     }
 
+    .person a{
+        color: #5C5C5C;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-decoration: :none;
+    }
     /* Add any other custom styling as needed */
 </style>
 

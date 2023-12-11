@@ -126,48 +126,49 @@
 
 
   .menu-icon {
-        cursor: pointer;
-        font-size: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
-        z-index: 1;
-        width: 50px;
-        height: 50px;
-        color: #FFFFFF;
-    }
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    padding: 0;
+    z-index: 1;
+    width:50px;
+    height:50px;
 
-    .action-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        background-color: #D9D9D9;
-        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-        z-index: 1;
-        display: none;
-        width: 200px;
-        border-radius: 8px;
-        padding: 8px;
-    }
+  }
 
-    .action-menu a {
-        display: block;
-        padding: 8px;
-        text-decoration: none;
-        color: #000;
-        font-family: 'Roboto';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 200;
-        line-height: normal;
-        transition: background-color 0.3s ease;
-    }
+  .action-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--Button, #2A2A2A); 
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+    width:200px;
+    border-radius: 8px;
 
-    .action-menu a:hover {
-        background-color: #f2f2f2;
-    }
+  }
 
+  .action-menu a {
+    display: flex;
+    padding: 8px;
+    text-decoration: none;
+    color: #f3f3f3;
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    justify-content: center;
+  }
+
+  .action-menu a:hover {
+    background: var(--Button, #2A2A2A); 
+    color: #d2d2d2;
+    border-radius: 8px;
+  }
 </style>
 
 <body>
@@ -199,7 +200,7 @@
     </h3>
 
     <h3 class="class_subtitle5 {{ in_array(request()->route()->getName(), ['class_lect_feedback']) ? 'feedback-page' : '' }}">
-        <a href="{{ route('class_lect_feedback', ['classroom' => $classroom->id]) }}">Feedback</a>
+        <a href="{{ route('class_lect_feedback', ['classroom' => $classroom->id]) }}">Survey</a>
     </h3>
 
     <h3 class="class_subtitle6 {{ in_array(request()->route()->getName(), ['class_lect_people']) ? 'people-page' : '' }}">
@@ -210,10 +211,10 @@
 
 
 <div class="button-container">
-    <div class="menu-icon" onclick="toggleMenu(this, event)">
+    <div class="menu-icon" id="menuIcon" onclick="toggleMenu(this, event)">
         <img src="{{ asset('img/threedot_icon.png')}}" alt="three_dot">
     </div>
-    <div class="action-menu">
+    <div class="action-menu"  id="actionMenu" style="z-index:1000;">
         <a href="#" data-toggle="modal" data-target="#addAnnouncementModal">Add Announcement</a>
         <a href="#" data-toggle="modal" data-target="#classCodeModal">Class Code</a>
     </div>
@@ -409,7 +410,20 @@
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+@if(session('success'))
+    <script>
+        // Call Swal for success message
+        Swal.fire({
+            title: 'Success!',
+            text: '{{ session("success") }}',
+            icon: 'success',
+            confirmButtonColor: '#28a745', // You can customize the color
+        });
+    </script>
+@endif
 
 <script>
    
@@ -500,30 +514,57 @@ function setAnnouncementId(announcementId) {
     currentAnnouncementId = announcementId;
 }
 
-function deleteAnnouncement() {
-// Find the clicked delete button and get the announcement ID
-announcementId = currentAnnouncementId;
-console.log(announcementId)
-// Perform AJAX call to delete announcement
-$.ajax({
+function deleteAnnouncement(announcementId) {
+    // Use SweetAlert to confirm the deletion
+    setAnnouncementId(announcementId);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // User confirmed, proceed with the deletion
+            performDeleteAnnouncement();
+        }
+    });
+}
+
+function performDeleteAnnouncement() {
+    // Find the clicked delete button and get the announcement ID
+    announcementId = currentAnnouncementId;
+
+    // Perform AJAX call to delete announcement
+    $.ajax({
         url: "{{ route('class_delete_announcement') }}",
         method: 'POST',
         data: {
             _token: '{{ csrf_token() }}',
-            announcementId:announcementId,
+            announcementId: announcementId,
             // Add other data if needed
         },
-            success: function (response) {
-                if (response.success) {
-                    alert('Announcement deleted successfully!');
+        success: function (response) {
+            if (response.success) {
+                // Show success SweetAlert
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Announcement deleted successfully!',
+                    icon: 'success',
+                    confirmButtonColor: '#28a745' // You can customize the color
+                }).then(function () {
+                    // Optionally, you can perform additional actions after the SweetAlert is closed
                     location.reload(); // This will reload the current page
-                } else {
-                    alert('Error deleting announcement: ' + response.message);
-                }
-            },
-            error: function () {
-                alert('Error deleting announcement');
+                });
+            } else {
+                alert('Error deleting announcement: ' + response.message);
             }
+        },
+        error: function () {
+            alert('Error deleting announcement');
+        }
     });
 }
 
@@ -623,6 +664,65 @@ function populateUpdateModal(response) {
     // Open the update modal
    // $('#updateAnnouncementModal').modal('show');
 }
+
+
+// Add a click event listener to the document body
+document.body.addEventListener('click', handleBodyClick);
+$(document).ready(function () {
+    var menuTimers = {}; // Object to store the timer IDs for each menu
+    var inactivityTimer; // Variable to store the inactivity timer ID
+
+    function showMenu(menuId) {
+        clearTimeout(menuTimers[menuId]); // Clear any existing timer
+        $("#" + menuId).slideDown(200); // Show the menu
+    }
+
+    function hideMenu(menuId) {
+        menuTimers[menuId] = setTimeout(function () {
+            $("#" + menuId).slideUp(200); // Hide the menu after 5 seconds
+        }, 500);
+    }
+
+    function handleInactivity() {
+        inactivityTimer = setTimeout(function () {
+            hideAllMenus();
+        }, 1000);
+    }
+
+    function hideAllMenus() {
+        Object.keys(menuTimers).forEach(function (menuId) {
+            hideMenu(menuId);
+        });
+    }
+
+    $("[id^='menuIcon']").click(function () {
+        var menuId = $(this).attr("id").replace("menuIcon", "");
+        showMenu("actionMenu" + menuId);
+        handleInactivity();
+    });
+
+    // Handle hover events for the action menus
+    $("[id^='actionMenu']").hover(
+        function () {
+            // Mouse enters the action menu
+            var menuId = $(this).attr("id");
+            clearTimeout(menuTimers[menuId]); // Clear the timer
+            clearTimeout(inactivityTimer); // Clear the inactivity timer
+        },
+        function () {
+            // Mouse leaves the action menu
+            var menuId = $(this).attr("id");
+            hideMenu(menuId);
+            handleInactivity();
+        }
+    );
+
+    // Automatically close all menus after 3 seconds of inactivity
+    $("body").on("mousemove", function () {
+        clearTimeout(inactivityTimer);
+        handleInactivity();
+    });
+});
 
 </script>
 

@@ -119,7 +119,7 @@
                         <div class="action-menu">
                             {{-- <a href="#" class="updateAnnouncement" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a> --}}
                             <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                            <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                            <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                         </div>
                        
                     </div>
@@ -143,7 +143,7 @@
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
                     <div class="action-menu">
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -171,7 +171,7 @@
                     </div>
                     <div class="action-menu">
                         <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -195,7 +195,7 @@
                     </div>
                     <div class="action-menu">
                         <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
@@ -209,7 +209,7 @@
         @case('AnnFeedback')
         <div class="annFeedback">
             <div class="ann_header">
-            <h1 class="ann_category">Feedback</h1>
+            <h1 class="ann_category">Survey</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
                 <div class="button-container">
@@ -217,13 +217,13 @@
                         <img src="{{ asset('img/threedot_white.png')}}" alt="three_dot">
                     </div>
                     <div class="action-menu">
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>
             </div>
             <div class="ann_content">
-            <p> A new feedback has been assigned. Fill it now!</p>
+            <p> A new survey has been assigned. Fill it now!</p>
             {{-- <p>{{ $announcement->annFeedback->feedback_id }}</p> --}}
             <button class="class_button" onclick="redirect_survey({{ $announcement->annFeedback}})">Fill Now!</button>
             </div>
@@ -234,25 +234,47 @@
 @endforeach
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
 function redirect(url) {
         window.location.href = url;
     }
 
+    
     function redirect_quiz(annquiz) {
+    var session_id = annquiz.session_id;
 
-        // Replace 'YOUR_BASE_URL' with the actual base URL of your application
-        var baseUrl = 'http://localhost:8000';
+    $.ajax({
+        url: "{{ route('class_redirect_quiz')}}",
+        method: 'POST',
+        data: {
+            session_id: session_id,
+            _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+            console.log(response);
+            var sessionCode = response.sessionCode;
+            console.log(sessionCode);
 
-        // Assuming you have the session code available (replace 'sessionCode' accordingly)
-        var sessionCode = annquiz.session_code;
+            var baseUrl = 'http://localhost:8000';
+            var link = baseUrl + '/join-quiz?code=' + sessionCode;
+            console.log(link);
+            //window.location.href = link;
+        },
+        error: function(error) {
+            console.error("Error occurred:", error);
 
-        // Generate the link with the session code
-        var link = baseUrl + '/join-quiz?code=' + sessionCode;
-
-        console.log(link);
-        // Navigate to the generated link
-        window.location.href = link;
+            // Display a SweetAlert modal for the error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Quiz session has ended.',
+                confirmButtonText: 'OK',
+            });
+        }
+    });
     }
 
     function redirect_survey(annfeedback) {

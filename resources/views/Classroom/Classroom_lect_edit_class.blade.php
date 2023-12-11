@@ -197,6 +197,10 @@
 </form>
 
 <script>
+document.getElementById('cancelButton').addEventListener('click', function(event) {
+    event.preventDefault();  // Prevent the default behavior of the link
+    history.back();  // Go back to the previous page
+});
 
 </script>
 @endsection

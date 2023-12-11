@@ -14,41 +14,50 @@
 
   .menu-icon {
     cursor: pointer;
-    font-size: 18px; /* Adjust the font size as needed */
+    font-size: 18px;
     display: flex;
-    align-items: start;
-    margin:0;
+    align-items:center;
+    justify-content: center;
     padding: 0;
-    
+    z-index: 1;
+    width:50px;
+    height:50px;
+
   }
 
   .action-menu {
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #D9D9D9;
+    background: var(--Button, #2A2A2A); 
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 1000;
     display: none;
-    width:100px;
+    width:200px;
+    border-radius: 8px;
 
   }
 
   .action-menu a {
-    display: block;
+    display: flex;
     padding: 8px;
     text-decoration: none;
-    color: #000;
+    color: #f3f3f3;
     font-family: 'Roboto';
     font-size: 16px;
     font-style: normal;
     font-weight: 200;
     line-height: normal;
+    justify-content: center;
   }
 
   .action-menu a:hover {
-    background-color: #f2f2f2;
+    background: var(--Button, #2A2A2A); 
+    color: #d2d2d2;
+    border-radius: 8px;
+    text-decoration: :none;
   }
+
     .report_title{
         color: var(--Button, #2A2A2A);
         font-family: 'Roboto';
@@ -397,10 +406,10 @@
 </div>
 
 <div class="button-container">
-    <div class="menu-icon" onclick="toggleMenu(this)">
+    <div class="menu-icon" id="menuIcon" onclick="toggleMenu(this)">
         <img src="{{ asset('img/threedot_icon.png') }}" alt="three_dot">
     </div>
-    <div class="action-menu">
+    <div class="action-menu" id="actionMenu">
         <a href="#" class="update-button" onclick="printPage()">Print</a>
     </div>
             
@@ -505,11 +514,107 @@
 
 
 <script>
-       function toggleMenu(icon) {
-      const menu = icon.nextElementSibling;
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+   // Add a variable to keep track of the currently open menu
+   let openMenu = null;
+// Function to toggle menu visibility
+function toggleMenu(icon, event) {
+    event.stopPropagation(); // Stop event propagation to prevent the container click
+    const menu = icon.nextElementSibling;
+
+    // Close other open menu if exists
+    if (openMenu && openMenu !== menu) {
+        closeMenu(openMenu);
     }
 
+    // Toggle the display of the current menu
+    if (menu.style.display === 'none') {
+        openMenu = menu;
+        openMenu.style.display = 'block';
+        // Add a click event listener to the document body to close the menu when clicking outside
+        document.body.addEventListener('click', handleBodyClick);
+
+        // Add a click event listener to the menu to stop propagation
+        menu.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    } else {
+        closeMenu(menu);
+    }
+}
+
+// Function to close the menu
+function closeMenu(menu) {
+    menu.style.display = 'none';
+    openMenu = null;
+    // Remove the click event listener from the document body
+    document.body.removeEventListener('click', handleBodyClick);
+}
+
+// Function to handle clicks on the document body
+function handleBodyClick() {
+    // Close the currently open menu (if any)
+    if (openMenu) {
+        closeMenu(openMenu);
+    }
+}
+
+// Add a click event listener to the document body
+document.body.addEventListener('click', handleBodyClick);
+$(document).ready(function () {
+    var menuTimers = {}; // Object to store the timer IDs for each menu
+    var inactivityTimer; // Variable to store the inactivity timer ID
+
+    function showMenu(menuId) {
+        clearTimeout(menuTimers[menuId]); // Clear any existing timer
+        $("#" + menuId).slideDown(200); // Show the menu
+    }
+
+    function hideMenu(menuId) {
+        menuTimers[menuId] = setTimeout(function () {
+            $("#" + menuId).slideUp(200); // Hide the menu after 5 seconds
+        }, 500);
+    }
+
+    function handleInactivity() {
+        inactivityTimer = setTimeout(function () {
+            hideAllMenus();
+        }, 1000);
+    }
+
+    function hideAllMenus() {
+        Object.keys(menuTimers).forEach(function (menuId) {
+            hideMenu(menuId);
+        });
+    }
+
+    $("[id^='menuIcon']").click(function () {
+        var menuId = $(this).attr("id").replace("menuIcon", "");
+        showMenu("actionMenu" + menuId);
+        handleInactivity();
+    });
+
+    // Handle hover events for the action menus
+    $("[id^='actionMenu']").hover(
+        function () {
+            // Mouse enters the action menu
+            var menuId = $(this).attr("id");
+            clearTimeout(menuTimers[menuId]); // Clear the timer
+            clearTimeout(inactivityTimer); // Clear the inactivity timer
+        },
+        function () {
+            // Mouse leaves the action menu
+            var menuId = $(this).attr("id");
+            hideMenu(menuId);
+            handleInactivity();
+        }
+    );
+
+    // Automatically close all menus after 3 seconds of inactivity
+        $("body").on("mousemove", function () {
+        clearTimeout(inactivityTimer);
+        handleInactivity();
+    });
+});
     function handleCircularProgress(circularProgressSelector, isSmall) {
   const circularProgress = document.querySelectorAll(circularProgressSelector);
 

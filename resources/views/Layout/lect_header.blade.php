@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+
 <style>
     .header_container{
         width:100%;
@@ -113,7 +115,7 @@
         </div>
         <div class="nav_row">
             <img class="menu_icons" src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
-            <a href="{{ route('survey-index') }}" class="nav-link">Feedback</a>
+            <a href="{{ route('survey-index') }}" class="nav-link">Survey</a>
         </div>
         <div class="nav_row">
             <img class="menu_icons" src="{{ asset('img/session_icon.png') }}" alt="session_icon">

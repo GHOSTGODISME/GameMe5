@@ -58,6 +58,7 @@ class InteractiveSessionController extends Controller
     public function joinInteractiveSession(Request $request)
     {
         $code = $request->input('code');
+
         try {
             $session = InteractiveSession::where('code', $code)->firstOrFail();
     
@@ -67,10 +68,12 @@ class InteractiveSessionController extends Controller
                     "sessionCode" => $code
                 ]);
             } else {
-                return back()->with('error', 'Session has already ended.');
+                return redirect()->back()->withErrors(['code' => 'Session has already ended.']);
+
             }
         } catch (ModelNotFoundException $exception) {
-            return back()->with('error', 'Invalid session code.');
+            return redirect()->back()->withErrors(['code' => 'Invalid session code.']);
+
         }
     }
 

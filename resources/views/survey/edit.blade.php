@@ -35,7 +35,7 @@
 
 <body style="background: whitesmoke;">
     <div class="header-container">
-        <img src="img/logo_header.png" alt="Logo">
+        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
         <!-- <div class="favicon-with-text">
             <i class="fas fa-chevron-left"></i>
             <span>Back</span>
@@ -122,12 +122,12 @@
                                                     <i class="fa fa-copy"></i>
                                                 </span>
                                                 
-                                                <div class="details-container">
-                                                    <b style="display: block;">Assign Class</b>
-                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
+                                             
+                                                    <b style="display: block;margin-top:10px;">Assign Class</b>
+                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="margin-top:5px;">
                                                         Assign to Class
                                                     </button>
-                                                </div>
+                                              
 
                                             @endif
                                         </div>

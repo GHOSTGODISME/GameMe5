@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style scoped>
         .lecturer-index-body {
             width: 80%;
@@ -125,29 +125,50 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script> 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   
 
     <script>
         
         function confirmDelete(id) {
-            if (confirm('Are you sure you want to delete this quiz?')) {
-                // Make an AJAX request to delete the quiz
-                axios.delete('{{ url('delete-quiz') }}/' + id, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                .then(response => {
-                    // Handle success, e.g., remove the deleted row from the table
-                    console.log('quiz deleted successfully:', response.data);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you really want to delete this quiz?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Make an AJAX request to delete the quiz
+            axios.delete('{{ url('delete-quiz') }}/' + id, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                // Handle success, e.g., remove the deleted row from the table
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Quiz deleted successfully.',
+                    icon: 'success',
+                }).then(() => {
                     location.reload(); // Reload the page
-                })
-                .catch(error => {
-                    // Handle error
-                    console.error('Error deleting quiz:', error);
                 });
-            }
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error deleting quiz:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to delete quiz. Please try again.',
+                    icon: 'error',
+                });
+            });
         }
+    });
+}
     </script>
 </body>
 </html>

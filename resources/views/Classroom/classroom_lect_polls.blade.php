@@ -110,7 +110,7 @@
                     </div>
                     <div class="action-menu">
                         <a href="#" data-toggle="modal" data-target="#updateAnnouncementModal" class="updateAnnouncementBtn" onclick="openUpdateModal({{ $announcement->id }})">Update Announcement</a>
-                        <a href="#" data-toggle="modal" data-target="#deleteAnnouncementModal" class="deleteAnnouncementBtn" onclick="setAnnouncementId({{ $announcement->id }})">Delete Announcement</a>
+                        <a href="#" class="deleteAnnouncementBtn" onclick="deleteAnnouncement({{ $announcement->id }})">Delete Announcement</a>
                     </div>
                    
                 </div>

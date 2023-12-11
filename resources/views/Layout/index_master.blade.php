@@ -70,6 +70,7 @@
         width: 100%;
         justify-content: space-between;
         /* align-items: center; */
+        margin-top:40px;
     }
 
     .add_icon {
@@ -128,6 +129,15 @@
         border-radius: 5px;
         cursor: pointer;
         font-size: 14px;
+    }
+
+    .admin_title{
+        color: var(--Button, #2A2A2A);
+        font-family: 'Roboto';
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
     }
 </style>
 

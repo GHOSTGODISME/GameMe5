@@ -252,8 +252,6 @@ function handleBodyClick() {
     }
 }
 
-// Add a click event listener to the document body
-document.body.addEventListener('click', handleBodyClick);
 
 
 // Add a click event listener to the document body

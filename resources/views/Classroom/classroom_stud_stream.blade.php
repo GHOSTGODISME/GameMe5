@@ -220,7 +220,7 @@
         @case('AnnFeedback')
         <div class="annFeedback">
             <div class="ann_header">
-            <h1 class="ann_category">Feedback</h1>
+            <h1 class="ann_category">Survey</h1>
             <p class="author">{{$announcement->user->name}}<p>
                 <p class="datetime">{{ \Carbon\Carbon::createFromTimestamp(strtotime($announcement->created_at))->format('d/m/Y h:i A')}}</p>
                 
@@ -238,7 +238,7 @@
 
             </div>
             <div class="ann_content">
-            <p> A new feedback has been assigned. Fill it now!</p>
+            <p> A new survey has been assigned. Fill it now!</p>
             {{-- <p>{{ $announcement->annFeedback->feedback_id }}</p> --}}
             <button class="class_button" onclick="redirect_survey({{ $announcement->annFeedback}})">Fill Now!</button>
             </div>
@@ -251,43 +251,58 @@
 @endforeach
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function redirect(url) {
         window.location.href = url;
     }
 
-function redirect_quiz(annquiz) {
-    // Replace 'YOUR_BASE_URL' with the actual base URL of your application
+   function redirect_quiz(annquiz) {
     var session_id = annquiz.session_id;
 
-$.ajax({
-    url: "{{ route('class_redirect_quiz')}}",
-    method: 'POST',
-    data: {
-        session_id: session_id,
-        _token: '{{ csrf_token() }}',
-    },
-    success: function(response) {
-        console.log(response);
-        var sessionCode = response.sessionCode;
-        console.log(sessionCode);
-        
-        var baseUrl = 'http://localhost:8000';
-        // Assuming you have the session code available (replace 'sessionCode' accordingly)
-        // Generate the link with the session code
-        var link = baseUrl + '/join-quiz?code=' + sessionCode;
-        console.log(link);
-        // Navigate to the generated link
-        window.location.href = link;
-  
-    },
-    error: function(error) {
-        console.error("Error occurred:", error);
+    $.ajax({
+        url: "{{ route('class_redirect_quiz')}}",
+        method: 'POST',
+        data: {
+            session_id: session_id,
+            _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+            console.log(response);
+
+            if (response && response.sessionCode) {
+                var sessionCode = response.sessionCode;
+                console.log(sessionCode);
+
+                var baseUrl = 'http://localhost:8000';
+                var link = baseUrl + '/join-quiz?code=' + sessionCode;
+                console.log(link);
+                window.location.href = link;
+            } else {
+                // Display a SweetAlert modal for unexpected response
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Unexpected response from the server.',
+                    confirmButtonText: 'OK',
+                });
+            }
+        },
+        error: function(error) {
+            console.error("Error occurred:", error);
+
+            // Display a SweetAlert modal for the error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Quiz session has ended.',
+                confirmButtonText: 'OK',
+            });
+        }
+    });
     }
-});
 
-
-}
 
     function redirect_survey(annfeedback) {
         // Replace 'YOUR_BASE_URL' with the actual base URL of your application

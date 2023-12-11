@@ -51,47 +51,70 @@ class AdminController extends Controller{
 
     function admin_add_student(Request $request)
     {
-        // Validate the request data
+    
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'dob' => 'required|date',
+            'name' => 'required|string|max:255|regex:/^[^\d]+$/',
             'gender' => 'required|in:male,female',
+            'dob' => 'required|date|before:today',
             'accountType' => 'required|in:student',
-            // Add other validation rules as needed
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]/',
+            ],
+        ], [
+            'email.regex' => 'The email has already registered!',
+            'name.regex' => 'The name field must not contain digits.', 
+            'password.regex' => "The password must meet the following criteria:\n" .
+            "- Be at least 8 characters long.\n" .
+            "- Include at least one lowercase letter.\n" .
+            "- Include at least one uppercase letter.\n" .
+            "- Include at least one digit.\n" .
+            "- Include at least one special character (allowed: @, $, !, %, *, ?, &, .).",
         ]);
 
         if ($request->filled('password')) {
-            $validatedData['password']  = bcrypt($request->password);
+            $validatedData['password']  = Hash::make($request->password);
         }
 
         // Create a new student using the validated data
         $user = User::create($validatedData);
 
         // Redirect or respond as needed (e.g., return a success message)
-        return redirect()->route('admin_stud')->with('success_message', 'Student created successfully');
+        return redirect()->back()->with('success', 'Student created successfully!');
     }
 
     function admin_add_staff(Request $request)
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'dob' => 'required|date',
+            'name' => 'required|string|max:255|regex:/^[^\d]+$/',
             'gender' => 'required|in:male,female',
+            'dob' => 'required|date|before:today',
             'accountType' => 'required|in:lecturer',
             'position' => 'required|string',
-            // Add other validation rules as needed
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]/',
+            ],
+        ], [
+            'email.regex' => 'The email has already registered!',
+            'name.regex' => 'The name field must not contain digits.', 
+            'password.regex' => "The password must meet the following criteria:\n" .
+            "- Be at least 8 characters long.\n" .
+            "- Include at least one lowercase letter.\n" .
+            "- Include at least one uppercase letter.\n" .
+            "- Include at least one digit.\n" .
+            "- Include at least one special character (allowed: @, $, !, %, *, ?, &, .).",
         ]);
 
         if ($request->filled('password')) {
-            $validatedData['password']  = bcrypt($request->password);
+            $validatedData['password']  = Hash::make($request->password);
         }
         
-
         // Create a new user using the validated data
         $user = User::create($validatedData);
 
@@ -99,7 +122,7 @@ class AdminController extends Controller{
         $lecturer = Lecturer::create(['iduser' => $user->id] + $lecturerData);
 
         // Redirect or respond as needed (e.g., return a success message)
-        return redirect()->route('admin_staff')->with('success_message', 'Staff created successfully');
+        return redirect()->back()->with('success', 'Staff created successfully!');
     }
 
    
@@ -125,14 +148,26 @@ class AdminController extends Controller{
 
     function admin_update_student(Request $request, $studentId)
     {
-        // Validate the request data
+    
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $studentId, // Include user ID to exclude the current user from uniqueness check
-            'new_password' => 'nullable|string|min:6',
-            'dob' => 'required|date',
+            'email' => 'required|email|unique:users,email,'. $studentId,
+            'name' => 'required|string|max:255|regex:/^[^\d]+$/',
             'gender' => 'required|in:male,female',
-            // Add other validation rules as needed
+            'dob' => 'required|date|before:today',
+            'new_password' => [
+                'nullable',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]/',
+            ],
+        ], [
+            'email.regex' => 'The email has already registered!',
+            'name.regex' => 'The name field must not contain digits.', 
+            'new_password.regex' => "The password must meet the following criteria:\n" .
+            "- Be at least 8 characters long.\n" .
+            "- Include at least one lowercase letter.\n" .
+            "- Include at least one uppercase letter.\n" .
+            "- Include at least one digit.\n" .
+            "- Include at least one special character (allowed: @, $, !, %, *, ?, &, .).",
         ]);
     
         // Update the student details
@@ -140,14 +175,14 @@ class AdminController extends Controller{
     
         // Check if a new password is provided
         if ($request->filled('new_password')) {
-            $student->password = bcrypt($request->input('new_password'));
+            $student->password = Hash::make($request->input('new_password'));
         }
     
         // Update other fields
         $student->update($validatedData);
     
         // Redirect or respond as needed (e.g., return a success message)
-        return redirect()->route('admin_edit_stud', ['student' => $student->id])->with('success_message', 'Student updated successfully');
+        return redirect()->route('admin_edit_stud', ['student' => $student->id])->with('success', 'Student updated successfully!');
     }
 
 
@@ -156,13 +191,25 @@ class AdminController extends Controller{
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $staffId, // Include user ID to exclude the current user from uniqueness check
-            'new_password' => 'nullable|string|min:6',
-            'dob' => 'required|date',
+            'email' => 'required|email|unique:users,email,'. $staffId,
+            'name' => 'required|string|max:255|regex:/^[^\d]+$/',
             'gender' => 'required|in:male,female',
+            'dob' => 'required|date|before:today',
             'position' => 'required|string',
-            // Add other validation rules as needed
+            'new_password' => [
+                'nullable',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]/',
+            ],
+        ], [
+            'email.regex' => 'The email has already registered!',
+            'name.regex' => 'The name field must not contain digits.', 
+            'new_password.regex' => "The password must meet the following criteria:\n" .
+            "- Be at least 8 characters long.\n" .
+            "- Include at least one lowercase letter.\n" .
+            "- Include at least one uppercase letter.\n" .
+            "- Include at least one digit.\n" .
+            "- Include at least one special character (allowed: @, $, !, %, *, ?, &, .).",
         ]);
     
         // Update the student details
@@ -173,7 +220,7 @@ class AdminController extends Controller{
 
         $staff = User::findOrFail($staffId);
         if ($request->filled('new_password')) {
-            $staff->password = bcrypt($request->input('new_password'));
+            $staff->password = Hash::make($request->input('new_password'));
         }
         $lecturer = Lecturer::where('iduser',$staff->id)->first();
         // Update other fields
@@ -181,7 +228,7 @@ class AdminController extends Controller{
         $lecturer->update(['position'=> $validatedData['position']]);
     
         // Redirect or respond as needed (e.g., return a success message)
-        return redirect()->route('admin_edit_staff', ['staff' => $staff->id])->with('success_message', 'Staff updated successfully');
+        return redirect()->route('admin_edit_staff', ['staff' => $staff->id])->with('success', 'Staff updated successfully!');
     }
     
     

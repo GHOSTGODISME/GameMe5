@@ -124,20 +124,39 @@
 @endforeach
 
 <script>
-        function redirect_quiz(annquiz) {
+     
+    function redirect_quiz(annquiz) {
+    var session_id = annquiz.session_id;
 
-// Replace 'YOUR_BASE_URL' with the actual base URL of your application
-var baseUrl = 'http://localhost:8000';
+    $.ajax({
+        url: "{{ route('class_redirect_quiz')}}",
+        method: 'POST',
+        data: {
+            session_id: session_id,
+            _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+            console.log(response);
+            var sessionCode = response.sessionCode;
+            console.log(sessionCode);
 
-// Assuming you have the session code available (replace 'sessionCode' accordingly)
-var sessionCode = annquiz.session_code;
+            var baseUrl = 'http://localhost:8000';
+            var link = baseUrl + '/join-quiz?code=' + sessionCode;
+            console.log(link);
+            window.location.href = link;
+        },
+        error: function(error) {
+            console.error("Error occurred:", error);
 
-// Generate the link with the session code
-var link = baseUrl + '/join-quiz?code=' + sessionCode;
-
-console.log(link);
-// Navigate to the generated link
-window.location.href = link;
-}
+            // Display a SweetAlert modal for the error
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Quiz session has ended.',
+                confirmButtonText: 'OK',
+            });
+        }
+    });
+    }
 </script>
 @endsection

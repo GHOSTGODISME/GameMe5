@@ -200,7 +200,7 @@
     </h3>
 
     <h3 class="class_subtitle5 {{ in_array(request()->route()->getName(), ['class_stud_feedback']) ? 'feedback-page' : '' }}">
-        <a href="{{ route('class_stud_feedback', ['classroom' => $classroom->id]) }}">Feedback</a>
+        <a href="{{ route('class_stud_feedback', ['classroom' => $classroom->id]) }}">Survey</a>
     </h3>
 
     <h3 class="class_subtitle6 {{ in_array(request()->route()->getName(), ['class_stud_people']) ? 'people-page' : '' }}">

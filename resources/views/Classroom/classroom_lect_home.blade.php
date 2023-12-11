@@ -95,11 +95,12 @@
     position: absolute;
     top: 100%;
     right: 0;
-    background-color: #D9D9D9;
+    background-color: #ffffff;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     display: none;
     width:200px;
+    border-radius: 8px;
 
   }
 
@@ -113,18 +114,19 @@
     font-style: normal;
     font-weight: 200;
     line-height: normal;
-    z-index: 1;
   }
 
   .action-menu a:hover {
-    background-color: #f2f2f2;
+    background-color: #e3e3e3;
+    border-radius: 8px;
   }
+
 </style>
 
 
 
 <!-- Display filtered classrooms associated with the lecturer -->
-@foreach ($filteredClassrooms as $classroom)
+@foreach ($filteredClassrooms as $index=> $classroom)
     @php
     $randomColors = ['#168AAD', '#52B69A', '#B876C8'];
     $randomColor = $randomColors[array_rand($randomColors)];
@@ -134,12 +136,12 @@
             <p>{{ $classroom->coursecode }} (G{{ $classroom->group }})</p>
 
             <div class="button-container">
-                <div class="menu-icon" onclick="toggleMenu(this, event)">
+                <div class="menu-icon" id="menuIcon{{ $index }}" onclick="toggleMenu(this, event)">
                     <img src="img/threedot_white.png" alt="three_dot">
                 </div>
-                <div class="action-menu">
+                <div class="action-menu" id="actionMenu{{ $index }}">
                     <a href="#" onclick="redirect('{{ route('lect_update_class', ['classroom' => $classroom->id]) }}')">Edit Class</a>
-                    <a href="#" onclick="confirmAndSubmit({{ $classroom->id }})">Remove Class</a>
+                    <a href="#" onclick="confirmAndSubmit({{ $classroom->id }},event)">Remove Class</a>
                 </div>
             </div>
         </div>
@@ -155,31 +157,53 @@
 @endforeach
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmAndSubmit(classroomId) {
-        if (confirm("Are you sure you want to remove this classroom?")) {
-            $.ajax({
-                url: "{{ route('classroom_remove') }}",
-                method: 'POST',
-                data: {
-                    class_id: classroomId,
-                    _token: '{{ csrf_token() }}',
-                },
-                success: function (response) {
-                    if (response.success) {
-                        alert('You have successfully removed the classroom!');
+   function confirmAndSubmit(classroomId, event) {
+    event.stopPropagation();
+        Swal.fire({
+    title: 'Are you sure?',
+    text: 'Once deleted, you will not be able to recover this classroom!',
+    icon: 'warning',
+    showCancelButton: true,  // This line ensures the "Cancel" button is displayed
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',  // This line sets the text for the "Cancel" button
+    dangerMode: true,
+})
+.then((result) => {
+    if (result.isConfirmed) {
+        // User clicked "OK," proceed with the deletion
+        $.ajax({
+            url: "{{ route('classroom_remove') }}",
+            method: 'POST',
+            data: {
+                class_id: classroomId,
+                _token: '{{ csrf_token() }}',
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire('Poof! Your classroom has been deleted!', {
+                        icon: 'success',
+                    })
+                    .then(() => {
                         location.reload();
-                    } else {
-                        alert('Error removing classroom. ' + response.message);
-                    }
-                },
-                error: function () {
-                    alert('Error removing classroom');
+                    });
+                } else {
+                    Swal.fire('Error!', 'Error removing classroom. ' + response.message, 'error');
                 }
-            });
-        }
+            },
+            error: function () {
+                Swal.fire('Error!', 'Error removing classroom', 'error');
+            }
+        });
+    } else {
+        // User clicked "Cancel," do nothing or handle as needed
+        Swal.fire('Your classroom is safe!');
     }
+});
+}
 
     function redirect(url) {
         window.location.href = url;
@@ -230,6 +254,65 @@ function handleBodyClick() {
 }
 
 // Add a click event listener to the document body
+
+
+// Add a click event listener to the document body
 document.body.addEventListener('click', handleBodyClick);
+// $(document).ready(function () {
+//     var menuTimers = {}; // Object to store the timer IDs for each menu
+//     var inactivityTimer; // Variable to store the inactivity timer ID
+
+//     function showMenu(menuId) {
+//         clearTimeout(menuTimers[menuId]); // Clear any existing timer
+//         $("#" + menuId).slideDown(200); // Show the menu
+//     }
+
+//     function hideMenu(menuId) {
+//         menuTimers[menuId] = setTimeout(function () {
+//             $("#" + menuId).slideUp(200); // Hide the menu after 5 seconds
+//         }, 500);
+//     }
+
+//     function handleInactivity() {
+//         inactivityTimer = setTimeout(function () {
+//             hideAllMenus();
+//         }, 1000);
+//     }
+
+//     function hideAllMenus() {
+//         Object.keys(menuTimers).forEach(function (menuId) {
+//             hideMenu(menuId);
+//         });
+//     }
+
+//     $("[id^='menuIcon']").click(function () {
+//         var menuId = $(this).attr("id").replace("menuIcon", "");
+//         showMenu("actionMenu" + menuId);
+//         handleInactivity();
+//     });
+
+//     // Handle hover events for the action menus
+//     $("[id^='actionMenu']").hover(
+//         function () {
+//             // Mouse enters the action menu
+//             var menuId = $(this).attr("id");
+//             clearTimeout(menuTimers[menuId]); // Clear the timer
+//             clearTimeout(inactivityTimer); // Clear the inactivity timer
+//         },
+//         function () {
+//             // Mouse leaves the action menu
+//             var menuId = $(this).attr("id");
+//             hideMenu(menuId);
+//             handleInactivity();
+//         }
+//     );
+
+//     // Automatically close all menus after 3 seconds of inactivity
+//     $("body").on("mousemove", function () {
+//         clearTimeout(inactivityTimer);
+//         handleInactivity();
+//     });
+// });
+
 </script>
 @endsection

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-   
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="{{ asset('css/quiz-style.css') }}">
     <style scoped>
         .header-container {
@@ -88,6 +88,10 @@
         .live-session-section-style div:first-child {
             font-weight: bold;
         }
+
+ 
+ 
+
     </style>
 </head>
 
@@ -135,9 +139,23 @@
                         </div>
                         @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
-                                <button class="btn btn-primary" data-bs-toggle="modal"
-                                    data-bs-target="#liveSessionModal">Start
-                                    Live Session </button>
+                                <button class="btn btn-primary" style="   width: 300px;
+                                height: 45px;
+                                margin-top:40px;
+                                flex-shrink: 0;
+                                border-radius: 8px;
+                                background: var(--Button, #2A2A2A);
+                                color: #FEFEFE;
+                                font-family: 'Roboto';
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                border:none;"
+                                
+                                data-bs-toggle="modal"
+                                data-bs-target="#liveSessionModal">Start
+                                Live Session </button>
                             </div>
                         @endif
                     </div>

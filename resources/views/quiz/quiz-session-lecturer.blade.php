@@ -69,7 +69,7 @@
             font-size: 24px;
             font-weight: bold;
             text-align: center;
-            background: #84dea8;
+            background: #f8f8f8;
             padding: 15px;
             border-radius: 10px;
             margin: auto;
@@ -83,19 +83,29 @@
         }
 
         .btn-container a {
-            width: 200px;
+            width: 300px;
             padding: 15px;
             font-size: 24px;
             font-weight: bold;
-            color: white;
-            background: #349981;
+            color: #FEFEFE;
+            font-family: 'Roboto';
+            background-color:#025551;
+        }
+
+        .btn-container a:hover {
+            width: 300px;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FEFEFE;
+            font-family: 'Roboto';
+            background-color:#1ca8a1;
         }
 
         .btn-container button:hover {
             background: #98ffc7;
             color: black;
         }
-
 
         .header_container {
             width: 100%;
@@ -127,7 +137,7 @@
         </div>
         <div class="col-xl-5">
             <div class="joined-participants-container">
-                <div style="background: #226755; padding: 20px; border-radius: 10px;">
+                <div style="border-radius: 10px;">
 
 
                     <div class="details-container" style="padding: 0;">
@@ -158,8 +168,20 @@
                         </div>
 
                         <div class="details-container">
-                            <div>Assign to Class</div>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal">
+                            <div>3. Assign to Class</div>
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="   width: 300px;
+                            height: 45px;
+                            margin-top:20px;
+                            flex-shrink: 0;
+                            border-radius: 8px;
+                           background-color:#00a49c;
+                            color: #ffffff;
+                            font-family: 'Roboto';
+                            font-size: 20px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            border:none;">
                                 Assign to Class
                             </button>
                         </div>

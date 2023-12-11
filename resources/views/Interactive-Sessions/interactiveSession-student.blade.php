@@ -281,6 +281,13 @@
             });
 
         });
+
+      
+        window.addEventListener('popstate', function () {
+            // Reload the page
+            location.reload();
+        });
+
     </script>
 
 

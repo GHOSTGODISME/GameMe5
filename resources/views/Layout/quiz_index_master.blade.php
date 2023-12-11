@@ -29,7 +29,7 @@
     .nav_container {
         display: flex;
         flex-direction: row;
-
+        margin-top:35px;
     }
 
     .admin_title {
@@ -107,6 +107,12 @@
     .admin_subtitle1 a,
     .admin_subtitle2 a {
         text-decoration: none;
+        color: #5C5C5C;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
     }
 
     .admin_subtitle1 a:hover,
@@ -134,6 +140,7 @@
         flex-direction: row;
         width: 100%;
         justify-content: space-between;
+        margin-top:20px;
     }
 
     .add_icon {
@@ -153,6 +160,7 @@
     .add_link {
         padding: 0;
         margin: 0;
+        margin-left:30px;
     }
 
     .search-form {
@@ -201,12 +209,10 @@
     <div class="content">
         <h1 class= "admin_title"> Available Quizzes </h1>
         <div class = "nav_container">
-            <h3
-                class="admin_subtitle1">
+            <h3 class="admin_subtitle1">
                 <a href="{{ route('own-quiz') }}">Owned Quiz</a>
             </h3>
-            <h3
-                class="admin_subtitle2">
+            <h3 class="admin_subtitle2">
                 <a href="{{ route('all-quiz') }}">Quiz Bank</a>
             </h3>
 

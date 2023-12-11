@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-
-
     <style scoped>
         body {
             background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);
@@ -43,6 +41,8 @@
             width: 200px;
             height: 50px;
         }
+
+        
 
         
 #txt_int_code{
@@ -103,6 +103,7 @@
 
 </head>
 
+
 <body>
     @include('Layout/student_header')
     {{-- for header template --}}
@@ -124,6 +125,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    @if($errors->has('code'))
+        <script>
+            // Use SweetAlert2 to display a modal
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '{{ $errors->first("code") }}',
+                customClass: {
+                    title: 'custom-title-class',
+                    content: 'custom-content-class',
+                },
+            });
+        </script>
+    @endif
 
 
 </body>

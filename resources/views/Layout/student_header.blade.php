@@ -59,6 +59,19 @@
         
     }
 
+    .nav-link:hover {
+        padding: 15px 15px 0 15px;
+        color: #fff;
+        text-decoration: none;
+        display: block;
+        font-family: 'Roboto';
+        font-size: 30px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        
+    }
+
     .close-icon {
         position: absolute;
         top: 25px;

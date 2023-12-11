@@ -428,7 +428,8 @@ class ClassroomController extends Controller{
         $email = $request->session()->get('email');
         //$email = 'wongtian628@gmail.com';
         $user = User::where('email', $email)->first();
-        $authorId = $user->id;
+        $author = Lecturer::where('iduser', $user->id)->first();
+
 
         // Create a new classroom record
         $classroom = new Classroom([
@@ -436,7 +437,7 @@ class ClassroomController extends Controller{
             'coursecode' => $request->input('course_code'),
             'group' => $request->input('group'),
             'joincode' => $joinCode,
-            'author' => $authorId,
+            'author' => $author->id,
         ]);
 
         // Save the classroom record
@@ -444,7 +445,7 @@ class ClassroomController extends Controller{
 
         Classlecturer::create([
             'idclass' => $classroom->id,
-            'idlecturer' => $user->lecturer->id,
+            'idlecturer' => $author->id,
         ]);
     
 
@@ -809,7 +810,7 @@ public function class_update_announcement(Request $request)
         $classroom->save();
 
         // Redirect with success message
-        return redirect()->route('classroom_lect_home')->with('success_message', 'Classroom updated successfully.');
+        return redirect()->route('classroom_lect_home')->with('success', 'Classroom updated successfully.');
     
     }
 
@@ -826,7 +827,7 @@ public function class_update_announcement(Request $request)
         $student->delete();
 
         // Redirect with success message
-        return redirect()->route('class_lect_people', ['classroom' => $classroom])->with('success_message', 'Student removed successfully.');
+        return redirect()->route('class_lect_people', ['classroom' => $classroom])->with('success', 'Student removed successfully.');
     }
     
     function assign_class(Request $request){
@@ -901,13 +902,17 @@ public function class_update_announcement(Request $request)
     
             // Log the session information
             Log::info($session);
-    
-            // Access session properties
-            $sessionCode = $session->code;
-            $sessionData = json_encode($session);
-    
-            // Return a JSON response with session information
-            return response()->json(['success' => true, 'sessionCode' =>  $sessionCode]);
+            if ($session->status != "ended") {
+                // Access session properties
+                $sessionCode = $session->code;
+                $sessionData = json_encode($session);
+            
+                // Return a JSON response with session information
+                return response()->json(['success' => true, 'sessionCode' => $sessionCode]);
+            } else {
+                // Return an error response
+                return response()->json(['error' => 'Session has ended.']);
+            }
         } catch (\Exception $e) {
             // Log the exception for further investigation
             Log::error($e);

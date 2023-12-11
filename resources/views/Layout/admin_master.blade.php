@@ -386,8 +386,8 @@
 </style>
 <body>
 <div class="fp_header">
-    <a href="{{ route('login') }}">
-        <img class="logo" src="img/logo_header.png" alt="Logo">
+    <a href="{{ route('admin_stud') }}">
+        <img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo">
     </a>
 
     <div class="profile-data_logout" onclick="confirmLogout()">
@@ -417,15 +417,23 @@
       menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     }
 
-    
-function confirmLogout() {
-        if (confirm("Are you sure you want to log out?")) {
-            logout();
-        }
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will be logged out!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, log me out!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logout();
+            }
+        });
     }
 
-function logout() {
-        // Make an AJAX request to logout
+    function logout() {
         $.ajax({
             url: "{{ route('logout') }}",
             method: 'POST',
@@ -433,11 +441,10 @@ function logout() {
                 _token: '{{ csrf_token() }}',
             },
             success: function (response) {
-                // Handle the logout success, e.g., redirect to the login page
-                window.location.href = "{{ route('login') }}"; // You can change 'login' to your desired route
+                window.location.href = "{{ route('login') }}";
             },
             error: function () {
-                alert('Error logging out');
+                showErrorAlert('Error logging out');
             },
         });
     }
