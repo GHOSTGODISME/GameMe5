@@ -127,10 +127,9 @@
 @endforeach
 
 <script>
-    
     function redirect_survey(annfeedback) {
         // Replace 'YOUR_BASE_URL' with the actual base URL of your application
-        var baseUrl = 'http://127.0.0.1:8000';
+        var baseUrl = 'http://localhost:8000';
         // Assuming you have the session code available (replace 'sessionCode' accordingly)
         var survey_id = annfeedback.survey_id;
         // Generate the link with the session code

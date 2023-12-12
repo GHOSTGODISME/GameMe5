@@ -858,11 +858,15 @@ function compareObject(obj1, obj2) {
         if (typeof val1 === 'object' && typeof val2 === 'object') {
             const objectsEqual = compareObject(val1, val2);
             if (!objectsEqual) {
+                console.log(val1);
+                console.log(val2);
                 console.log("false 3");
                 return false;
             }
         } else if (val1 !== val2) {
             console.log("false 4");
+            console.log(val1);
+            console.log(val2);
             return false;
         }
     }

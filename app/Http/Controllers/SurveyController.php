@@ -14,6 +14,7 @@ use App\Models\SurveyResponseQuestion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
 use League\Flysystem\Visibility;
 use Maatwebsite\Excel\Facades\Excel;
@@ -214,18 +215,20 @@ class SurveyController extends Controller
         return response()->json($survey);
     }
 
-    public function studentResponse($id)
+    public function studentResponse(Request $request, $id)
     {
+        $email = $request->session()->get('email');
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
         return view('survey.student-view', ['survey' => $survey]);
     }
 
     public function storeResponse(Request $request)
     {
-        $email = $request->session()->get('email');
+        $email = session('email');
         $user = User::where('email', $email)->first();
         $stud = Student::where('iduser', $user->id)->first();
         $student = Student::with('classrooms')->find($stud->id);
+        
         
         Log::info('Request Data: ' . json_encode($request->all()));
         try {
