@@ -492,7 +492,12 @@
                 setTimeout(function() {
                     clearInterval(spinTimer);
                     // Display the selected name
-                    alert(selectedEntry + "!!!");
+                    
+                    Swal.fire({
+                        title: 'Congratulations!',
+                        text: selectedEntry + ' has been selected.',
+                        icon: 'success',
+                    });
 
                     // Remove the selected name from Entries and put into result
                     entries.splice(randomIndex, 1);

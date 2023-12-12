@@ -875,7 +875,9 @@ function compareObject(obj1, obj2) {
 
 
 window.addEventListener('beforeunload', function(e) {
-    if (!compareObject(ori_survey, survey)) {
+    const new_survey = deepCopy(survey);
+    ori_survey = deepCopy(survey);
+    if (!compareObject(ori_survey, new_survey)) {
         e.preventDefault();
         e.returnValue = '';
         return 'Are you sure you want to leave? Your changes may not be saved.';
