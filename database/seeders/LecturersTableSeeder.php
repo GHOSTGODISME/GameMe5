@@ -14,7 +14,11 @@ class LecturersTableSeeder extends Seeder
     public function run(): void
     {
         Lecturer::create([
-            'iduser' => 2, // Assuming you have a user with ID 2
+            'iduser' => 3, // Assuming you have a user with ID 2
+            'position'=>'Senior Lecturer'
+        ]);
+        Lecturer::create([
+            'iduser' => 4, // Assuming you have a user with ID 2
             'position'=>'Senior Lecturer'
         ]);
     }

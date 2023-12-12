@@ -17,5 +17,9 @@ class StudentsTableSeeder extends Seeder
             'iduser' => 1, // Assuming you have a user with ID 1
             // other attributes...
         ]);
+        Student::create([
+            'iduser' => 2, // Assuming you have a user with ID 1
+            // other attributes...
+        ]);
     }
 }
