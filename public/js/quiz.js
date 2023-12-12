@@ -915,7 +915,7 @@ function generateQuestionHTML(question, index, mode) {
     <div class="question-container-footer">
         <div>
             <label for="quiz-duration-show">Duration</label>
-        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" ||mode === "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.duration === 10 ? 'selected' : ''}>10 seconds</option>
             <option value="15" ${question.duration === 15 ? 'selected' : ''}>15 seconds</option>
             <option value="30" ${question.duration === 30 ? 'selected' : ''}>30 seconds</option>
@@ -924,7 +924,7 @@ function generateQuestionHTML(question, index, mode) {
 
         <div>
             <label for="quiz-points-show">Points</label>
-        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || "viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || mode ==="viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.points === 10 ? 'selected' : ''}>10</option>
             <option value="15" ${question.points === 15 ? 'selected' : ''}>15</option>
             <option value="30" ${question.points === 30 ? 'selected' : ''}>30</option>
