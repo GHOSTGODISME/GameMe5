@@ -143,7 +143,7 @@ export default {
                             " You will be redirected to the home page."
                     );
                     // this.$router.push("/");
-                    window.location.href = "/";
+                    window.location.href = '/stud_homepage';
                 }
             });
         },

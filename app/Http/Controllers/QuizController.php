@@ -165,4 +165,21 @@ class QuizController extends Controller
             }
         }
     }
+
+    public function delete($id)
+    {
+        // Find the quiz by ID
+        $quiz = Quiz::find($id);
+
+        // Check if the fortune wheel exists
+        if (!$quiz) {
+            return response()->json(['message' => 'Quiz not found.'], 404);
+        }
+
+        $quiz->quiz_questions()->delete();
+
+        $quiz->delete();
+
+        return response()->json(['message' => 'Quiz deleted successfully.']);
+    }
 }
