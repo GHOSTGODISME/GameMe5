@@ -899,7 +899,7 @@ function generateQuestionHTML(question, index, mode) {
         }
     }
     // Checking and appending answer explaination if available
-    if (question.answer_explaination) {
+    if (question.answer_explaination != "[]") {
         questionHTML += `
     <div class="answer-explaination-container container-space">
         <div class="horizontal-line-with-text">
