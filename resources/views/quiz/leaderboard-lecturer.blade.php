@@ -668,7 +668,7 @@
                         success: function(response) {
                             socket.emit("endSession", sessionCode);
                             console.log('Session ended successfully');
-                            window.location.href = '/';
+                            window.location.href = '/lect_homepage';
                         },
                         error: function(xhr, status, error) {
                             console.error('Failed to end session:', error);
