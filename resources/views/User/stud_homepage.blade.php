@@ -239,6 +239,7 @@ text-decoration: none;
 </script>
 @enderror
 
+
 <div class="stud_sub_cont">
 <a href="{{ route('classroom_stud_home') }}" class="stud_sub_header">Classroom</a>
 <div class="stud_small_cont">

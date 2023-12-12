@@ -38,12 +38,12 @@
                 </div>
             </div>
             <div v-else class="wait-start-screen">
-                <p>Waiting for the host to start the quiz...</p>
+                <p style="font-size:30px;">Waiting for the host to start the quiz...</p>
                 <span class="joined-participants-people">{{ username }}</span>
             </div>
         </div>
 
-        <JoinQuizJoinedParticipants :participants="participantList" />
+        <JoinQuizJoinedParticipants :participants="participantList"/>
     </div>
 </template>
 

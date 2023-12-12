@@ -136,8 +136,19 @@ class QuizSessionController extends Controller
     public function joinQuiz(Request $request)
     {
         $request->validate([
-            'code' => 'required|exists:sessions,code',
+            'code' => [
+                'required',
+                'exists:sessions,code',
+                function ($attribute, $value, $fail) {
+                    $session = Session::where('code', $value)->first();
+        
+                    if ($session && $session->status === 'ended') {
+                        $fail('The selected session has already ended.');
+                    }
+                },
+            ],
         ]);
+        
         
         $code = $request->input('code');
     
