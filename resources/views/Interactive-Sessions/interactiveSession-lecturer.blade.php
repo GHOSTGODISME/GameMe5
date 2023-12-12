@@ -438,8 +438,8 @@
                     socket.emit("saveChatMessage", sessionCode);
                     socket.on('returnChatMessageSave', message => {
                         $.ajax({
-                            url: '/end-interactive-session', // Replace with your route
-                            type: 'POST', // Adjust the HTTP method accordingly
+                            url: '/end-interactive-session',
+                            type: 'POST',
                             data: {
                                 messages: message,
                                 sessionId: sessionId
@@ -464,40 +464,25 @@
         });
 
         function updatePollResult(pollId, optionSelected, votes) {
-            console.log("triggerd");
-
             const pollContainer = document.querySelector(`[data-poll-id="${pollId}"]`);
             if (pollContainer) {
-                console.log("triggerd");
-
                 const pollOptions = pollContainer.querySelectorAll('.polls-options');
 
+                const totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
+                const selectedOptionVotes = votes[optionSelected];
+
+                // Update progress bars for all options within the poll
                 pollOptions.forEach((optionElement) => {
                     const optionTextContainer = optionElement.querySelector('.option-text');
                     const optionText = optionTextContainer.textContent.trim();
 
-                    if (optionText === optionSelected) {
-                        console.log("triggerd");
-                        console.log("votes " + votes);
-                        console.log(votes);
-                        console.log("optionSelected " + optionSelected);
+                    const progressContainer = optionElement.querySelector('.progress');
+                    const progressBar = progressContainer.querySelector('.progress-bar');
 
-                        const progressContainer = optionElement.querySelector('.progress');
-                        const progressBar = progressContainer.querySelector('.progress-bar');
-
-                        if (votes instanceof Map) {
-                            totalVotes = Array.from(votes.values()).reduce((acc, curr) => acc + curr, 0);
-                            selectedOptionVotes = votes.get(optionSelected);
-                        } else if (typeof votes === 'object') {
-                            totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
-                            selectedOptionVotes = votes[optionSelected];
-                        }
-                        const votesPercentage = totalVotes > 0 ? (selectedOptionVotes / totalVotes) * 100 : 0;
-                        console.log("votesPercentage " + votesPercentage);
-
-                        progressBar.style.width = `${votesPercentage}%`;
-                        progressBar.textContent = `${selectedOptionVotes}`;
-                    }
+                    const optionVotes = votes[optionText];
+                    const votesPercentage = totalVotes > 0 ? (optionVotes / totalVotes) * 100 : 0;
+                    progressBar.style.width = `${votesPercentage}%`;
+                    progressBar.textContent = `${optionVotes}`;
                 });
             }
         }
@@ -647,9 +632,16 @@
             const optionInputs = document.querySelectorAll('#optionsContainer input:not([readonly])');
             optionInputs.forEach(input => {
                 if (input.value.trim() !== '' && input.value !== null) {
-                    options.push(input.value);
+                    options.push(input.value.trim());
                 }
             });
+
+            // check if there are duplicated option
+            const uniqueOptions = Array.from(new Set(options));
+            if (uniqueOptions.length !== options.length) {
+                alert('Duplicate options are not allowed. Please enter unique options for the poll.');
+                return;
+            }
 
             if (options.length < 2) {
                 alert('Please enter at least two options for the poll.');

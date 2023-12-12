@@ -72,32 +72,19 @@ export default {
     created() {
         this.socket = io("http://localhost:3000");
         this.store = useQuizStore();
-        this.store.clearPinialocalStorage();
+        // this.store.clearPinialocalStorage();
         const code = this.$route.query.code.toString();
-
-        // if (this.storedState && this.storedState.sessionCode === code) {
-        //     Object.keys(this.storedState).forEach((key) => {
-        //         if (this.store[key] !== undefined) {
-        //             this.store[key] = this.storedState[key];
-        //         }
-        //     });
-        // } else {
-            const studId = sessionStorage.getItem("stud_id");
-            this.store.setUserId(studId);
-            this.store.setSessionCode(code);
-        // }
+        this.store.setSessionCode(code);
 
         this.store.fetchQuizDetails().then(() => {
             this.title = this.store.quizTitle;
         });
-
+        const studId = sessionStorage.getItem("stud_id");
         this.username = this.store.username || "";
 
         if (this.username.trim() !== "") {
             this.joinedQuiz = true;
         }
-
-
     },
     mounted() {
         this.initializeSocket();
@@ -143,6 +130,7 @@ export default {
             });
 
             this.socket.on("session status", (sessionStatus) => {
+                this.store.quizState = sessionStatus;
                 // if (this.joinedQuiz) {
                 //   this.$router.push("/quiz/quiz-loading");
                 // } else
@@ -158,47 +146,95 @@ export default {
                     window.location.href = '/stud_homepage';
                 }
             });
-
-            this.socket.emit("checkUser", {
-                sessionCode: this.store.sessionCode,
-                id: this.store.userId,
-            });
-
-            this.socket.on("same participants", () => {
-                alert(
-                    "You have participated to this session.\n" +
-                        " You will be redirected to the homepage."
-                );
-                window.location.href = '/';
+        },
+        checkUserQualification(userId, sessionId) {
+            return new Promise((resolve, reject) => {
+                axios
+                    .post("/api/check-user-qualification", {
+                        session_id: sessionId,
+                        user_id: userId,
+                    })
+                    .then((response) => {
+                        const hasCompletedQuiz = response.data;
+                        console.log(hasCompletedQuiz);
+                        if (hasCompletedQuiz) {
+                            this.store.clearPinialocalStorage();
+                            alert(
+                                "You have participated in this session.\n" +
+                                    " You will be redirected to the homepage."
+                            );
+                            window.location.href = "/";
+                        } else {
+                            // if user havent complete the quiz
+                            resolve(false);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(
+                            "Error checking user qualification:",
+                            error
+                        );
+                        reject(error);
+                    });
             });
         },
+
         validateUsername() {
             if (this.username.trim() === "") {
                 this.emptyUserNameMsg = true;
             } else {
                 this.emptyUserNameMsg = false;
 
-                // store.setUsername(this.username);
-                // console.log("store.username " + store.username);
-                this.store.setUsername(this.username)
+                this.store.setUsername(this.username);
 
                 axios
-                    .post("/api/register-name", {
-                        username: this.store.username,
-                        sessionId: this.store.sessionId,
-                        userId: this.store.userId,
+                    .post("/api/check-user-qualification", {
+                        session_id: this.store.sessionId,
+                        user_id: sessionStorage.getItem("stud_id"),
                     })
                     .then((response) => {
-                        this.joinedQuiz = true;
-                        this.socket.emit("join", {
-                            sessionCode: this.store.sessionCode,
-                            id: this.store.userId,
-                            username: this.store.username,
-                        });
-                        this.socket.emit("get status", this.store.sessionCode);
+                        const hasCompletedQuiz = response.data;
+                        if (hasCompletedQuiz) {
+                            // User has already completed the quiz
+                            this.store.clearPinialocalStorage();
+                            alert(
+                                "You have participated in this session.\n" +
+                                    " You will be redirected to the homepage."
+                            );
+                            window.location.href = "/";
+                        } else {
+                            // User hasn't completed the quiz, proceed with joining
+                            axios
+                                .post("/api/register-name", {
+                                    username: this.store.username,
+                                    sessionId: this.store.sessionId,
+                                    userId: this.store.userId,
+                                })
+                                .then((response) => {
+                                    this.joinedQuiz = true;
+                                    this.socket.emit("join", {
+                                        sessionCode: this.store.sessionCode,
+                                        id: this.store.userId,
+                                        username: this.store.username,
+                                    });
+                                    this.socket.emit(
+                                        "get status",
+                                        this.store.sessionCode
+                                    );
+                                })
+                                .catch((error) => {
+                                    console.error(
+                                        "Error joining the quiz:",
+                                        error
+                                    );
+                                });
+                        }
                     })
                     .catch((error) => {
-                        console.error("Error joining the quiz:", error);
+                        console.error(
+                            "Error checking user qualification:",
+                            error
+                        );
                     });
             }
         },
