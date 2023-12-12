@@ -337,10 +337,10 @@
                                 <table style="border:1" class="table table-striped table-bordered table-hover ">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>Response ID</th>
-                                            <th>Survey ID</th>
-                                            <th>User ID</th>
-                                            <th>Responded Time</th> 
+                                            <th>No</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Responded Time</th>
                                             @foreach ($uniqueQuestions as $question)
                                                 <th>{{ $question->title }}</th>
                                             @endforeach
@@ -349,9 +349,9 @@
                                     <tbody>
                                         @foreach ($surveyResponses as $response)
                                             <tr>
-                                                <td>{{ $response->id }}</td>
-                                                <td>{{ $response->survey_id }}</td>
-                                                <td>{{ $response->user_id }}</td>
+                                                <td>{{ $loop->index + 1 }}</td>
+                                                <td>{{ $response->user->name }}</td>
+                                                <td>{{ $response->user->email }}</td>
                                                 <td>{{ $response->created_at }}</td>
                                                 <!-- Loop through each question response for this response -->
                                                 @foreach ($response->surveyResponseQuestions as $questionResponse)
