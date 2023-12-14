@@ -62,7 +62,7 @@ border:2px white solid;
 <div class="profile-container">
     <div class="profile-data_top" onclick="editProfile('profile_picture')">
         <div class="profile-label">
-        <img class= profile_picture src="{{ $student->profile_picture ? url($student->profile_picture) : asset('path_to_default_image') }}" alt="Profile Picture" data-field="profile_picture">
+        <img class= profile_picture src="{{ $student->profile_picture ? url($student->profile_picture) : asset('storage/' )}}" alt="Profile Picture" data-field="profile_picture">
         {{-- <label class="profile-label">Profile Picture</label> --}}
         <!-- Display profile picture -->
         </div>

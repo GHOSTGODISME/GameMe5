@@ -80,6 +80,7 @@ export default {
             this.title = this.store.quizTitle;
         });
         const studId = sessionStorage.getItem("stud_id");
+        this.store.setUserId(studId);
         this.username = this.store.username || "";
 
         if (this.username.trim() !== "") {
@@ -163,7 +164,7 @@ export default {
                                 "You have participated in this session.\n" +
                                     " You will be redirected to the homepage."
                             );
-                            window.location.href = "/";
+                            window.location.href = "/stud_homepage";
                         } else {
                             // if user havent complete the quiz
                             resolve(false);

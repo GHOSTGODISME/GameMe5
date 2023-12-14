@@ -209,7 +209,7 @@
                                         @endif
                                     </li>
                                 @endforeach
-                                @if (!empty($question->answer_explaination))
+                                @if (!empty($question->answer_explaination) && $question->answer_explaination != "[]")
                                     <div>
                                         <hr>
                                         <p><b>Explanation:</b></p>
@@ -236,7 +236,7 @@
                                     <hr>
                                     <p>Correct Answer: {{ $question->correct_ans[0] }}</p>
                                 @endif
-                                @if (!empty($question->answer_explaination))
+                                @if (!empty($question->answer_explaination)  && $question->answer_explaination != "[]")
                                     <div>
                                         <hr>
                                         <p><b>Explanation:</b></p>

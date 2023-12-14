@@ -442,7 +442,10 @@
                         totalIncorrect++;
                     }
 
-                    const answeredOptions = JSON.parse(response.answeredOption);
+                    // const answeredOptions = JSON.parse(response.answeredOption);
+                    const answeredOptions = response.answeredOption;
+                    console.log("answeredOptions");
+                    console.log(answeredOptions);
                     if (!answeredOptions || answeredOptions[0] == null) {
                         blankCount++; // Increment blank count for each empty or null response
                     } else if (Array.isArray(answeredOptions)) {
@@ -510,15 +513,21 @@
                         studentAnsRow.classList.add('incorrect-option');
                     }
 
-                    const answeredOption = JSON.parse(studentAnswer.answeredOption);
+                    // const answeredOption = JSON.parse(studentAnswer.answeredOption);
+                    const answeredOption = studentAnswer.answeredOption;
+                    console.log(answeredOption);
+                    
                     const answerText = answeredOption && answeredOption[0] !== null ?
                     answeredOption[0] :'No answer provided';
+
+                    console.log(answerText);
                     const textColor = answeredOption && answeredOption[0] !== null ?
                         'black' :'grey';
 
                     studentAnsRow.innerHTML = `
                         <span>${studentAnswer.username}</span>
-                        <span style="color: ${textColor};">${answerText}</span>
+                        <span style="color:                     console.log(answeredOption));
+${textColor};">${answerText}</span>
                     `;
 
                     studentAnswerText.appendChild(studentAnsRow);
