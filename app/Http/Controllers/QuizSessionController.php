@@ -421,13 +421,17 @@ class QuizSessionController extends Controller
 
     public function showQuizSummary(Request $request, $userId, $sessionId, $quizId)
     {
-        // $email = $request->session()->get('email');
-        // $user = User::where('email', $email)->first();
-        // $stud = Student::where('iduser', $user->id)->first();
-        // $student = Student::with('classrooms')->find($stud->id);
-        // $userId = $student->id;
+        $email = $request->session()->get('email');
+        $user = User::where('email', $email)->first();
+        $stud = Student::where('iduser', $user->id)->first();
+        $student = Student::with('classrooms')->find($stud->id);
 
-        return view('quiz.quiz-summary', compact('userId', 'sessionId', 'quizId'));
+        $userId = $student->id;
+
+        $quiz = Quiz::find($quizId);
+        $quizTitle = $quiz->title;
+
+        return view('quiz.quiz-summary', compact('userId', 'sessionId', 'quizId', 'quizTitle'));
     }
 
     public function generatePDF(Request $request, $userId, $sessionId, $quizId)

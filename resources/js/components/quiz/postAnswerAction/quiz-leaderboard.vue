@@ -19,6 +19,8 @@
                     <tr
                         v-for="(player, index) in leaderboardData"
                         :key="player.id"
+                        :class="{ 'highlighted-row': player.id === $pinia.state.userId }"
+
                     >
                         <th scope="row">{{ index + 1 }}</th>
                         <td>{{ player.username }}</td>
@@ -48,6 +50,7 @@ export default {
             timerInterval: null,
             leaderboardData: [],
             socket: null,
+            store: null,
         };
     },
     mounted() {
@@ -104,3 +107,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.highlighted-row {
+    background-color: yellow; /* Change this to your preferred highlight color */
+}
+</style>

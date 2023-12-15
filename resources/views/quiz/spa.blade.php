@@ -23,15 +23,7 @@
     <div id="app"></div>
 
     <script>
-        function clearLocalStorageWithPrefix(prefix) {
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith(prefix)) {
-                    localStorage.removeItem(key);
-                }
-            }
-        }
-        clearLocalStorageWithPrefix('quiz:');
+
         
         // window.sessionData = @json(session("stud_id"));
         sessionStorage.setItem("stud_id", @json(session("stud_id")));

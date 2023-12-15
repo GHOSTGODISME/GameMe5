@@ -215,7 +215,7 @@
 <body>
     <div class="header-container">
         <img src="/img/logo_header.png" alt="Logo">
-        <span class="header-quiz-title">Title</span>
+        <span class="header-quiz-title">{{$quizTitle}}</span>
     </div>
 
     <div class="quiz-body">
@@ -343,6 +343,8 @@
             const quizId = @json($quizId);
             const quizDetails = await fetchQuizDetails(userId, sessionId, quizId);
 
+            console.log(@json($quizTitle));
+
             if (quizDetails) {
                 const {
                     quiz,
@@ -365,8 +367,8 @@
                 document.getElementById('quiz-rank').textContent = `${rank}/${totalParticipants}`;
                 document.getElementById('quiz-score').textContent = total_points;
                 document.getElementById('quiz-accuracy').textContent = `${accuracy}%`;
-                document.getElementById('quiz-correct').textContent = correct_answer_count;
-                document.getElementById('quiz-incorrect').textContent = incorrect_answer_count;
+                document.getElementById('quiz-correct').textContent = `${correct_answer_count}/${correct_answer_count + incorrect_answer_count}`;
+                document.getElementById('quiz-incorrect').textContent = `${incorrect_answer_count}/${correct_answer_count + incorrect_answer_count}`;
                 document.getElementById('quiz-avg-time').textContent = `${average_time}`;
 
 

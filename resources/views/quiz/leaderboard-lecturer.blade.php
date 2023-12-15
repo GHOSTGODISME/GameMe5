@@ -442,8 +442,14 @@
                         totalIncorrect++;
                     }
 
-                    // const answeredOptions = JSON.parse(response.answeredOption);
-                    const answeredOptions = response.answeredOption;
+                    let answeredOptions;
+
+                    try {
+                        answeredOptions = JSON.parse(response.answeredOption);
+                    } catch (error) {
+                        answeredOptions = response.answeredOption;
+                    }
+
                     console.log("answeredOptions");
                     console.log(answeredOptions);
                     if (!answeredOptions || answeredOptions[0] == null) {
@@ -513,21 +519,24 @@
                         studentAnsRow.classList.add('incorrect-option');
                     }
 
-                    // const answeredOption = JSON.parse(studentAnswer.answeredOption);
-                    const answeredOption = studentAnswer.answeredOption;
-                    console.log(answeredOption);
-                    
+                    let answeredOption;
+                    try {
+                        answeredOption = JSON.parse(studentAnswer.answeredOption);
+                    } catch (error) {
+                        answeredOption = studentAnswer.answeredOption;
+                    }
+                   console.log(answeredOption);
+
                     const answerText = answeredOption && answeredOption[0] !== null ?
-                    answeredOption[0] :'No answer provided';
+                        answeredOption[0] : 'No answer provided';
 
                     console.log(answerText);
                     const textColor = answeredOption && answeredOption[0] !== null ?
-                        'black' :'grey';
+                        'black' : 'grey';
 
                     studentAnsRow.innerHTML = `
                         <span>${studentAnswer.username}</span>
-                        <span style="color:                     console.log(answeredOption));
-${textColor};">${answerText}</span>
+                        <span style="color:${textColor};">${answerText}</span>
                     `;
 
                     studentAnswerText.appendChild(studentAnsRow);
@@ -664,7 +673,7 @@ ${textColor};">${answerText}</span>
 
             $('#endBtn').click(function() {
                 const sessionId = sessionStorage.getItem('sessionId');
-                
+
                 if (sessionId) {
                     $.ajaxSetup({
                         headers: {
@@ -737,8 +746,8 @@ ${textColor};">${answerText}</span>
             };
 
             socket.on('updateResponse', (data) => {
+                console.log("testtttttttt");
                 console.log(data);
-
                 if (data) {
                     const questionId = data.questionId;
 

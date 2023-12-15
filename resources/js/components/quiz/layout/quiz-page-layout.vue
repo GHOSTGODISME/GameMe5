@@ -55,6 +55,7 @@
                 submitted: false,
                 defaultTime: 10,
                 socket:null,
+                store:null,
             };
         },
         mounted() {
@@ -64,24 +65,21 @@
         },
         created(){
             this.socket = io("http://localhost:3000");
+            this.store = useQuizStore();
         },
         methods: {
             initializeSocket() {
-                const store = useQuizStore();
-                
-
-                this.socket.emit("rejoinRoom", store.sessionCode);
-                this.socket.emit("get leaderboard", store.sessionCode);
+                this.socket.emit("rejoinRoom", this.store.sessionCode);
+                this.socket.emit("get leaderboard", this.store.sessionCode);
 
                 this.socket.on("update leaderboard", (leaderboard) => {
                     console.log("Received updated leaderboard:", leaderboard);
                     this.leaderboardData = leaderboard;
-                    store.updateUserRank(this.leaderboardData);
+                    this.store.updateUserRank(this.leaderboardData);
                 });
             },
             startTimer() {
-                const store = useQuizStore();
-                const currentQuestion = store.questions[store.currentQuestionIndex];
+                const currentQuestion = this.store.questions[this.store.currentQuestionIndex];
                 const questionDuration = currentQuestion ?
                     currentQuestion.duration :
                     this.defaultTime;
@@ -119,34 +117,32 @@
                 }
                 console.log(submitedAns);
 
-
-                const store = useQuizStore();
                 const currentTime = this.timeRemaining;
                 const timeTaken =
-                    store.questions[store.currentQuestionIndex].duration -
+                this.store.questions[this.store.currentQuestionIndex].duration -
                     currentTime;
-                const questionId = store.questions[store.currentQuestionIndex].id;
+                const questionId = this.store.questions[this.store.currentQuestionIndex].id;
 
                 clearInterval(this.timerInterval);
 
-                store.storeQuestionTime(questionId, timeTaken);
-                store.storeQuizResponse(questionId, submitedAns);
-                store.storeCorrectness(questionId, answeredCorrectly);
-                store.storeQuestionPoints(questionId, answeredCorrectly);
+                this.store.storeQuestionTime(questionId, timeTaken);
+                this.store.storeQuizResponse(questionId, submitedAns);
+                this.store.storeCorrectness(questionId, answeredCorrectly);
+                this.store.storeQuestionPoints(questionId, answeredCorrectly);
 
-                this.score = store.totalPoints;
+                this.score = this.store.totalPoints;
 
                 this.socket.emit("update score", {
-                    sessionCode: store.sessionCode,
-                    userId: store.userId,
-                    newScore: store.totalPoints,
+                    sessionCode: this.store.sessionCode,
+                    userId: this.store.userId,
+                    newScore: this.store.totalPoints,
                 });
 
                 this.socket.emit("userData", {
-                    sessionCode: store.sessionCode,
+                    sessionCode: this.store.sessionCode,
                     userData: {
-                        userId: store.userId,
-                        username: store.username,
+                        userId: this.store.userId,
+                        username: this.store.username,
                         questionId: this.question.id,
                         answeredOption: submitedAns ?? Array(0),
                         timeTaken: timeTaken,
@@ -169,11 +165,11 @@
                             this.question.answer_explaination !== "[]"
                         ) {
                             this.$router.push("/quiz/quiz-explaination");
-                        } else if(store.showLeaderboardFlag === 1){
+                        } else if(this.store.showLeaderboardFlag === 1){
                             this.$router.push("/quiz/quiz-leaderboard");
                         }else{
-                            store.currentQuestionIndex += 1;
-                            if (store.currentQuestionIndex < store.questions.length) {
+                            this.store.currentQuestionIndex += 1;
+                            if (this.store.currentQuestionIndex < this.store.questions.length) {
                                 this.$router.push("/quiz/quiz-page-layout");
                             } else {
                                 this.$router.push("/quiz/quiz-closure");
@@ -183,19 +179,18 @@
                 }, 1000); // Update every second (1000 milliseconds)
             },
             async submitResponseToDatabase(timeTaken, submitedAns, answeredCorrectly) {
-                const store = useQuizStore();
                 const payload = {
-                    session_id: store.sessionId,
-                    user_id: store.userId,
+                    session_id: this.store.sessionId,
+                    user_id: this.store.userId,
                     question_id: this.question.id,
-                    quiz_id: store.quizId,
+                    quiz_id: this.store.quizId,
                     time_taken: timeTaken,
                     user_response: submitedAns,
                     correctness: answeredCorrectly,
-                    points: store.questionPoints[this.question.id],
+                    points: this.store.questionPoints[this.question.id],
                 };
 
-                await store.storeIndividualResponse(payload);
+                await this.store.storeIndividualResponse(payload);
             },
             resetTimer(time) {
                 clearInterval(this.timerInterval);
@@ -205,14 +200,13 @@
         },
         computed: {
             question() {
-                const store = useQuizStore();
-                console.log(store.questions[store.currentQuestionIndex]);
+                console.log(this.store.questions[this.store.currentQuestionIndex]);
 
-                if(store.shuffleOptionFlag === 1){
-                    store.shuffle(store.questions[store.currentQuestionIndex].options);
+                if(this.store.shuffleOptionFlag === 1){
+                    this.store.shuffle(this.store.questions[this.store.currentQuestionIndex].options);
                 }
-                console.log(store.questions[store.currentQuestionIndex]);
-                return store.questions[store.currentQuestionIndex] || {}; 
+                console.log(this.store.questions[this.store.currentQuestionIndex]);
+                return this.store.questions[this.store.currentQuestionIndex] || {}; 
             },
         },
         beforeUnmount() {

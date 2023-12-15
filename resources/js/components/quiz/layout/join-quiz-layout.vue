@@ -38,12 +38,14 @@
                 </div>
             </div>
             <div v-else class="wait-start-screen">
-                <p style="font-size:30px;">Waiting for the host to start the quiz...</p>
+                <p style="font-size: 30px">
+                    Waiting for the host to start the quiz...
+                </p>
                 <span class="joined-participants-people">{{ username }}</span>
             </div>
         </div>
 
-        <JoinQuizJoinedParticipants :participants="participantList"/>
+        <JoinQuizJoinedParticipants :participants="participantList" />
     </div>
 </template>
 
@@ -98,12 +100,7 @@ export default {
         // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
     },
     computed: {
-        storedState() {
-            // const sessionStorageState = sessionStorage.getItem("quizStore");
-            // return sessionStorageState ? JSON.parse(sessionStorageState) : {};
-        },
         inputStyle() {
-            // Compute input field style based on error condition
             return this.emptyUserNameMsg
                 ? {
                       border: "3px solid #CA0000",
@@ -132,9 +129,6 @@ export default {
 
             this.socket.on("session status", (sessionStatus) => {
                 this.store.quizState = sessionStatus;
-                // if (this.joinedQuiz) {
-                //   this.$router.push("/quiz/quiz-loading");
-                // } else
                 if (sessionStatus === "running" && this.joinedQuiz) {
                     // this.socket.emit("exitRoom", this.store.sessionCode);
                     this.$router.push("/quiz/quiz-loading");
@@ -143,8 +137,7 @@ export default {
                         "The session has ended.\n" +
                             " You will be redirected to the home page."
                     );
-                    // this.$router.push("/");
-                    window.location.href = '/stud_homepage';
+                    window.location.href = "/stud_homepage";
                 }
             });
         },
@@ -166,7 +159,6 @@ export default {
                             );
                             window.location.href = "/stud_homepage";
                         } else {
-                            // if user havent complete the quiz
                             resolve(false);
                         }
                     })
