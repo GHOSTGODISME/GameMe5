@@ -26,26 +26,10 @@ use App\Http\Controllers\ClassroomController;
 |
 */
 
-// Route::any('{slug}', function(){
-//     return view('home');
-// });
-
 /*Homepage*/
 Route::get('/', function () {
     return view('User/login');
-    // return view('chat');
-    // return view('quiz.spa');
 });
-
-
-
-// Route::get('/{pathMatch}', function(){
-//     return view('quiz.spa');
-// }) ->where ('pathMatch',".*");
-
-// Route::get('/{vue_capture?}', function() {
-//     return view('quiz.spa');
-// })->where('vue_capture', '[\/\w\.-]*');
 
 /*User Authentication*/
 /*Login*/
