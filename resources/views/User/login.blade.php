@@ -3,27 +3,27 @@
 @section('title', 'Sign In')
 
 @section('content')
+
 <style>
+    .forget_pass{
+        color: #000;
+        font-family: 'Roboto';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        text-decoration-line: underline;
+    }
 
-.forget_pass{
-color: #000;
-font-family: 'Roboto';
-font-size: 12px;
-font-style: normal;
-font-weight: 300;
-line-height: normal;
-text-decoration-line: underline;
-}
-
-.forget_pass_container{
-width: 300px;
-display: flex;
-justify-content: right;   
-margin-top:10px; 
-}
+    .forget_pass_container{
+        width: 300px;
+        display: flex;
+        justify-content: right;   
+        margin-top:10px; 
+    }
 
 
-#txt_login_email, #txt_login_password {
+    #txt_login_email, #txt_login_password {
         padding: 15px;
         border: 1px solid #BFBFBF;
         border-radius: 10px;
@@ -34,7 +34,7 @@ margin-top:10px;
         flex-shrink: 0;
     }
     #txt_login_email{
-    margin-bottom: 30px;
+        margin-bottom: 30px;
     }
 
     #txt_login_email:focus,#txt_login_password:focus{
@@ -52,25 +52,25 @@ margin-top:10px;
     }
 
     .input_label{
-    color: #000;
-    font-family: 'Roboto';
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 300;
-    line-height: normal;
-    margin-bottom:20px;
+        color: #000;
+        font-family: 'Roboto';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 300;
+        line-height: normal;
+        margin-bottom:20px;
     }
 
     .error_message{
-	background-color: #f9d0d0;
-    padding:10px;
-    height:20px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-top:5px;
-    margin-bottom:20px;
-    border-radius:8px;
+        background-color: #f9d0d0;
+        padding:10px;
+        height:20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top:5px;
+        margin-bottom:20px;
+        border-radius:8px;
     }
 
     .error_message p{
