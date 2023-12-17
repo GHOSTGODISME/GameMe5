@@ -48,13 +48,13 @@ function addQuestion(type) {
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
 
-    // questionContainer.setAttribute("data-survey-question", JSON.stringify(question));
     questionContainer.setAttribute("data-survey-question", question.id);
 
     questionContainer.innerHTML = `
     <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>
     <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>
     `;
+
     // Create a div with the class "input-container" for grouping input elements
     const inputContainer = document.createElement("div");
     inputContainer.className = "input-container";
@@ -71,7 +71,6 @@ function addQuestion(type) {
     surveyQuestions.push(question);
     const structure = createStructureElement(question.id, question.type, question.title);
     formStructureContainer.appendChild(structure);
-
 }
 
 function initializeQuestionOnClick_admin(questionBlock) {

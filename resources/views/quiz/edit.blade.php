@@ -90,6 +90,21 @@
         }
 
  
+        .live-session-btn{
+            width: 300px;
+                                height: 45px;
+                                margin-top:40px;
+                                flex-shrink: 0;
+                                border-radius: 8px;
+                                background: var(--Button, #2A2A2A);
+                                color: #FEFEFE;
+                                font-family: 'Roboto';
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                border:none;
+        }
  
 
     </style>
@@ -100,10 +115,8 @@
         <img src="{{ asset('img/logo_header.png')}}" alt="Logo">
 
         <div class="">
-            <!-- <h2 >Quiz Title</h2> -->
             <div class="" id="quizDetailsContainer">
                 <span id="quizDetailsTrigger" style="cursor: pointer;">
-                    <!-- Added this span for styling and cursor -->
                     <span id="quizDetailsTitle" style="cursor: pointer;display: inline;text-align: center;"
                         class="title-style-header h2 quiz-title-display" id="quiz_title_header">Quiz Title</span>
                     <a><i class="fa-regular fa-pen-to-square" style="font-size: 22px; margin-left: 10px;"></i></a>
@@ -116,7 +129,6 @@
         @elseif($mode == 'view')
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>
-            {{-- <button class="btn btn-dark header-edit-btn" id="edit-quiz-btn" type="button">Edit</button> --}}
         @endif
 
     </div>
@@ -132,30 +144,11 @@
                             <p class="quiz-description-container"><b>Description: </b><span
                                     class="quiz-description-display"></span></p>
                             <p><b>Visibility: </b><span class="quiz-visibility-display"></span></p>
-
-                            {{-- @if (isset($quiz->id))
-                                <small class="text-black-50"><span class="num-of-plays">0</span> plays</small>
-                            @endif --}}
                         </div>
                         @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
-                                <button class="btn btn-primary" style="   width: 300px;
-                                height: 45px;
-                                margin-top:40px;
-                                flex-shrink: 0;
-                                border-radius: 8px;
-                                background: var(--Button, #2A2A2A);
-                                color: #FEFEFE;
-                                font-family: 'Roboto';
-                                font-size: 20px;
-                                font-style: normal;
-                                font-weight: 500;
-                                line-height: normal;
-                                border:none;"
-                                
-                                data-bs-toggle="modal"
-                                data-bs-target="#liveSessionModal">Start
-                                Live Session </button>
+                                <button class="btn btn-primary live-session-btn" 
+                                data-bs-toggle="modal" data-bs-target="#liveSessionModal">Start Live Session </button>
                             </div>
                         @endif
                     </div>
@@ -168,8 +161,7 @@
                             @if ($mode == 'edit' || $mode == 'create')
                                 <button type="button" class="btn btn-primary" id="openQuestionModal"
                                     data-bs-toggle="modal" data-bs-target="#questionModal">
-                                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question
-                                </button>
+                                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question</button>
                             @endif
                         </div>
 

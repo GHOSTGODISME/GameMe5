@@ -9,16 +9,11 @@ use App\Models\Student;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
-use App\Models\SurveyResponseEmail;
 use App\Models\SurveyResponseQuestion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Mail;
-use League\Flysystem\Visibility;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Browsershot\Browsershot;
 
 
 class SurveyController extends Controller
@@ -30,14 +25,14 @@ class SurveyController extends Controller
         $lecturer = Lecturer::where('iduser', $user->id)->first();
         
         $surveys = Survey::where('id_lecturer', $lecturer->id)->get();
-        return view('survey.index', ['surveys' => $surveys]);
+        return view('Survey.index', ['surveys' => $surveys]);
     }
 
     public function create()
     {
         $survey = new Survey();
         $mode = 'create';
-        return view('survey.edit', compact('survey', 'mode'));
+        return view('Survey.edit', compact('survey', 'mode'));
     }
 
     public function view($id)
@@ -45,7 +40,7 @@ class SurveyController extends Controller
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
         
         $mode = 'view';
-        return view('survey.edit', compact('survey', 'mode'));
+        return view('Survey.edit', compact('survey', 'mode'));
     }
 
 
@@ -67,21 +62,21 @@ class SurveyController extends Controller
         $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
 
         // Pass the survey and its responses data to the view for rendering
-        return view('survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions', 'mode'));
+        return view('Survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions', 'mode'));
     }
 
     public function delete($id)
     {
-        // Find the fortune wheel by ID
+        // Find the survey by ID
         $survey = Survey::find($id);
 
-        // Check if the fortune wheel exists
+        // Check if the survey exists
         if (!$survey) {
             return response()->json(['message' => 'Survey not found.'], 404);
         }
 
-        // Delete the fortune wheel
-        $survey->surveyQuestions()->delete(); // Assuming 'questions()' defines the relationship
+        // Delete the survey
+        $survey->surveyQuestions()->delete();
 
         $survey->delete();
 
@@ -199,7 +194,7 @@ class SurveyController extends Controller
         }
 
         $surveys = $surveys->get();
-        return view('survey.index', ['surveys' => $surveys]);
+        return view('Survey.index', ['surveys' => $surveys]);
     }
 
     public function getSurvey($id)
@@ -219,7 +214,7 @@ class SurveyController extends Controller
     {
         $email = $request->session()->get('email');
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
-        return view('survey.student-view', ['survey' => $survey]);
+        return view('Survey.student-view', ['survey' => $survey]);
     }
 
     public function storeResponse(Request $request)
@@ -280,7 +275,7 @@ class SurveyController extends Controller
             ->get();
 
         // Pass the $surveyResponses data to the view for rendering
-        return view('survey.show-responses', ['surveyResponses' => $surveyResponses]);
+        return view('Survey.show-responses', ['surveyResponses' => $surveyResponses]);
     }
 
 

@@ -38,7 +38,6 @@
                     <td class="bordered">{{ $survey->updated_at->format('Y-m-d H:i:s') }}</td>
 
                     <td>
-                        {{-- <a href="{{ route('student-view-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn">Response</a> --}}
                         <a href="{{ route('edit-survey', ['id' => $survey->id]) }}" class="btn btn-info edit-delete-btn"><i class="fa fa-edit"></i></a>
                         <a class="btn btn-danger edit-delete-btn" onclick="confirmDelete({{ $survey->id }})"><i class="fa fa-trash"></i></a>
             </td>

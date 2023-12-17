@@ -36,16 +36,10 @@
 <body style="background: whitesmoke;">
     <div class="header-container">
         <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
-        <!-- <div class="favicon-with-text">
-            <i class="fas fa-chevron-left"></i>
-            <span>Back</span>
-        </div> -->
 
         <div class="">
-            <!-- <h2 >Quiz Title</h2> -->
             <div class="surveyDetailsContainer" id="">
                 <span id="surveyDetailsTrigger" style="cursor: pointer;">
-                    <!-- Added this span for styling and cursor -->
                     <span id="quizDetailsTitle" style="cursor: pointer;"
                         class="title-style-header h2 quiz-title-display survey-title-text"
                         id="survey_title_header">Title</span>
@@ -89,14 +83,10 @@
                                                 class="input-fields form-control survey-title-input" type="text"
                                                 title="Survey Title" placeholder="Your Survey Title"
                                                 value="{{ $survey->title }}" />
-                                            {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                                             <b>Description</b>
                                             <label for="survey_description"></label>
                                             <textarea id="survey_description" class="input-fields form-control survey-description-input" title="Survey Description"
                                                 placeholder="(Optional)">{{ $survey->description }}</textarea>
-                                            {{-- <span id="description_char_counter"
-                                                class="char_count description_cc">0/0</span> --}}
-
                                             <b>Visibility</b>
                                             <label for="visibility"></label>
                                             <select id="visibility" name="visibility"
@@ -113,22 +103,16 @@
                                             @if (isset($survey->id))
                                                 <b style="display: block;">Survey Link</b>
                                                 <span id="copyLink" style="cursor: pointer;">
-                                                    {{-- <p style="display: inline;">randome link </p> --}}
                                                     <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}"
                                                         id="surveyLink" target="_blank"
                                                         style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
-
-
                                                     <i class="fa fa-copy"></i>
                                                 </span>
-                                                
-                                             
+                                                                                             
                                                     <b style="display: block;margin-top:10px;">Assign Class</b>
                                                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="margin-top:5px;">
                                                         Assign to Class
                                                     </button>
-                                              
-
                                             @endif
                                         </div>
                                     </div>
@@ -216,12 +200,12 @@
                                         <div class="accordion-collapse collapse item-2 show" role="tabpanel">
                                             <div class="accordion-body">
 
-                                                <p class="fw-bold">Remove & Duplicate Block</p>
+                                                <p class="fw-bold">Duplicate & Remove Block</p>
                                                 <div class="remove_duplicate_row">
-                                                    <button id="remove_block" class="btn btn-secondary"><i
-                                                            class="far fa-trash-alt favicon-with-btn"></i>Remove</button>
                                                     <button id="duplicate_block" class="btn btn-secondary"><i
                                                             class="far fa-copy favicon-with-btn"></i>Duplicate</button>
+                                                    <button id="remove_block" class="btn btn-secondary"><i
+                                                            class="far fa-trash-alt favicon-with-btn"></i>Remove</button>
                                                 </div>
 
                                                 <hr>
@@ -327,8 +311,6 @@
 
             @if (isset($survey->id))
                 <div id="tab-2" class="tab-pane" role="tabpanel">
-                    <!-- Display all survey responses in a scrollable table -->
-
                     @if (count($surveyResponses) > 0)
                         <div class="row justify-content-center ">
                             <p>Number of response: {{ $surveyResponses->count() }}</p>
@@ -363,8 +345,6 @@
                                                         @endif
                                                     </td>
                                                 @endforeach
-
-                                                <!-- Add other response details as needed -->
                                             </tr>
                                         @endforeach
                                     </tbody>
