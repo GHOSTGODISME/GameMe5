@@ -305,19 +305,19 @@ class SurveyController extends Controller
     $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
 
 
-    $headings = ['Response ID', 'Survey ID', 'User ID', 'Responded Time'];
+    $headings = ['No', 'Name', 'Email', 'Responded Time'];
     foreach ($uniqueQuestions as $question) {
         $headings[] = $question->title; 
     }
 
     $data = []; 
 
-    foreach ($surveyResponses as $response) {
+    foreach ($surveyResponses as $index => $response) {
 
         $responseData = [
-            'Response ID' => $response->id,
-            'Survey ID' => $response->survey_id,
-            'User ID' => $response->user_id,
+            'No' => $index + 1,
+            'Name' => $response->user->name,
+            'Email' => $response->user->email,
             'Responded Time' => $response->created_at,
         ];
 

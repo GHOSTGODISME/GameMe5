@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <button class="btn btn-dark header-save-btn" id="save-survey-form" type="button">Save Survey</button>
+        <button class="btn btn-dark header-save-btn" id="save-survey-form" type="button">Save & Exit</button>
     </div>
 
 

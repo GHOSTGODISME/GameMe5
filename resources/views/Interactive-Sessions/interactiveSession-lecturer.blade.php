@@ -324,6 +324,26 @@
             return `poll-${timestamp}-${randomString}`;
         }
 
+        $(document).ready(function() {
+            $('#pollModal').on('hidden.bs.modal', function() {
+                // Clear the input fields in the modal
+                $('#pollTitle').val('');
+                $('#optionsContainer').empty(); // Remove all poll options
+
+
+                        
+                // Add a default input for adding options
+                const placeholderInput = `                <div id="optionsContainer">
+                            <div class="input-group mt-2">
+                                <input type="text" class="form-control polls-option"
+                                    placeholder="Click to add option" onclick="addOption(this)" readonly>
+                            </div>
+                        </div>`;
+                $('#optionsContainer').append(placeholderInput);
+            });
+        });
+
+
         console.log(@json($title));
         console.log(@json($sessionCode));
         socket = io("http://localhost:3000");
@@ -469,12 +489,12 @@
                 const pollOptions = pollContainer.querySelectorAll('.polls-options');
 
                 const totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
-                const selectedOptionVotes = votes[optionSelected];
+                //const selectedOptionVotes = votes[optionSelected];
 
                 // Update progress bars for all options within the poll
                 pollOptions.forEach((optionElement) => {
                     const optionTextContainer = optionElement.querySelector('.option-text');
-                    const optionText = optionTextContainer.textContent.trim();
+                    const optionText = optionTextContainer.textContent.trim().toLowerCase();
 
                     const progressContainer = optionElement.querySelector('.progress');
                     const progressBar = progressContainer.querySelector('.progress-bar');
@@ -548,7 +568,6 @@
             };
 
             newInputGroup.appendChild(removeButton);
-
             element.parentElement.replaceWith(newInputGroup);
 
             const newInputGroup2 = document.createElement('div');
@@ -564,7 +583,6 @@
             };
             newInputGroup2.appendChild(placeholderInput);
             optionsContainer.appendChild(newInputGroup2);
-
             newInput.focus();
         }
 
@@ -629,17 +647,24 @@
         function savePoll() {
             const pollTitle = document.getElementById('pollTitle').value;
             const options = [];
+            const lowerCaseOptions = [];
             const optionInputs = document.querySelectorAll('#optionsContainer input:not([readonly])');
             optionInputs.forEach(input => {
                 if (input.value.trim() !== '' && input.value !== null) {
                     options.push(input.value.trim());
+                    lowerCaseOptions.push(input.value.trim().toLowerCase());
                 }
             });
 
             // check if there are duplicated option
-            const uniqueOptions = Array.from(new Set(options));
+            const uniqueOptions = Array.from(new Set(lowerCaseOptions));
             if (uniqueOptions.length !== options.length) {
                 alert('Duplicate options are not allowed. Please enter unique options for the poll.');
+                return;
+            }
+
+            if (pollTitle.trim() == "") {
+                alert('Please enter a title for the poll.');
                 return;
             }
 

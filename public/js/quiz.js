@@ -13,7 +13,7 @@ const QUESTION_TYPE_STRING = {
 
 const MIN_OPTION_COUNT = 2;
 const DEFAULT_OPTION_COUNT = 4;
-const MAX_OPTION_COUNT = 6;
+const MAX_OPTION_COUNT = 10;
 
 // Global Variables
 let optionCount = 0; // Initial option count
@@ -180,6 +180,7 @@ function initializeEventListeners() {
     // Function to reset the modal content when it's closed
     $('#questionModal').on('hidden.bs.modal', function () {
         // Clear input fields and reset modal state here
+        $('#modal_title').text("Add Question");
         $('#quiz-type').val('Multiple Choice').change(); // Reset dropdown to default value
         $('#optionsContainer').empty(); // Clear options
         $('#quiz_title').val(''); // Clear quiz title input
@@ -755,6 +756,7 @@ function loadQuestionDataIntoModal(uniqueID) {
 
     $('#quiz_unique_id').val(uniqueID);
     if (question) {
+        $('#modal_title').text("Modify Question");
         // Set the values of the modal fields with the data of the question
         $('#quiz_title').val(question.title);
         $('#quiz-type').val(QUESTION_TYPE_STRING[question.type]).change();

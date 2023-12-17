@@ -23,6 +23,13 @@ class InteractiveSessionController extends Controller
 
     public function createInteractiveSession(Request $request)
     {
+
+        $request->validate([
+            'title' => [
+                'required',
+            ],
+        ]);
+
         $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();

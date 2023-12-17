@@ -50,7 +50,7 @@ function initializePollVotes(sessionCode, pollId, options) {
 
   interactiveSession.votes[pollId] = {};
   options.forEach((option) => {
-    interactiveSession.votes[pollId][option] = 0;
+    interactiveSession.votes[pollId][option.toLowerCase()] = 0;
   });
 }
 
@@ -59,7 +59,7 @@ function voteForPollOption(sessionCode, pollId, optionSelected) {
 
   if (interactiveSession && interactiveSession.votes[pollId]) {
     console.log("pass1");
-    if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
+    if (interactiveSession.votes[pollId][optionSelected.toLowerCase()] !== undefined) {
       console.log("pass2");
 
       interactiveSession.votes[pollId][optionSelected]++;
@@ -293,6 +293,7 @@ function handleJoinEvents(socket) {
       const participants = sessions.get(sessionCode).participants;
       const existingUser = participants.find((participant) => participant.id === id);
 
+      console.log("existingUser " + existingUser);
       // if (existingUser) {
         io.to(sessionCode).emit('same participants', existingUser);
       // }

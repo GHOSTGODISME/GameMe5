@@ -112,7 +112,7 @@
         </div>
 
         @if ($mode == 'edit' || $mode == 'create')
-            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save Quiz</button>
+            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save & Exit</button>
         @elseif($mode == 'view')
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>
@@ -238,7 +238,7 @@
             <div class="modal-content" style="padding: 25px;">
                 <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title">Modify Question</h5>
+                    <h5 class="modal-title" id="modal_title">Add Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!-- Modal body -->

@@ -161,12 +161,12 @@
                 <tr>
                     <td>Correct Answers</td>
                     <td>:</td>
-                    <td>{{ $data->quizResponse->correct_answer_count }}</td>
+                    <td>{{ $data->quizResponse->correct_answer_count }} / {{ $data->quizResponse->correct_answer_count + $data->quizResponse->incorrect_answer_count }}</td>
                 </tr>
                 <tr>
                     <td>Incorrect Answers</td>
                     <td>:</td>
-                    <td>{{ $data->quizResponse->incorrect_answer_count }}</td>
+                    <td>{{ $data->quizResponse->incorrect_answer_count }} / {{ $data->quizResponse->correct_answer_count + $data->quizResponse->incorrect_answer_count }}</td>
                 </tr>
                 <tr>
                     <td>Average Time</td>

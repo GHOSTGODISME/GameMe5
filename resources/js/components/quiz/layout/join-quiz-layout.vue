@@ -117,7 +117,16 @@ export default {
             );
 
             this.socket.on("initial participants", (participants) => {
+                console.log("hi");
                 console.log(participants);
+                if (
+                    !participants.find(
+                        (participant) => participant.id === this.store.userId
+                    )
+                ) {
+                    console.log("bye");
+                    this.clearLocalStorageWithPrefix("quiz:");
+                }
                 this.participantList = participants.map(
                     (participant) => participant.username
                 );
@@ -230,6 +239,19 @@ export default {
                         );
                     });
             }
+        },
+        clearLocalStorageWithPrefix(prefix) {
+            let localStorageKeysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(prefix)) {
+                    localStorageKeysToRemove.push(key);
+                }
+            }
+
+            localStorageKeysToRemove.forEach((key) => {
+                localStorage.removeItem(key);
+            });
         },
     },
 };

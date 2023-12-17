@@ -266,7 +266,7 @@
 
                 <div>
                     <hr>
-                    <p>This summary has already been sent to your email. Please Wait for a moment.</p>
+                    <p>This summary has already been sent to your email. Please wait for a moment.</p>
                     <a href="{{ route('generate-pdf', ['userId' => $userId, 'sessionId' => $sessionId, 'quizId' => $quizId]) }}"
                         class="btn btn-primary">
                         Haven't received? Download it now</a>

@@ -99,8 +99,23 @@
     line-height: normal;  
 }
 
+.custom-title-class {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    /* Add any other title styles you want */
+}
 
+.custom-content-class {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    /* Add any other content styles you want */
+}
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
@@ -113,9 +128,24 @@
         <form method="POST" action="{{ route('create-interactive-session') }}"
             style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
             @csrf
-            <input type="text" name="title" id="txt_int_code" class="form-control input-style" placeholder="Title">
+            <input type="text" name="title" name="title" id="txt_int_code" class="form-control input-style" placeholder="Title">
             <button type="submit" class="button_general">Create Session</button>
         </form>
+
+        @error('title') 
+<script>
+    // Use SweetAlert2 to display a modal
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please enter a title for the interactive session.',
+        customClass: {
+        title: 'custom-title-class',
+        content: 'custom-content-class',
+    },
+    });
+</script>
+@enderror
     </div>
     </div>
 

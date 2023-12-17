@@ -135,11 +135,11 @@
         socket = io("http://localhost:3000");
         const sessionCode = @json($sessionCode);
         sessionStorage.setItem("interactiveSessionCode", sessionCode);
-        sessionStorage.setItem("stud_id", @json(session("stud_id")));
-        sessionStorage.setItem("stud_name", @json(session("stud_name")));
+        sessionStorage.setItem("stud_id", @json(session('stud_id')));
+        sessionStorage.setItem("stud_name", @json(session('stud_name')));
 
-        const id = `s-${@json(session("stud_id"))}`;
-        const username = @json(session("stud_name"));
+        const id = `s-${@json(session('stud_id'))}`;
+        const username = @json(session('stud_name'));
 
         console.log(sessionCode);
         socket.emit("joinInteractiveSession", {
@@ -219,7 +219,9 @@
 
             if (radioInputs.length > 0) {
                 const optionSelected = radioInputs[0].value; // Get the selected option value
-                radioInputs.forEach(input => {
+                const allInputs = form.querySelectorAll(`input[name="pollOption-${pollId}"]`);
+
+                allInputs.forEach(input => {
                     input.disabled = true;
                 });
 
@@ -247,12 +249,12 @@
             <hr>
             <form id="pollForm-${pollId}">
                 ${options.map((option, index) => `
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
-                                        <label class="form-check-label" for="option${index + 1}-${pollId}">
-                                            ${option}
-                                        </label>
-                                    </div>`).join('')}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="pollOption-${pollId}" id="option${index + 1}-${pollId}" value="${option.toLowerCase().replace(/\s/g, '')}">
+                                            <label class="form-check-label" for="option${index + 1}-${pollId}">
+                                                ${option}
+                                            </label>
+                                        </div>`).join('')}
                 <div style="text-align: end; margin-top: 10px;">
                     <a class="btn btn-primary" onclick="submitVote('${pollId}')">Vote</a>
                 </div>
@@ -282,12 +284,11 @@
 
         });
 
-      
-        window.addEventListener('popstate', function () {
+
+        window.addEventListener('popstate', function() {
             // Reload the page
             location.reload();
         });
-
     </script>
 
 
