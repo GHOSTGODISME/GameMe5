@@ -59,7 +59,8 @@ function updateQuestionPreview(question) {
 
     questionContainer.innerHTML = `
     <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>
-    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>
+    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">
+    ${question.description}</p>
     `;
 
     const inputContainer = document.createElement("div");
@@ -67,44 +68,11 @@ function updateQuestionPreview(question) {
 
     recreateQuestionTypeBlock(question, inputContainer);
 
-    // initializeQuestionOnClickStudent(questionContainer);
-
     // Append the input container to the question container
     questionContainer.appendChild(inputContainer);
 
-    // const questionTitleElement = questionContainer.querySelector(".question-title");
-    // const questionInput = questionContainer.querySelector(".question-input");
-    // applyQuestionProperty(question, questionTitleElement,questionInput);
-
     return questionContainer;
 }
-
-// function applyQuestionProperty(question, questionTitleElement, questionInput) {
-//     console.log(question.properties.toLowerCase());
-//     switch (question.properties.toLowerCase()) {
-//         case QUESTION_PROPERTIES[0]: // Default
-//             console.log(QUESTION_PROPERTIES[0]);
-//             questionTitleElement.classList.remove("required");
-//             // questionInput.required = false;
-//             // questionInput.readOnly = false;
-
-//             break;
-//         case QUESTION_PROPERTIES[1]: // Required
-//             console.log(QUESTION_PROPERTIES[1]);
-//             questionTitleElement.classList.add("required");
-//             // questionInput.required = true;
-//             // questionInput.readOnly = false;
-//             break;
-//         case QUESTION_PROPERTIES[2]: // Disabled
-//             console.log(QUESTION_PROPERTIES[2]);
-//             questionTitleElement.classList.remove("required");
-//             // questionInput.required = false;
-//             // questionInput.readOnly = true;
-//             break;
-//         default:
-//             break;
-//     }
-// }
 
 function initializeQuestionOnClickStudent(questionBlock) {
     questionBlock.addEventListener('click', () => {
@@ -257,7 +225,8 @@ function initializeSurveySubmitBtn_student() {
                         console.log('Form saved successfully:', response);
                         $('#form-preview').html(
                             '<p class="not-receive-response-text">Response has been submitted successfully!</p>' + 
-                            '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >Back to Homepage</a></p>');
+                            '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >' +
+                            'Back to Homepage</a></p>');
                     },
                     error: function(xhr, status, error) {
                         console.error('Error saving form:', error);
@@ -283,11 +252,6 @@ function convertImage() {
     return new Promise(function(resolve, reject) {
         html2canvas(container, options).then(function(canvas) {
             const imageData = canvas.toDataURL('image/jpeg', 1);
-
-        //             var imageWindow = window.open('');
-        // imageWindow.document.write('<img src="' + imageData + '" style="width:100%;">');
-
-        //     console.log(imageData);
             resolve(imageData);
         }).catch(function(error) {
             reject(error);

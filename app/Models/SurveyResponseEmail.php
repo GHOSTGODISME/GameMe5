@@ -23,8 +23,6 @@ class SurveyResponseEmail extends Mailable
 
     public function build()
     {
-        Log::info("check");
-        Log::info($this->imageData);
         $generatedDate = Carbon::now()->format('Y-m-d H:i:s');
         $decodedImageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageData));
         return $this->view('Email\survey-response-email')

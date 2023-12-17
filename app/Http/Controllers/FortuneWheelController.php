@@ -6,8 +6,6 @@ use App\Models\FortuneWheel;
 use App\Models\Lecturer;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 
 class FortuneWheelController extends Controller
 {
@@ -40,33 +38,26 @@ class FortuneWheelController extends Controller
             'results' => 'nullable|array',
         ]);
 
-        Log::info('data: ' . json_encode($data));
-
         if (isset($data['id'])) {
             $fortuneWheel = FortuneWheel::find($data['id']);
-            Log::info('have id: ' . $fortuneWheel);
 
             if ($fortuneWheel) {
-                // $fortuneWheel->update($data);
                 $fortuneWheel->update([
                     'title' => $data['title'],
                     'entries' => $data['entries'],
                     'results' => $data['results'],
                     'id_lecturer' => $lecturer->id,
                 ]);
-                Log::info('updated: ' . json_encode($data));
 
                 return redirect()->route('fortune-wheel-index')->with('success', 'Wheel updated successfully');
             }
         }else{
-            // $fortuneWheel = FortuneWheel::create($data);
             $fortuneWheel = new FortuneWheel([
                 'title' => $data['title'],
                 'entries' => $data['entries'],
                 'results' => $data['results'],
                 'id_lecturer' => $lecturer->id,
             ]);
-            Log::info('stored: ' . json_encode($data));
             $fortuneWheel->save();
         }
         // Save the updated FortuneWheel to the database

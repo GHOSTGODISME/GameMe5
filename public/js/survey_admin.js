@@ -79,8 +79,6 @@ function initializeQuestionOnClick_admin(questionBlock) {
         const questionData = questionBlock.getAttribute("data-survey-question");
         const question = surveyQuestions.find(q => q.id.toString() === questionData);
 
-        console.log("current question id: " + questionData);
-        console.log(surveyQuestions);
         // Remove the 'selected-question' class from previously selected questions
         const previouslySelectedQuestion = document.querySelector(".selected-question");
         if (previouslySelectedQuestion) {
@@ -97,25 +95,10 @@ function initializeQuestionOnClick_admin(questionBlock) {
         questionTitleInput.value = question.title;
         questionDescriptionInput.value = question.description;
 
-        // const minLabel = document.getElementById(`${question.id}-scale-min-label`);
-        // const maxLabel = document.getElementById(`${question.id}-scale-max-label`);
-
-        // minLabel.textContent = question.options[0];
-        // maxLabel.textContent = question.options[question.options.length - 1];    
-
         questionEditOption(question);
 
         const editBlockSection = document.getElementById("edit_block_section");
         editBlockSection.style.display = 'block';
-
-        console.log(question.index);
-
-        // const questionPropertiesDDL = document.getElementById("question_properties");
-        // questionPropertiesDDL.value = question.properties;
-
-        // const questionTitleElement = questionBlock.querySelector(".question-title");
-        // applyQuestionProperty(question,questionTitleElement );
-
     });
 }
 
@@ -727,8 +710,6 @@ deleteQuestionButton.addEventListener('click', function () {
                 question.index = index + 1; // Update indices based on the new positions
             });
         }
-        console.log(surveyQuestions);
-
         updateFormStructure();
     }
 });

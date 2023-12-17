@@ -162,7 +162,6 @@
                                                 Add Block</button>
                                         </h2>
                                         <div class="accordion-collapse collapse item-1 show" role="tabpanel">
-                                            <!-- <div class="accordion-collapse collapse item-1 show" role="tabpanel"> -->
                                             <div class="accordion-body">
                                                 <p class="fw-bold">Input block</p>
                                                 <div id="form-builder">
@@ -177,9 +176,6 @@
                                                     <button class="btn btn-secondary "
                                                         onclick="addQuestion(QUESTION_TYPES.CHECKBOX.value)"><i
                                                             class="far fa-check-square favicon-with-btn"></i>Checkbox</button>
-                                                    <!-- <button class="btn btn-secondary d-none"
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.DROPDOWN)">Dropdown
-                                                        List</button> -->
                                                     <button class="btn btn-secondary"
                                                         onclick="addQuestion(QUESTION_TYPES.SCALE.value)"><i
                                                             class="fas fa-exchange-alt favicon-with-btn"></i>Scale</button>
@@ -189,9 +185,6 @@
                                     </div>
                                     <div class="accordion-item" id="edit_block_section">
                                         <h2 class="accordion-header" role="tab">
-                                            <!-- <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#accordion-1-action-block .item-2" aria-expanded="false"
-                                                aria-controls="accordion-1-action-block .item-2"> -->
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#accordion-1-action-block .item-2"
                                                 aria-expanded="true" aria-controls="accordion-1-action-block .item-2">
