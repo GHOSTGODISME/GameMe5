@@ -9,7 +9,6 @@
         <p>{{ question.answer_explaination }}</p>
     </div>
 
-    <!-- <ForwardBackwardBtn /> -->
 </template>
 <script>
 import { useQuizStore } from "../../../store.js";

@@ -39,12 +39,8 @@ export const useQuizStore = defineStore('quiz', {
     clearPinialocalStorage() {
       const piniaKeys = Object.keys(localStorage).filter((key) => key.startsWith('quiz:'));
       piniaKeys.forEach((key) => {
-        console.log("Checking existence of " + key + ":", key in localStorage, " in localStorage");
         if (key in localStorage) {
-          console.log("Removing " + key);
           localStorage.removeItem(key);
-        } else {
-          console.log(key + " does not exist in localStorage");
         }
       });
 
@@ -158,14 +154,12 @@ export const useQuizStore = defineStore('quiz', {
     },
     setQuestionTime(state, { questionId, timeTaken }) {
       this.questionTimes[questionId] = timeTaken;
-      console.log(questionTimes);
     },
     recordQuestionTime({ setQuestionTime }, { questionId, timeTaken }) {
       setQuestionTime({ questionId, timeTaken });
     },
     updateUserRank(leaderboard) {
       const userIndex = leaderboard.findIndex((player) => player.id === this.userId);
-      console.log(userIndex);
       if (userIndex !== -1) {
         const userRank = userIndex + 1;
         this.userRank = userRank;
@@ -176,32 +170,22 @@ export const useQuizStore = defineStore('quiz', {
     async fetchSessionSettings() {
       try {
         const response = await fetch(`/quiz/settings/${this.sessionId}`);
-        console.log(response);
         const details = await response.json();
-        console.log(details);
         this.showLeaderboardFlag = details.sessionSettings.show_leaderboard_flag;
         this.shuffleOptionFlag = details.sessionSettings.shuffle_option_flag;
-        console.log("this.showLeaderboardFlag " + this.showLeaderboardFlag);
-        console.log("this.shuffleOptionFlag " + this.shuffleOptionFlag);
       } catch (error) {
         console.error('Failed to fetch session settings:', error);
       }
     },
     async fetchQuizDetails() {
-      console.log("trigger");
       try {
         const response = await fetch(`/quiz/details/${this.sessionCode}`);
-        console.log(response);
         const details = await response.json();
-        console.log(details);
-        console.log('Fetched details:', details);
 
         if (details && details.quiz.title) {
           this.setQuizTitle(details.quiz.title); // Update quizTitle using setQuizTitle action
           this.quizId = details.quiz.id;
           this.sessionId = details.session_id;
-          console.log("this.sessionId " + this.sessionId);
-          console.log('Updated quizTitle:', this.quizTitle);
         } else {
           console.error('Quiz details or title is empty.');
         }
@@ -215,9 +199,6 @@ export const useQuizStore = defineStore('quiz', {
         const questions = await response.json();
         this.setQuestions(questions);
         this.quizTotalQuestion = questions.length;
-        console.log('Fetched questions:', this.questions);
-
-
       } catch (error) {
         console.error('Failed to fetch questions:', error);
       }
@@ -292,7 +273,7 @@ export const useQuizStore = defineStore('quiz', {
       }
     },
   },
-  mutation:{
+  mutation: {
 
   },
   getters: {

@@ -38,7 +38,7 @@ export default {
             type: Array,
             required: true,
         },
-        singleSelectFlag:{
+        singleSelectFlag: {
             type: Number,
             required: true,
         },
@@ -76,7 +76,6 @@ export default {
                     }
                 }
             }
-
         },
         optionClasses(option) {
             return {
@@ -131,7 +130,7 @@ export default {
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
-                this.selectedOptions=[];
+                this.selectedOptions = [];
                 this.submitInput();
             }
         },

@@ -16,8 +16,8 @@
     <style scoped>
         body {
             background: linear-gradient(90deg, #13C1B7 0%, #87DFA8 100%);
-            margin:0;
-            padding:0;
+            margin: 0;
+            padding: 0;
         }
 
         .content-body {
@@ -26,7 +26,7 @@
             justify-content: flex-end;
             align-items: center;
             gap: 80px;
-            margin-top:100px;
+            margin-top: 100px;
         }
 
         img {
@@ -45,108 +45,115 @@
             height: 50px;
         }
 
-    #txt_int_code{
-    padding: 25px 15px 20px 15px;
-    border: 1px solid #BFBFBF;
-    border-radius: 10px;
-    box-sizing: border-box;
-    background: #FAFAFA;
-    width: 500px;
-    height: 40px;
-    flex-shrink: 0;
-    margin-top:30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif; /* Replace 'Your Font' with the desired font name */
-    font-size: 25px; /* Adjust the font size as needed */
-    font-weight: bold; /* Adjust the font weight as needed */
-    text-align: center; /* Center the text horizontally */
-}
+        #txt_int_code {
+            padding: 25px 15px 20px 15px;
+            border: 1px solid #BFBFBF;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background: #FAFAFA;
+            width: 500px;
+            height: 40px;
+            flex-shrink: 0;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            /* Replace 'Your Font' with the desired font name */
+            font-size: 25px;
+            /* Adjust the font size as needed */
+            font-weight: bold;
+            /* Adjust the font weight as needed */
+            text-align: center;
+            /* Center the text horizontally */
+        }
 
-#txt_int_code:focus{
-    outline: none;
-    border-color: #007bff; /* Change the border color on focus */
-} 
-    
-#txt_int_code::placeholder{
-    color: #A3A3A3;
-    font-family:'Roboto';
-    font-size: 25px;
-    font-style:normal;
-    font-weight: 400;
-    line-height: normal;
-    text-align: center;
-}
+        #txt_int_code:focus {
+            outline: none;
+            border-color: #007bff;
+            /* Change the border color on focus */
+        }
 
-.stud_big_cont{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-.button_general{
-    width: 300px;
-    height: 45px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: var(--Button, #2A2A2A);
-    color: #FEFEFE;
-    font-family: 'Roboto';
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;  
-}
+        #txt_int_code::placeholder {
+            color: #A3A3A3;
+            font-family: 'Roboto';
+            font-size: 25px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-align: center;
+        }
 
-.custom-title-class {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 200;
-    line-height: normal;
-    /* Add any other title styles you want */
-}
+        .stud_big_cont {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-.custom-content-class {
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 200;
-    line-height: normal;
-    /* Add any other content styles you want */
-}
+        .button_general {
+            width: 300px;
+            height: 45px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            background: var(--Button, #2A2A2A);
+            color: #FEFEFE;
+            font-family: 'Roboto';
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
+
+        .custom-title-class {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            /* Add any other title styles you want */
+        }
+
+        .custom-content-class {
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 200;
+            line-height: normal;
+            /* Add any other content styles you want */
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
     {{-- for header template --}}
-@include('Layout/lect_header');
+    @include('Layout/lect_header');
     <div class="content-body">
 
         <div class="stud_big_cont">
             <img src="img/logo_stud.png" alt="logo">
-        <form method="POST" action="{{ route('create-interactive-session') }}"
-            style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
-            @csrf
-            <input type="text" name="title" name="title" id="txt_int_code" class="form-control input-style" placeholder="Title">
-            <button type="submit" class="button_general">Create Session</button>
-        </form>
+            <form method="POST" action="{{ route('create-interactive-session') }}"
+                style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
+                @csrf
+                <input type="text" name="title" name="title" id="txt_int_code" class="form-control input-style"
+                    placeholder="Title">
+                <button type="submit" class="button_general">Create Session</button>
+            </form>
 
-        @error('title') 
-<script>
-    // Use SweetAlert2 to display a modal
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Please enter a title for the interactive session.',
-        customClass: {
-        title: 'custom-title-class',
-        content: 'custom-content-class',
-    },
-    });
-</script>
-@enderror
-    </div>
+            @error('title')
+                <script>
+                    // Use SweetAlert2 to display a modal
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Please enter a title for the interactive session.',
+                        customClass: {
+                            title: 'custom-title-class',
+                            content: 'custom-content-class',
+                        },
+                    });
+                </script>
+            @enderror
+        </div>
     </div>
 
 

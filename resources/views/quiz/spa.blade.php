@@ -23,19 +23,15 @@
     <div id="app"></div>
 
     <script>
-
-        
-        // window.sessionData = @json(session("stud_id"));
-        sessionStorage.setItem("stud_id", @json(session("stud_id")));
-        console.log( @json(session("stud_id")));
+        // window.sessionData = @json(session('stud_id'));
+        sessionStorage.setItem("stud_id", @json(session('stud_id')));
     </script>
-    
+
 
     @vite('resources/js/app.js')
     @vite('resources/js/initialize-vue-app.js')
 
-        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js" >
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">

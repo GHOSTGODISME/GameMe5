@@ -12,7 +12,7 @@
     <style scoped>
         .joined-participants-text {
             font-size: 24px;
-            
+
         }
 
         .joined-participants-container {
@@ -25,7 +25,7 @@
             margin-top: 40px;
             background-color: #13C1B7;
             /* background-color: #1b4e42; */
-         
+
         }
 
         .joined-participants-people-container {
@@ -91,7 +91,7 @@
             font-weight: bold;
             color: #FEFEFE;
             font-family: 'Roboto';
-            background-color:#025551;
+            background-color: #025551;
         }
 
         .btn-container a:hover {
@@ -101,7 +101,7 @@
             font-weight: bold;
             color: #FEFEFE;
             font-family: 'Roboto';
-            background-color:#1ca8a1;
+            background-color: #1ca8a1;
         }
 
         .btn-container button:hover {
@@ -154,7 +154,7 @@
                                 <span id="quizLinkIcon" class="fas fa-copy"></span>
                             </div>
                         </div>
-                        
+
 
                         <div class="details-container">
                             <div>2. Enter the code</div>
@@ -166,12 +166,13 @@
 
                         <div class="details-container">
                             <div>Or scan the code below!!!</div>
-                            <div id="qrCode">{{$qrCodeContent}}</div>
+                            <div id="qrCode">{{ $qrCodeContent }}</div>
                         </div>
 
                         <div class="details-container">
                             <div>3. Assign to Class</div>
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="   width: 300px;
+                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal"
+                                style="   width: 300px;
                             height: 45px;
                             margin-top:20px;
                             flex-shrink: 0;
@@ -199,39 +200,40 @@
             </div>
         </div>
     </div>
-   
-    
-   
-    <!-- assign class Modal -->
-<div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="assignClassForm" action="{{ route('assign_class') }}" method="post">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="class">Select Class:</label>
-                        <select class="form-control" id="class" name="class_id" required>
-                            <!-- Options will be dynamically added using JavaScript -->
-                        </select>
-                    </div>
 
-                     <!-- Your input field -->
-                    <input type="hidden" name="session_id" id="session_id" value="">
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Assign Class</button>
-                    </div>
-                </form>
-                
+
+
+    <!-- assign class Modal -->
+    <div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignClassForm" action="{{ route('assign_class') }}" method="post">
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="class">Select Class:</label>
+                            <select class="form-control" id="class" name="class_id" required>
+                                <!-- Options will be dynamically added using JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- Your input field -->
+                        <input type="hidden" name="session_id" id="session_id" value="">
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Assign Class</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script></script>
 
@@ -265,6 +267,7 @@
             }
 
             quizLinkElement.textContent = `localhost:8000/join-quiz?code=${sessionCode}`
+
             function handleCopyClick(element, iconElement) {
                 const text = element.innerText;
                 const dummyElement = document.createElement('textarea');
@@ -340,34 +343,33 @@
         });
 
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-        // Fetch lecturerClasses using AJAX
-        fetch('{{ route('get_lecturer_classes') }}')
-            .then(response => response.json())
-            .then(data => {
-                // Populate options in the class selection dropdown
-                const classSelect = document.getElementById('class');
-               
-                if (classSelect) {
-                    data.lecturerClasses.forEach(classDetail => {
-                        const option = document.createElement('option');
-                        option.value = classDetail.class.id;
-                        option.textContent = classDetail.class.name;
-                        classSelect.appendChild(option);
-                    });
-                    
-                }
-            })
+            // Fetch lecturerClasses using AJAX
+            fetch('{{ route('get_lecturer_classes') }}')
+                .then(response => response.json())
+                .then(data => {
+                    // Populate options in the class selection dropdown
+                    const classSelect = document.getElementById('class');
 
-            .catch(error => console.error('Error fetching lecturerClasses:', error));
-    });
+                    if (classSelect) {
+                        data.lecturerClasses.forEach(classDetail => {
+                            const option = document.createElement('option');
+                            option.value = classDetail.class.id;
+                            option.textContent = classDetail.class.name;
+                            classSelect.appendChild(option);
+                        });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Parse the JSON and set the value of the input field
-        document.getElementById('session_id').value = sessionStorage.getItem('sessionId');
-    });
+                    }
+                })
 
+                .catch(error => console.error('Error fetching lecturerClasses:', error));
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Parse the JSON and set the value of the input field
+            document.getElementById('session_id').value = sessionStorage.getItem('sessionId');
+        });
     </script>
 
 </body>

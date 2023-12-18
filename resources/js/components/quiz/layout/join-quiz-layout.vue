@@ -15,9 +15,11 @@
                         :style="inputStyle"
                         v-model="username"
                         placeholder="Player's name"
-                        required/>
+                        required
+                    />
                     <span v-if="emptyUserNameMsg" class="input-fails-text"
-                        >Please enter a username</span>
+                        >Please enter a username</span
+                    >
                     <p class="join-quiz-details-instruction">
                         Please enter your username and wait for the host to
                         start the game.
@@ -26,7 +28,8 @@
                     <div class="button-container">
                         <button
                             class="btn btn-dark button-style"
-                            @click="validateUsername">
+                            @click="validateUsername"
+                        >
                             Confirm
                         </button>
                     </div>

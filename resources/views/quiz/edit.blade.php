@@ -88,16 +88,12 @@
         .live-session-section-style div:first-child {
             font-weight: bold;
         }
-
- 
- 
-
     </style>
 </head>
 
 <body>
     <div class="header-container">
-        <img src="{{ asset('img/logo_header.png')}}" alt="Logo">
+        <img src="{{ asset('img/logo_header.png') }}" alt="Logo">
 
         <div class="">
             <div class="" id="quizDetailsContainer">
@@ -110,7 +106,8 @@
         </div>
 
         @if ($mode == 'edit' || $mode == 'create')
-            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save & Exit</button>
+            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save &
+                Exit</button>
         @elseif($mode == 'view')
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>
@@ -132,7 +129,8 @@
                         </div>
                         @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
-                                <button class="btn btn-primary" style="   
+                                <button class="btn btn-primary"
+                                    style="   
                                 width: 300px;
                                 height: 45px;
                                 margin-top:40px;
@@ -146,8 +144,8 @@
                                 font-weight: 500;
                                 line-height: normal;
                                 border:none;"
-                                data-bs-toggle="modal"
-                                data-bs-target="#liveSessionModal">Start Live Session </button>
+                                    data-bs-toggle="modal" data-bs-target="#liveSessionModal">Start Live Session
+                                </button>
                             </div>
                         @endif
                     </div>
@@ -346,7 +344,8 @@
                         <div>Details</div>
                         <hr>
                         <p><b>Title: </b><span id="session-title">{{ $quiz->title }}</span></p>
-                        <p><small><b>Number of Questions: </b><span id="question-count">{{$quiz->quiz_questions->count()}}</span></small>
+                        <p><small><b>Number of Questions: </b><span
+                                    id="question-count">{{ $quiz->quiz_questions->count() }}</span></small>
                         </p>
                     </div>
 
@@ -383,7 +382,7 @@
         </div>
     </div>
 
-    
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -395,9 +394,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
-        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
         integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous">
-</script>
+    </script>
 
     <script>
         class QuizSessionSetting {
@@ -415,8 +414,8 @@
             $('#continueBtn').click(function() {
                 // Get settings from the checkboxes
                 const quizSessionSetting = new QuizSessionSetting();
-                quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked')? 1 : 0;
-                quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked')? 1 : 0;
+                quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked') ? 1 : 0;
+                quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked') ? 1 : 0;
                 const quizId = quizFromDB.id;
                 // AJAX request to store the new quiz session
                 $.ajax({
@@ -428,22 +427,18 @@
                         quizId
                     }),
                     success: function(response) {
-                        // Handle success, e.g., display a success message or redirect
-                        console.log('Quiz session created successfully!');
-                        // Assuming you have the URL stored in a variable called 'redirectUrl'
-                        console.log(response.sessionCode);
                         if (response.sessionCode) {
                             sessionStorage.setItem("sessionId", response.sessionId);
                             sessionStorage.setItem("sessionCode", response.sessionCode);
                             // Redirect to the specified URL with the sessionCode as a query parameter
-                            
+
                             socket = io("http://localhost:3000");
                             socket.emit("createSession", response.sessionCode.toString());
 
-                            socket.on('session created',()=>{
+                            socket.on('session created', () => {
                                 window.location.href =
-                                "{{ route('quiz-session-lecturer', ['sessionId' => ':sessionId']) }}"
-                                .replace(':sessionId', response.sessionId);
+                                    "{{ route('quiz-session-lecturer', ['sessionId' => ':sessionId']) }}"
+                                    .replace(':sessionId', response.sessionId);
                                 socket.close();
                             })
 

@@ -82,9 +82,6 @@
     <script>
         const surveyFromDB = @json($survey);
 
-        console.log(surveyFromDB);
-        //console.log(survey123);
-
         $(document).ready(function() {
             const surveyFromDB = @json($survey);
             if (surveyFromDB.visibility === 'public') {
@@ -103,9 +100,7 @@
     <script src="{{ asset('js/survey_form.js') }}"></script>
     {{-- <script  src="{{ asset('js/survey_admin.js') }}"></script> --}}
 
-    <script>
-
-    </script>
+    <script></script>
 
 </body>
 

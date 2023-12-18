@@ -55,7 +55,6 @@ export default {
                 "/api/store-quiz-response",
                 payload
             );
-            console.log("Quiz response stored successfully:", response.data);
         },
         prepareQuizPayload(store) {
             const accuracy = store.quizAccuracy;
@@ -88,10 +87,6 @@ export default {
                     userId: store.userId,
                     responses: quizResponses,
                 });
-                console.log(
-                    "Individual responses stored successfully:",
-                    response.data
-                );
             }
         },
         prepareResponsePayload(store, questionId) {

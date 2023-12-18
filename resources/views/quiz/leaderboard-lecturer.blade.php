@@ -375,8 +375,7 @@
         function updateQuestionStatus(questionId, studentResponses) {
             const questionElement = document.getElementById(`ques-${questionId}`);
             const questionStats = calculateQuestionStats(questionId, studentResponses);
-            // console.log("questionStats");
-            console.log(questionStats);
+
             if (questionElement && questionStats) {
                 const {
                     totalResponses,
@@ -452,13 +451,10 @@
                         answeredOptions = response.answeredOption;
                     }
 
-                    console.log("answeredOptions");
-                    console.log(answeredOptions);
                     if (!answeredOptions || answeredOptions[0] == null) {
                         blankCount++; // Increment blank count for each empty or null response
                     } else if (Array.isArray(answeredOptions)) {
                         answeredOptions.forEach(option => {
-                            console.log(answeredOptions);
                             selectedOptions[option] = (selectedOptions[option] || 0) + 1;
                         });
                     }
@@ -527,12 +523,10 @@
                     } catch (error) {
                         answeredOption = studentAnswer.answeredOption;
                     }
-                   console.log(answeredOption);
 
                     const answerText = answeredOption && answeredOption[0] !== null ?
                         answeredOption[0] : 'No answer provided';
 
-                    console.log(answerText);
                     const textColor = answeredOption && answeredOption[0] !== null ?
                         'black' : 'grey';
 
@@ -565,7 +559,6 @@
 
                     const optionNumPlayer = document.createElement('div');
                     optionNumPlayer.classList.add('option-num-player');
-                    console.log(questionStats.selectedOptions);
                     const selectedOptionCount = questionStats.selectedOptions[option] || 0;
                     optionNumPlayer.textContent = `${selectedOptionCount} players`;
 
@@ -602,9 +595,6 @@
                 success: function(response) {
                     const quizQuestions = response.quizQuestions;
                     const userResponses = response.userResponses;
-
-                    console.log(quizQuestions);
-                    console.log(userResponses);
 
                     quizQuestions.forEach((question, index) => {
                         if (!studentResponses[question.id]) {
@@ -687,7 +677,6 @@
                         type: 'PUT',
                         success: function(response) {
                             socket.emit("endSession", sessionCode);
-                            console.log('Session ended successfully');
                             window.location.href = '/lect_homepage';
                         },
                         error: function(xhr, status, error) {
@@ -718,7 +707,6 @@
                     if (existingRow) {
                         // Update existing row content
                         const cells = existingRow.querySelectorAll('td');
-                        console.log(cells);
                         if (cells.length >= 3) {
                             cells[0].textContent = username;
                             cells[1].textContent = score;
@@ -741,8 +729,6 @@
             };
 
             socket.on('updateResponse', (data) => {
-                console.log("testtttttttt");
-                console.log(data);
                 if (data) {
                     const questionId = data.questionId;
 
@@ -751,15 +737,11 @@
                     }
 
                     studentResponses[questionId].push(data);
-                    console.log("here");
-                    console.log(studentResponses);
                     updateQuestionStatus(questionId, studentResponses[questionId]);
                 }
             });
 
             socket.on('initial leaderboard', function(leaderboardData) {
-                console.log('trigger initial');
-                console.log(leaderboardData);
                 updateLeaderboardRow(leaderboardData);
 
                 const participantCount = leaderboardData.length;
@@ -768,8 +750,6 @@
             });
 
             socket.on('update leaderboard', function(leaderboardData) {
-                console.log('trigger update');
-                console.log(leaderboardData);
                 updateLeaderboardRow(leaderboardData);
 
                 const participantCount = leaderboardData.length;

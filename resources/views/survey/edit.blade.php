@@ -35,7 +35,8 @@
 
 <body style="background: whitesmoke;">
     <div class="header-container">
-        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}"
+                alt="Logo"></a>
 
         <div class="">
             <div class="surveyDetailsContainer" id="">
@@ -108,11 +109,12 @@
                                                         style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
                                                     <i class="fa fa-copy"></i>
                                                 </span>
-                                                                                             
-                                                    <b style="display: block;margin-top:10px;">Assign Class</b>
-                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="margin-top:5px;">
-                                                        Assign to Class
-                                                    </button>
+
+                                                <b style="display: block;margin-top:10px;">Assign Class</b>
+                                                <button class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#assignClassModal" style="margin-top:5px;">
+                                                    Assign to Class
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -344,12 +346,12 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                         <div style="margin: 50px 0; display: flex; justify-content: flex-end;">
-                            <a href="{{ url('/export-survey-response/' . $survey->id) }}" class="btn btn-dark">Export to Excel</a>
+                            <a href="{{ url('/export-survey-response/' . $survey->id) }}" class="btn btn-dark">Export
+                                to Excel</a>
 
                         </div>
-
                     @else
                         <p>No records found.</p>
                     @endif
@@ -399,16 +401,6 @@
                                 Private (Not receive response)</option>
                         </select>
                     </div>
-                    @if (isset($survey->id))
-                        <p class="m-0"><b>Survey Link</b></p>
-                        <span id="copyLink" style="cursor: pointer;">
-                            {{-- <p style="display: inline;">randome link </p> --}}
-                            <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}" id="surveyLink"
-                                target="_blank"
-                                style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
-                            <i class="fa fa-copy"></i>
-                        </span>
-                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -420,36 +412,37 @@
 
 
 
-      <!-- assign class Modal -->
-<div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="assignClassForm" action="{{ route('assign_class_survey') }}" method="post">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="class">Select Class:</label>
-                        <select class="form-control" id="class" name="class_id" required>
-                            <!-- Options will be dynamically added using JavaScript -->
-                        </select>
-                    </div>
+    <!-- assign class Modal -->
+    <div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog"
+        aria-labelledby="assignClassModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignClassForm" action="{{ route('assign_class_survey') }}" method="post">
+                        @csrf
 
-                     <!-- Your input field -->
-                    <input type="hidden" name="survey_id" id="survey_id" value={{$survey->id}}>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Assign Class</button>
-                    </div>
-                </form>
-                
+                        <div class="form-group">
+                            <label for="class">Select Class:</label>
+                            <select class="form-control" id="class" name="class_id" required>
+                                <!-- Options will be dynamically added using JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- Your input field -->
+                        <input type="hidden" name="survey_id" id="survey_id" value={{ $survey->id }}>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Assign Class</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -471,7 +464,6 @@
 
     <script>
         const surveyFromDB = @json($survey);
-        console.log(surveyFromDB);
     </script>
     <script src="{{ asset('js/survey_utility.js') }}"></script>
     <script src="{{ asset('js/survey_form.js') }}"></script>
@@ -508,7 +500,6 @@
             survey.title = surveyTitle;
             survey.description = surveyDescription;
             survey.visibility = visibility;
-            console.log("visibility " + visibility);
         }
 
         function validateSurveyDetails(survey) {
@@ -526,7 +517,6 @@
         // jQuery to handle click event on the span
         $('#copyLink').click(function() {
             // Get the text within the <p> tag
-            // var linkText = $(this).find('p').text().trim();
             var linkText = $('#surveyLink').text();
             // Create a temporary input element to copy the text
             var tempInput = $('<input>');
@@ -541,41 +531,34 @@
             // Remove the temporary input
             tempInput.remove();
 
-            // Add some visual feedback or a message to indicate the text has been copied
-            // For example, change the text or style of the span to show it's copied
-            // $(this).find('p').text('Link copied!');
-            // Additionally, you can change the icon or add a tooltip to indicate the copy action
-            $(this).find('i').removeClass('fa-copy').addClass('fa-check'); // Example: Changing icon to checkmark
             // Reset the text and icon after a short delay (optional)
             setTimeout(function() {
-                // $('#copyLink').find('p').text('random link');
                 $('#copyLink').find('i').removeClass('fa-check').addClass('fa-copy');
             }, 2000); // Change back to original text after 2 seconds (adjust as needed)
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-// Fetch lecturerClasses using AJAX
-fetch('{{ route('get_lecturer_classes') }}')
-    .then(response => response.json())
-    .then(data => {
-        // Populate options in the class selection dropdown
-        const classSelect = document.getElementById('class');
-       
-        if (classSelect) {
-            data.lecturerClasses.forEach(classDetail => {
-                const option = document.createElement('option');
-                option.value = classDetail.class.id;
-                option.textContent = classDetail.class.name;
-                classSelect.appendChild(option);
-            });
-            
-        }
-    })
+            // Fetch lecturerClasses using AJAX
+            fetch('{{ route('get_lecturer_classes') }}')
+                .then(response => response.json())
+                .then(data => {
+                    // Populate options in the class selection dropdown
+                    const classSelect = document.getElementById('class');
 
-    .catch(error => console.error('Error fetching lecturerClasses:', error));
-});
+                    if (classSelect) {
+                        data.lecturerClasses.forEach(classDetail => {
+                            const option = document.createElement('option');
+                            option.value = classDetail.class.id;
+                            option.textContent = classDetail.class.name;
+                            classSelect.appendChild(option);
+                        });
 
+                    }
+                })
+
+                .catch(error => console.error('Error fetching lecturerClasses:', error));
+        });
     </script>
 </body>
 

@@ -27,8 +27,6 @@ const sortable = new Sortable(formStructureContainer, {
         // Update the surveyQuestions array with the reordered questions
         surveyQuestions = newSurveyQuestions;
 
-        // console.log("updated " + surveyQuestions);
-        console.log(surveyQuestions);
         // Update the form preview when an item is dragged and dropped
         updateFormPreview();
     }
@@ -107,7 +105,6 @@ function initializeQuestionOnClick_admin(questionBlock) {
 //==========update form when changing structure================================
 //==================================================================================
 function recreateSameQuestion(question) {
-    console.log(question);
     const questionContainer = document.createElement("div");
     questionContainer.className = "question-style";
     questionContainer.setAttribute("data-survey-question", question.id);
@@ -222,7 +219,6 @@ function updateFormStructure() {
     surveyQuestions.forEach(question => {
         const structure = createStructureElement(question.id, question.type, question.title);
         formStructureContainer.appendChild(structure);
-        console.log("triggered");
     });
 }
 
@@ -413,8 +409,6 @@ questionPlaceholderInput.addEventListener("input", function () {
     const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
     const question = surveyQuestions.find(q => q.id.toString() === questionData);
 
-    console.log("questionData " + questionData);
-    console.log("question " + question);
     // Update the input field's placeholder
     const questionInput = selectedQuestionContainer.querySelector(".question-input");
     if (questionInput) {
@@ -464,7 +458,6 @@ function questionEditOption(question) {
         scaleField.style.display = "none";
 
         let questionInputOptionInput = document.getElementById("input_option_contentholder");
-        console.log("question.options " + question.options);
         questionInputOptionInput.value = '';
         for (let i = 0; i < question.options.length; i++) {
             questionInputOptionInput.value += question.options[i];
@@ -501,18 +494,19 @@ function questionEditOption(question) {
         scaleMinLabelInput.value = question.scale_min_label;
         scaleMaxLabelInput.value = question.scale_max_label;
 
-
-        console.log("= question.scale_min_value " + question.scale_min_value);
-        console.log("= question.scale_miax_value " + question.scale_max_value);
-
-        console.log("question.scale_min_label " + question.scale_min_label);
-        console.log("question.scale_max_label " + question.scale_max_label);
-
         minLabel.textContent = question.scale_min_label.trim() || question.scale_min_value;
         maxLabel.textContent = question.scale_max_label.trim() || question.scale_max_value;
 
         scaleMinNum.value = question.scale_min_value;
         scaleMaxNum.value = question.scale_max_value;
+
+        for (let i = 0; i < scaleMaxNum.options.length; i++) {
+            scaleMaxNum.options[i].disabled = (parseInt(scaleMaxNum.options[i].value) <= parseInt(scaleMinNum.value));
+        }
+
+        for (let i = 0; i < scaleMinNum.options.length; i++) {
+            scaleMinNum.options[i].disabled = (parseInt(scaleMinNum.options[i].value) >= parseInt(scaleMaxNum.value));
+        }
 
     }
     else {
@@ -557,8 +551,6 @@ questionInputOptionInput.addEventListener("input", function () {
                 </label>
                 `;
             });
-
-            console.log(question);
             break;
         case QUESTION_TYPES.CHECKBOX.value:
             inputOptions.forEach((option, index) => {
@@ -569,8 +561,6 @@ questionInputOptionInput.addEventListener("input", function () {
                 </label>
                 `;
             });
-            console.log(question);
-
             break;
     }
 });
@@ -646,6 +636,21 @@ function populateSelect(select, options) {
 populateSelect(minSelect, scaleOptions);
 populateSelect(maxSelect, scaleOptions);
 
+minSelect.addEventListener('change', function() {
+    // Disable options in maxSelect that are less than minSelect's value
+    for (let i = 0; i < maxSelect.options.length; i++) {
+        maxSelect.options[i].disabled = (parseInt(maxSelect.options[i].value) <= parseInt(minSelect.value));
+    }
+});
+
+maxSelect.addEventListener('change', function() {
+    // Disable options in minSelect that are greater than maxSelect's value
+    for (let i = 0; i < minSelect.options.length; i++) {
+        minSelect.options[i].disabled = (parseInt(minSelect.options[i].value) >= parseInt(maxSelect.value));
+    }
+});
+
+
 
 function updateScaleInput(scaleInputContainer) {
     scaleInputContainer.addEventListener("input", function () {
@@ -656,8 +661,6 @@ function updateScaleInput(scaleInputContainer) {
         // Access the question object using the data-survey-question attribute
         const questionData = selectedQuestionContainer.getAttribute("data-survey-question");
         const question = surveyQuestions.find(q => q.id.toString() === questionData);
-
-        console.log(question);
 
         question.scale_min_value = minSelect.value;
         question.scale_max_value = maxSelect.value;
@@ -711,6 +714,8 @@ deleteQuestionButton.addEventListener('click', function () {
             });
         }
         updateFormStructure();
+
+        initializeFieldsVisibility();
     }
 });
 
@@ -761,7 +766,6 @@ function saveSurveyForm() {
 
     const validSurvey = validateDetails(survey);
 
-    console.log(survey);
     // Make an AJAX POST request to the backend to save the form data
     if (validSurvey) {
         ori_survey = deepCopy(survey);
@@ -772,7 +776,7 @@ function saveSurveyForm() {
             data: JSON.stringify(survey),
             success: function (response) {
                 console.log('Survey saved successfully:', response);
-               window.location.href = "/survey-index";
+                window.location.href = "/survey-index";
             },
             error: function (xhr, status, error) {
                 console.error('Error saving form:', error);
@@ -854,7 +858,7 @@ function compareObject(obj1, obj2) {
 }
 
 
-window.addEventListener('beforeunload', function(e) {
+window.addEventListener('beforeunload', function (e) {
     const new_survey = deepCopy(survey);
     ori_survey = deepCopy(survey);
     if (!compareObject(ori_survey, new_survey)) {

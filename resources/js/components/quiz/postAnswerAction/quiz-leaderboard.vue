@@ -19,7 +19,9 @@
                     <tr
                         v-for="(player, index) in leaderboardData"
                         :key="player.id"
-                        :class="{ 'highlighted-row': player.id === store.userId }"
+                        :class="{
+                            'highlighted-row': player.id === store.userId,
+                        }"
                     >
                         <th scope="row">{{ index + 1 }}</th>
                         <td>{{ player.username }}</td>
@@ -56,11 +58,10 @@ export default {
         this.initializeSocket();
         this.startTimer();
     },
-    created(){
+    created() {
         this.socket = io("http://localhost:3000");
         this.store = useQuizStore();
         document.body.className = "play-quiz-body";
-
     },
     methods: {
         initializeSocket() {
@@ -87,7 +88,9 @@ export default {
         },
         handleTimeUp() {
             clearInterval(this.timerInterval);
-            this.store.setCurrentQuestionIndex(this.store.currentQuestionIndex+1);
+            this.store.setCurrentQuestionIndex(
+                this.store.currentQuestionIndex + 1
+            );
 
             if (this.store.currentQuestionIndex < this.store.questions.length) {
                 this.$router.push("/quiz/quiz-page-layout");
@@ -105,6 +108,6 @@ export default {
 
 <style scoped>
 .highlighted-row {
-    background-color: #0195FF; 
+    background-color: #0195ff;
 }
 </style>

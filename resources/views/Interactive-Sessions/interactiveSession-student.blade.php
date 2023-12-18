@@ -69,12 +69,12 @@
 
 <body>
     @include('Layout/student_header')
-    
+
     <div class="main-body">
         <div class="session-body-header">
             <div>
-                <span class="h2">Session - {{ $title }}<span> 
-                    <small>(<span id="concurrentUser">0</span>)</small>
+                <span class="h2">Session - {{ $title }}<span>
+                        <small>(<span id="concurrentUser">0</span>)</small>
             </div>
             <div><a id="leaveBtn" class="btn btn-dark">Leave Session</a></div>
         </div>

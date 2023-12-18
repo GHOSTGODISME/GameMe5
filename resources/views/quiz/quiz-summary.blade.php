@@ -215,7 +215,7 @@
 <body>
     <div class="header-container">
         <img src="/img/logo_header.png" alt="Logo">
-        <span class="header-quiz-title">{{$quizTitle}}</span>
+        <span class="header-quiz-title">{{ $quizTitle }}</span>
     </div>
 
     <div class="quiz-body">
@@ -341,8 +341,6 @@
             const quizId = @json($quizId);
             const quizDetails = await fetchQuizDetails(userId, sessionId, quizId);
 
-            console.log(@json($quizTitle));
-
             if (quizDetails) {
                 const {
                     quiz,
@@ -365,8 +363,10 @@
                 document.getElementById('quiz-rank').textContent = `${rank}/${totalParticipants}`;
                 document.getElementById('quiz-score').textContent = total_points;
                 document.getElementById('quiz-accuracy').textContent = `${accuracy}%`;
-                document.getElementById('quiz-correct').textContent = `${correct_answer_count}/${correct_answer_count + incorrect_answer_count}`;
-                document.getElementById('quiz-incorrect').textContent = `${incorrect_answer_count}/${correct_answer_count + incorrect_answer_count}`;
+                document.getElementById('quiz-correct').textContent =
+                    `${correct_answer_count}/${correct_answer_count + incorrect_answer_count}`;
+                document.getElementById('quiz-incorrect').textContent =
+                    `${incorrect_answer_count}/${correct_answer_count + incorrect_answer_count}`;
                 document.getElementById('quiz-avg-time').textContent = `${average_time}`;
 
 
@@ -425,16 +425,12 @@
 
 
                 let userAnswers = userResponses[id] || null; // User's selected answers (array)
-                console.log(userAnswers);
                 if (userAnswers != null) {
                     userAnswers = JSON.parse(userAnswers);
-                    console.log(userAnswers);
                 }
 
 
                 const isCorrect = correctness[id];
-                console.log(userAnswers);
-                console.log(options);
 
                 const titleBgClass = isCorrect ? "correct-ans-title-bg" : "incorrect-ans-title-bg";
                 const optionsBgClass = isCorrect ? "correct-ans-options-bg" : "incorrect-ans-options-bg";
@@ -453,7 +449,6 @@
             ${options.map((option) => {
               const optionLowerCase = option.toLowerCase();
               const isChecked = userAnswers?.map(ans => ans?.toLowerCase()).includes(optionLowerCase);
-              console.log(isChecked);
               const isOptionCorrect = correct_ans.map(ans => ans.toLowerCase()).includes(optionLowerCase);
               return generateInputHTML(single_ans_flag, option, isChecked, isOptionCorrect, type);
             }).join("")}

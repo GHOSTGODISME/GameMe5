@@ -152,11 +152,11 @@ function initializeEventListeners() {
         // Clear input fields and reset modal state here
         $('#modal_title').text("Add Question");
         $('#quiz-type').val('Multiple Choice').change();
-        $('#optionsContainer').empty(); 
+        $('#optionsContainer').empty();
         $('#quiz_title').val('');
         $("#quiz-duration").val('10').change();
         $("#quiz-points").val('10').change();
-        $('#quiz_answer_explaination').val(''); 
+        $('#quiz_answer_explaination').val('');
 
         // Initialize default options
         initializeOptions();
@@ -860,7 +860,7 @@ function generateQuestionHTML(question, index, mode) {
     <div class="question-container-footer">
         <div>
             <label for="quiz-duration-show">Duration</label>
-        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" ||mode === "viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-duration-show" name="Quiz duration" class="form-select duration_ddl " style="width:150px;" title="Quiz duration" data-question-id="${question.uniqueID}" ${mode === "view" || mode === "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.duration === 10 ? 'selected' : ''}>10 seconds</option>
             <option value="15" ${question.duration === 15 ? 'selected' : ''}>15 seconds</option>
             <option value="30" ${question.duration === 30 ? 'selected' : ''}>30 seconds</option>
@@ -869,7 +869,7 @@ function generateQuestionHTML(question, index, mode) {
 
         <div>
             <label for="quiz-points-show">Points</label>
-        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || mode ==="viewWithRestriction" ? "disabled" : ""}>
+        <select id="quiz-points-show"  name="Quiz points" class="form-select points_ddl"  style="width:150px;" title="Quiz points" data-question-id="${question.uniqueID}" ${mode === "view" || mode === "viewWithRestriction" ? "disabled" : ""}>
             <option value="10" ${question.points === 10 ? 'selected' : ''}>10</option>
             <option value="15" ${question.points === 15 ? 'selected' : ''}>15</option>
             <option value="30" ${question.points === 30 ? 'selected' : ''}>30</option>
@@ -917,7 +917,7 @@ function duplicateQuestion(uniqueID) {
         allQuiz.splice(indexToDuplicate + 1, 0, duplicatedQuestion);
 
 
-        populateQuiz(allQuiz, mode); 
+        populateQuiz(allQuiz, mode);
     } else {
         console.log('Question not found.');
     }

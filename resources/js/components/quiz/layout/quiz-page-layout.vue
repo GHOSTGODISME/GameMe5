@@ -1,37 +1,38 @@
-<template >
+<template>
     <QuizHeaderWithProgressBar
         :timeRemaining="timeRemaining"
-        :progressBarValue="progressBarValue"/>
+        :progressBarValue="progressBarValue"
+    />
 
-        <div id="quiz-title-container">{{ question.title }}</div>
+    <div id="quiz-title-container">{{ question.title }}</div>
 
-        <div>
-            <template v-if="question.type === 0">
-                <QuizTypeMCQ
-                    :options="question.options"
-                    :correctAnswer="question.correct_ans"
-                    :singleSelectFlag="question.single_ans_flag"
-                    :timeRemaining="timeRemaining"
-                    @returnValues="handleReturnValues"
-                />
-            </template>
+    <div>
+        <template v-if="question.type === 0">
+            <QuizTypeMCQ
+                :options="question.options"
+                :correctAnswer="question.correct_ans"
+                :singleSelectFlag="question.single_ans_flag"
+                :timeRemaining="timeRemaining"
+                @returnValues="handleReturnValues"
+            />
+        </template>
 
-            <template v-else-if="question.type === 1">
-                <QuizTypeTrueFalse
-                    :correctAnswer="question.correct_ans"
-                    :timeRemaining="timeRemaining"
-                    @returnValues="handleReturnValues"
-                />
-            </template>
+        <template v-else-if="question.type === 1">
+            <QuizTypeTrueFalse
+                :correctAnswer="question.correct_ans"
+                :timeRemaining="timeRemaining"
+                @returnValues="handleReturnValues"
+            />
+        </template>
 
-            <template v-else-if="question.type === 2">
-                <QuizTypeText
-                    :correctAnswer="question.correct_ans"
-                    :timeRemaining="timeRemaining"
-                    @returnValues="handleReturnValues"
-                />
-            </template>
-        </div>
+        <template v-else-if="question.type === 2">
+            <QuizTypeText
+                :correctAnswer="question.correct_ans"
+                :timeRemaining="timeRemaining"
+                @returnValues="handleReturnValues"
+            />
+        </template>
+    </div>
 </template>
 
 <script>
@@ -79,7 +80,6 @@ export default {
             this.socket.emit("get leaderboard", this.store.sessionCode);
 
             this.socket.on("update leaderboard", (leaderboard) => {
-                console.log("Received updated leaderboard:", leaderboard);
                 this.leaderboardData = leaderboard;
                 this.store.updateUserRank(this.leaderboardData);
             });
