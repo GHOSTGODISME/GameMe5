@@ -341,8 +341,10 @@
                     </div>
                     <div>
                         <div class="progress" style="border-radius: 10px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: ${correctPercentage}%" aria-valuenow="${correctPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${incorrectPercentage}%" aria-valuenow="${incorrectPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: ${correctPercentage}%" 
+                        aria-valuenow="${correctPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${incorrectPercentage}%" 
+                        aria-valuenow="${incorrectPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div><span class="total-correct">${totalCorrect}</span> correct, <span class="total-incorrect">${totalIncorrect}</span> incorrect</div>
                     </div>
@@ -736,13 +738,6 @@
                         tableBody.appendChild(newRow);
                     }
                 });
-
-                // Remove extra rows if there are more existing rows than entries
-                // if (existingRows.length > leaderboardData.length) {
-                //     for (let i = leaderboardData.length; i < existingRows.length; i++) {
-                //         tableBody.removeChild(existingRows[i]);
-                //     }
-                // }
             };
 
             socket.on('updateResponse', (data) => {

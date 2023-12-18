@@ -33,7 +33,6 @@ export default {
     async fetchQuizQuestions() {
       const store = useQuizStore();
       await store.fetchQuizQuestions();
-      console.log(store.questions);
     },
     startCountdown() {
       const interval = setInterval(() => {
@@ -48,8 +47,6 @@ export default {
     },
     finishCountdown() {
       this.showText = false;
-      console.log('Countdown Finished');
-      console.log('Redirecting to Quiz Page');
       this.$router.push('/quiz/quiz-page-layout');
     },
   },

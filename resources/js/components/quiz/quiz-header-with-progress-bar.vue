@@ -22,10 +22,6 @@
         <div class="header-time-remaining">
             {{ timeRemaining }}s
         </div>
-
-        <div class="header-setting">
-            <i class="fa-solid fa-gear"></i>
-        </div>
     </div>
 
     <!-- progress bar -->
@@ -78,6 +74,5 @@
 <style scoped>
     .progress-bar {
         transition: width 0.5s ease;
-        /* Use a transition effect on width change */
     }
 </style>

@@ -69,8 +69,6 @@
         </div>
 
         <div class="row">
-
-
             <div class="col-md-6 col-xl-7 container-style" id="standard" style="display: none;">
                 <div id="result-box" class="box">Press "Spin" to start</div>
                 <button class="btn btn-dark interactive_btn" id="spin-button" type="button"
@@ -88,7 +86,6 @@
                     onclick="startSpin();">Spin</button>
             </div>
 
-            {{-- <div class="col-md-6 col-xl-5 container-style"> --}}
             <div class="col-xl-5 container-style">
                 <div class="card fortune_wheel_card"></div>
                 <div>

@@ -57,8 +57,6 @@ function changeMode() {
     }
 }
 
-
-
 /////// for fortune wheel -- the actual wheel
 const canvas = document.getElementById('fortuneWheel');
 let theWheel = null;

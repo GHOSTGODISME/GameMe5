@@ -114,11 +114,6 @@ body{
 
 
 /* actual play quiz style */
-.quiz-body {
-    background-image: url('quiz-bg.png');
-    background-repeat: repeat;
-}
-
 .header {
     padding: 10px;
     display: flex;

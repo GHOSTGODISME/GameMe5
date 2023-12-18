@@ -1,4 +1,5 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
@@ -13,8 +14,8 @@
     <style scoped>
         body {
             background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);
-            margin:0;
-            padding:0;
+            margin: 0;
+            padding: 0;
         }
 
         .content-body {
@@ -23,7 +24,7 @@
             justify-content: flex-end;
             align-items: center;
             gap: 80px;
-            margin-top:100px;
+            margin-top: 100px;
         }
 
         img {
@@ -42,63 +43,68 @@
             height: 50px;
         }
 
-        
 
-        
-#txt_int_code{
-    padding: 25px 15px 20px 15px;
-    border: 1px solid #BFBFBF;
-    border-radius: 10px;
-    box-sizing: border-box;
-    background: #FAFAFA;
-    width: 500px;
-    height: 40px;
-    flex-shrink: 0;
-    margin-top:30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Roboto', sans-serif; /* Replace 'Your Font' with the desired font name */
-    font-size: 25px; /* Adjust the font size as needed */
-    font-weight: bold; /* Adjust the font weight as needed */
-    text-align: center; /* Center the text horizontally */
-}
 
-#txt_int_code:focus{
-    outline: none;
-    border-color: #007bff; /* Change the border color on focus */
-} 
-    
-#txt_int_code::placeholder{
-    color: #A3A3A3;
-    font-family:'Roboto';
-    font-size: 25px;
-    font-style:normal;
-    font-weight: 400;
-    line-height: normal;
-    text-align: center;
-}
 
-.stud_big_cont{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
+        #txt_int_code {
+            padding: 25px 15px 20px 15px;
+            border: 1px solid #BFBFBF;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background: #FAFAFA;
+            width: 500px;
+            height: 40px;
+            flex-shrink: 0;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            /* Replace 'Your Font' with the desired font name */
+            font-size: 25px;
+            /* Adjust the font size as needed */
+            font-weight: bold;
+            /* Adjust the font weight as needed */
+            text-align: center;
+            /* Center the text horizontally */
+        }
 
-.button_general{
-    width: 300px;
-    height: 45px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: var(--Button, #2A2A2A);
-    color: #FEFEFE;
-    font-family: 'Roboto';
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;  
-}
+        #txt_int_code:focus {
+            outline: none;
+            border-color: #007bff;
+            /* Change the border color on focus */
+        }
+
+        #txt_int_code::placeholder {
+            color: #A3A3A3;
+            font-family: 'Roboto';
+            font-size: 25px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            text-align: center;
+        }
+
+        .stud_big_cont {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button_general {
+            width: 300px;
+            height: 45px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            background: var(--Button, #2A2A2A);
+            color: #FEFEFE;
+            font-family: 'Roboto';
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+        }
     </style>
 
 </head>
@@ -110,14 +116,15 @@
     <div class="content-body">
         <div class="stud_big_cont">
             <img src="img/logo_stud.png" alt="logo">
-     
-        <form method="GET" action="{{ route('join-interactive-session') }}"
-            style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
-            @csrf
-            <input type="text" name="code" id="txt_int_code" class="form-control input-style" placeholder="Code">
-            <button type="submit" class="button_general">Join Session</button>
-        </form>
-    </div>
+
+            <form method="GET" action="{{ route('join-interactive-session') }}"
+                style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 50px;">
+                @csrf
+                <input type="text" name="code" id="txt_int_code" class="form-control input-style"
+                    placeholder="Code">
+                <button type="submit" class="button_general">Join Session</button>
+            </form>
+        </div>
     </div>
 
 
@@ -126,15 +133,15 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-    @if($errors->has('code'))
+    @if ($errors->has('code'))
         <script>
             // Use SweetAlert2 to display a modal
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: '{{ $errors->first("code") }}',
+                text: '{{ $errors->first('code') }}',
                 customClass: {
                     title: 'custom-title-class',
                     content: 'custom-content-class',

@@ -15,23 +15,18 @@
                         :style="inputStyle"
                         v-model="username"
                         placeholder="Player's name"
-                        required
-                    />
-                    <!-- <span v-if="showErrorMessage" class="input-fails-text">Username has been used</span> -->
+                        required/>
                     <span v-if="emptyUserNameMsg" class="input-fails-text"
-                        >Please enter a username</span
-                    >
+                        >Please enter a username</span>
                     <p class="join-quiz-details-instruction">
                         Please enter your username and wait for the host to
                         start the game.
                     </p>
 
                     <div class="button-container">
-                        <!-- <button class="btn btn-dark button-style" @click="validateUsername">Confirm</button> -->
                         <button
                             class="btn btn-dark button-style"
-                            @click="validateUsername"
-                        >
+                            @click="validateUsername">
                             Confirm
                         </button>
                     </div>
@@ -97,7 +92,6 @@ export default {
         if (this.socket) {
             this.socket.emit("exitRoom", this.store.sessionCode);
         }
-        // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
     },
     computed: {
         inputStyle() {
@@ -117,14 +111,11 @@ export default {
             );
 
             this.socket.on("initial participants", (participants) => {
-                console.log("hi");
-                console.log(participants);
                 if (
                     !participants.find(
                         (participant) => participant.id === this.store.userId
                     )
                 ) {
-                    console.log("bye");
                     this.clearLocalStorageWithPrefix("quiz:");
                 }
                 this.participantList = participants.map(
@@ -159,7 +150,6 @@ export default {
                     })
                     .then((response) => {
                         const hasCompletedQuiz = response.data;
-                        console.log(hasCompletedQuiz);
                         if (hasCompletedQuiz) {
                             this.store.clearPinialocalStorage();
                             alert(

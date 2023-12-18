@@ -90,21 +90,6 @@
         }
 
  
-        .live-session-btn{
-            width: 300px;
-                                height: 45px;
-                                margin-top:40px;
-                                flex-shrink: 0;
-                                border-radius: 8px;
-                                background: var(--Button, #2A2A2A);
-                                color: #FEFEFE;
-                                font-family: 'Roboto';
-                                font-size: 20px;
-                                font-style: normal;
-                                font-weight: 500;
-                                line-height: normal;
-                                border:none;
-        }
  
 
     </style>
@@ -147,8 +132,22 @@
                         </div>
                         @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
-                                <button class="btn btn-primary live-session-btn" 
-                                data-bs-toggle="modal" data-bs-target="#liveSessionModal">Start Live Session </button>
+                                <button class="btn btn-primary" style="   
+                                width: 300px;
+                                height: 45px;
+                                margin-top:40px;
+                                flex-shrink: 0;
+                                border-radius: 8px;
+                                background: var(--Button, #2A2A2A);
+                                color: #FEFEFE;
+                                font-family: 'Roboto';
+                                font-size: 20px;
+                                font-style: normal;
+                                font-weight: 500;
+                                line-height: normal;
+                                border:none;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#liveSessionModal">Start Live Session </button>
                             </div>
                         @endif
                     </div>
@@ -161,7 +160,8 @@
                             @if ($mode == 'edit' || $mode == 'create')
                                 <button type="button" class="btn btn-primary" id="openQuestionModal"
                                     data-bs-toggle="modal" data-bs-target="#questionModal">
-                                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question</button>
+                                    <i class="fa-solid fa-plus" style="margin-right: 10px;"></i>Add Question
+                                </button>
                             @endif
                         </div>
 
@@ -410,8 +410,6 @@
         const quizFromDB = @json($quiz);
         const quizQuestionFromDB = @json($questions);
         const mode = @json($mode);
-        console.log(quizFromDB);
-        console.log(quizQuestionFromDB);
 
         $(document).ready(function() {
             $('#continueBtn').click(function() {
@@ -419,7 +417,6 @@
                 const quizSessionSetting = new QuizSessionSetting();
                 quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked')? 1 : 0;
                 quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked')? 1 : 0;
-                console.log(quizSessionSetting);
                 const quizId = quizFromDB.id;
                 // AJAX request to store the new quiz session
                 $.ajax({

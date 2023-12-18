@@ -59,16 +59,15 @@ export default {
     created(){
         this.socket = io("http://localhost:3000");
         this.store = useQuizStore();
+        document.body.className = "play-quiz-body";
+
     },
     methods: {
         initializeSocket() {
             this.socket.emit("rejoinRoom", this.store.sessionCode);
             this.socket.emit("get leaderboard", this.store.sessionCode);
 
-            console.log("triggered get leaderboard");
-
             this.socket.on("update leaderboard", (leaderboard) => {
-                console.log("Received updated leaderboard:", leaderboard);
                 this.leaderboardData = leaderboard;
                 this.store.updateUserRank(this.leaderboardData);
             });
@@ -88,7 +87,6 @@ export default {
         },
         handleTimeUp() {
             clearInterval(this.timerInterval);
-            // store.currentQuestionIndex += 1;
             this.store.setCurrentQuestionIndex(this.store.currentQuestionIndex+1);
 
             if (this.store.currentQuestionIndex < this.store.questions.length) {
@@ -100,7 +98,6 @@ export default {
     },
     beforeUnmount() {
         this.socket.emit("exitRoom", this.store.sessionCode);
-        // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
         clearInterval(this.timerInterval);
     },
 };
@@ -108,6 +105,6 @@ export default {
 
 <style scoped>
 .highlighted-row {
-    background-color: #0195FF; /* Change this to your preferred highlight color */
+    background-color: #0195FF; 
 }
 </style>

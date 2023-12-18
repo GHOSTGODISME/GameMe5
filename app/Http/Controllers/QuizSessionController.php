@@ -164,11 +164,8 @@ class QuizSessionController extends Controller
                 return view('quiz.spa', ['sessionCode' => $code]);
             }
         } else {
-            // If no session or an invalid code is provided, return an error message
             LaravelSession::flash('error', 'Please enter a valid session code.');
             return response()->json(['message' => 'Invalid code']);
-            // Alternatively, you can redirect the user to the homepage or another route
-            // return redirect()->to('/');
         }
     }
     
@@ -471,7 +468,6 @@ class QuizSessionController extends Controller
 
         // Output PDF
         return $dompdf->stream("quiz_summary_{$generatedDate}.pdf");
-        // return $dompdf;
     }
 
     public function sendEmail(Request $request, $userId, $sessionId, $quizId)
@@ -487,8 +483,6 @@ class QuizSessionController extends Controller
         $user = User::find($userId);
         if ($user) {
             SendQuizSummaryEmail::dispatch($user->email, $pdfContent);
-        }else{
-            SendQuizSummaryEmail::dispatch("ming.fai2002@gmail.com", $pdfContent);      
         }
     }
 }

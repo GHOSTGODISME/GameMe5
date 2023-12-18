@@ -315,9 +315,7 @@
         clearLocalStorageWithPrefix('quiz:');
 
         let questionsData = [];
-
         let userResponseDetails = [];
-
         let userResponses = {};
         let correctness = {};
 

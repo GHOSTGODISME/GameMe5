@@ -1,12 +1,6 @@
 <template>
     <div id="quiz-options-container" class="container">
         <div class="row" id="mcq-question-container" @keydown="handleKeyPress">
-            <!-- <div v-for="(option, index) in options" :key="index" class="col-10 col-md-5 format-option" :class="{
-                'option-not-selected': isNotSelected(option),
-                'format-option-selected': isOptionSelected(option),
-                'option-correct': isCorrectOption(option),
-                'option-incorrect': isIncorrectOption(option),
-            }" @click="selectOption(option)"> -->
             <div
                 v-for="(option, index) in options"
                 :key="index"
@@ -68,15 +62,6 @@ export default {
     },
     methods: {
         selectOption(option) {
-            // if (!this.submitted) {
-            //     const index = this.selectedOptions.indexOf(option);
-            //     if (index !== -1) {
-            //         this.selectedOptions.splice(index, 1);
-            //     } else {
-            //         this.selectedOptions.push(option);
-            //     }
-            // }
-
             if (!this.submitted) {
                 if (this.singleSelectFlag === 1) {
                     // Clear selectedOptions if singleSelectFlag is 1 (single answer mode)
@@ -163,7 +148,6 @@ export default {
 
 .format-option {
     border-radius: 10px;
-    /* border: solid 1px black; */
     background-color: #0195ff;
 
     margin: 20px;

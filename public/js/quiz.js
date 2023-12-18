@@ -59,7 +59,6 @@ function mapQuizDataToInstance(fetchedQuizData) {
 
     // Map quiz questions
     if (fetchedQuizData.quiz_questions && Array.isArray(fetchedQuizData.quiz_questions)) {
-        console.log("quiz_questions");
         quizInstance.quiz_questions = fetchedQuizData.quiz_questions.map(questionData => {
             // Create Question instance for each question data
             let question = new Question();
@@ -77,7 +76,6 @@ function mapQuizDataToInstance(fetchedQuizData) {
             question.quiz_id = questionData.quiz_id || "";
 
             question.index = questionData.index !== undefined ? parseInt(questionData.index) : 0;
-            console.log("question");
             return question;
         });
     }
@@ -101,43 +99,15 @@ function deepCopy(obj) {
     return copiedObj;
 }
 
-
 const quiz = mapQuizDataToInstance(quizFromDB);
 let ori_quiz = deepCopy(quiz);
-
 let savedQuiz = mapQuizDataToInstance(quizFromDB);
 
-console.log("quizzz");
-console.log(quiz);
-
-// let quiz_questions = quizRecord.quiz_questions;
-// console.log("quiz_questions");
-// console.log(quiz_questions);
 
 // Quiz Details Instance
 const quizDetails = new Question();
-// let allQuiz = [];
 let allQuiz = quiz.quiz_questions;
-// const quiz = new Quiz();
-// let quiz;
-// if(quizRecord.id != null){
-//     quiz = quizRecord;
-// }else{
-//     quiz = new Quiz();
-// }
-// quiz.quiz_questions = allQuiz;
 
-// console.log("quiz");
-// console.log(quiz);
-
-// console.log("test " +quizFromDb );
-// console.log(quizFromDb );
-
-// const quizFromDb = @JSON($quiz);
-// quizDetails.quiz_id = quizFromDb.id;
-// // console.log(@JSON($quiz));
-// console.log(quizFromDb);
-// console.log(quizDetails.quiz_id);
 
 // DOM Ready Event
 $(document).ready(function () {
@@ -181,12 +151,12 @@ function initializeEventListeners() {
     $('#questionModal').on('hidden.bs.modal', function () {
         // Clear input fields and reset modal state here
         $('#modal_title').text("Add Question");
-        $('#quiz-type').val('Multiple Choice').change(); // Reset dropdown to default value
-        $('#optionsContainer').empty(); // Clear options
-        $('#quiz_title').val(''); // Clear quiz title input
+        $('#quiz-type').val('Multiple Choice').change();
+        $('#optionsContainer').empty(); 
+        $('#quiz_title').val('');
         $("#quiz-duration").val('10').change();
         $("#quiz-points").val('10').change();
-        $('#quiz_answer_explaination').val(''); // Clear answer explaination input
+        $('#quiz_answer_explaination').val(''); 
 
         // Initialize default options
         initializeOptions();
@@ -202,19 +172,15 @@ function initializeEventListeners() {
             $("#quizModal").modal("hide");
             updateQuizDetailsShow(quiz);
         }
-
     });
 
 
 
     $('#saveQuestionBtn').click(function () {
         const uniqueID = $('#quiz_unique_id').val();
-        console.log(uniqueID);
         const quiz = variableAssignment(uniqueID);
-        console.log(quiz);
         validQuestion = validateDetails(quiz);
 
-        console.log(quiz);
         // Close the modal after saving
         if (validQuestion) {
             const existingIndex = allQuiz.findIndex(q => q.uniqueID === uniqueID);
@@ -222,17 +188,11 @@ function initializeEventListeners() {
             if (existingIndex !== -1) {
                 // Update existing record in allQuiz array
                 allQuiz[existingIndex] = quiz;
-                console.log("Record updated:", allQuiz[existingIndex]);
             } else {
-                console.log("Record not found. Adding as a new record.");
                 // Add new record to allQuiz array
-                console.log("quiz.duration " + quiz.duration);
-                console.log("quiz.points " + quiz.points);
                 allQuiz.push(quiz);
-                console.log("Record added:", quiz);
             }
 
-            console.log(allQuiz);
             // Update UI or perform necessary actions
             populateQuiz(allQuiz, mode);
             $('#questionModal').modal('hide');
@@ -277,7 +237,6 @@ function updateInputState(input, checkbox) {
 }
 
 function initializeTooltips() {
-    console.log("triggered");
     $('.correct-answer-radio, .correct-answer-checkbox').each(function () {
         var checkbox = $(this);
         var input = checkbox.siblings('input[name="input_options"]');
@@ -507,7 +466,6 @@ function updateDeleteButtonDisplay() {
 }
 
 function updateQuizDetailsOptions(quizDetails) {
-    console.log(quizDetails);
     quizDetails.options = [];
     quizDetails.correct_ans = [];
 
@@ -518,7 +476,6 @@ function updateQuizDetailsOptions(quizDetails) {
         "#optionsContainer input[name='correct-answer-checkbox']");
 
     options.forEach(function (option, index) {
-        console.log("option " + option.value + " index " + index);
         if (option.value != '') {
             quizDetails.options.push(option.value);
         }
@@ -573,8 +530,6 @@ function variableAssignment(uniqueID) {
     quiz.duration = parseInt($("#quiz-duration").val());
     quiz.points = parseInt($("#quiz-points").val());
 
-    console.log("quiz.durationquiz.duration " + quiz.duration);
-    console.log("quiz.pointsquiz.points " + quiz.points);
     // Update answer explaination, assign null if empty
     quiz.answer_explaination = $("#quiz_answer_explaination").val();
     if (quiz.answer_explaination === "") {
@@ -680,7 +635,6 @@ function validateDetails(quizDetails) {
 
 function initializeEditDeleteButtonListeners() {
     document.querySelectorAll('.edit-btn').forEach(button => {
-        console.log("initialized edit");
         button.addEventListener('click', function () {
             const uniqueID = this.getAttribute('data-question-id');
             loadQuestionDataIntoModal(uniqueID);
@@ -688,7 +642,6 @@ function initializeEditDeleteButtonListeners() {
     });
 
     document.querySelectorAll('.remove-btn').forEach(button => {
-        console.log("initialized remove");
         button.addEventListener('click', function () {
             const uniqueID = this.getAttribute('data-question-id');
             deleteQuestion(uniqueID);
@@ -696,7 +649,6 @@ function initializeEditDeleteButtonListeners() {
     });
 
     document.querySelectorAll('.duplicate-btn').forEach(button => {
-        console.log("initialized duplicate");
         button.addEventListener('click', function () {
             const uniqueID = this.getAttribute('data-question-id');
             duplicateQuestion(uniqueID);
@@ -708,16 +660,13 @@ function initializeEditDeleteButtonListeners() {
 
 function initializePointsDurationDDLListeners() {
     document.querySelectorAll('.points_ddl').forEach(button => {
-        console.log("initialized points");
         button.addEventListener('click', function () {
             const uniqueID = this.getAttribute('data-question-id');
             const questionToUpdate = allQuiz.find(q => q.uniqueID === uniqueID);
             const selectedPoints = $(this).val();
-            console.log(selectedPoints);
 
             if (questionToUpdate) {
                 questionToUpdate.points = parseInt(selectedPoints);
-                console.log(`Question ${uniqueID} duration updated to ${selectedPoints}`);
 
                 const index = allQuiz.findIndex(q => q.uniqueID === questionToUpdate.uniqueID);
                 if (index !== -1) {
@@ -728,16 +677,13 @@ function initializePointsDurationDDLListeners() {
     });
 
     document.querySelectorAll('.duration_ddl').forEach(button => {
-        console.log("initialized dl");
         button.addEventListener('click', function () {
             const uniqueID = this.getAttribute('data-question-id');
             const questionToUpdate = allQuiz.find(q => q.uniqueID === uniqueID);
             const selectedDuration = $(this).val();
-            console.log(selectedDuration);
 
             if (questionToUpdate) {
                 questionToUpdate.duration = parseInt(selectedDuration);
-                console.log(`Question ${uniqueID} duration updated to ${selectedDuration}`);
 
                 const index = allQuiz.findIndex(q => q.uniqueID === questionToUpdate.uniqueID);
                 if (index !== -1) {
@@ -751,8 +697,6 @@ function initializePointsDurationDDLListeners() {
 function loadQuestionDataIntoModal(uniqueID) {
     // Find the question in the allQuiz array
     const question = allQuiz.find(q => q.uniqueID === uniqueID);
-    console.log(question);
-    // <input type="hidden" id="quiz_unique_id" name="quiz_unique_id" value="">
 
     $('#quiz_unique_id').val(uniqueID);
     if (question) {
@@ -769,7 +713,6 @@ function loadQuestionDataIntoModal(uniqueID) {
             $('#optionsContainer').empty();
             optionCount = 0;
             question.options.forEach(option => {
-                console.log(option);
                 addOption();
                 let optionInput = $('#optionsContainer .format-option:last-child input[name="input_options"]');
                 optionInput.val(option);
@@ -901,7 +844,7 @@ function generateQuestionHTML(question, index, mode) {
         }
     }
     // Checking and appending answer explaination if available
-    if (question.answer_explaination != "[]") {
+    if (question.answer_explaination != "[]" && question.answer_explaination != null) {
         questionHTML += `
     <div class="answer-explaination-container container-space">
         <div class="horizontal-line-with-text">
@@ -938,12 +881,6 @@ function generateQuestionHTML(question, index, mode) {
 
     questionHTML += '</div>'; // Close the question-container div
 
-
-    console.log("question.duration " + question.duration);
-    console.log("question.points " + question.points);
-    console.log("1 " + `${question.duration === 10 ? 'selected' : ''}`);
-    console.log("2 " + `${question.duration === 15 ? 'selected' : ''}`);
-    console.log("3 " + `${question.duration === 30 ? 'selected' : ''}`);
     return questionHTML;
 }
 
@@ -958,9 +895,9 @@ function deleteQuestion(uniqueID) {
 
             // Update the indices after deletion
             allQuiz.forEach((question, index) => {
-                question.index = index + 1; // Update indices based on the new positions
+                question.index = index + 1;
             });
-            populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
+            populateQuiz(allQuiz, mode);
         }
     } else {
         console.log('Question not found.');
@@ -973,19 +910,14 @@ function duplicateQuestion(uniqueID) {
         const originalQuestion = allQuiz[indexToDuplicate];
         const duplicatedQuestion = JSON.parse(JSON.stringify(originalQuestion));
 
-        // Optionally, modify properties if needed (e.g., change uniqueID, reset some values)
-        duplicatedQuestion.uniqueID = generateUniqueID(); // Change uniqueID for the duplicated question
-        duplicatedQuestion.id = ""; // Clear ID or set to another value if required
+        duplicatedQuestion.uniqueID = generateUniqueID();
+        duplicatedQuestion.id = "";
 
         // Insert the duplicated question right after the original one
         allQuiz.splice(indexToDuplicate + 1, 0, duplicatedQuestion);
 
-        console.log(originalQuestion);
-        console.log(duplicatedQuestion);
-        // Update the UI or perform any other necessary actions
-        populateQuiz(allQuiz, mode); // Assuming populateQuiz function updates the UI
-        console.log(allQuiz);
-        console.log(quiz);
+
+        populateQuiz(allQuiz, mode); 
     } else {
         console.log('Question not found.');
     }
@@ -1010,7 +942,6 @@ const sortable = new Sortable(questionsContainer, {
 
         });
         allQuiz = updatedAllQuiz;
-        console.log(allQuiz);
         populateQuiz(allQuiz, mode);
     }
 
@@ -1047,15 +978,9 @@ function saveQuiz() {
 
     const validQuiz = validateQuizDetails(quiz);
 
-    console.log(quiz);
     // Make an AJAX POST request to the backend to save the form data
     if (validQuiz) {
         savedQuiz = mapQuizDataToInstance(quiz);
-        console.log(quiz);
-        console.log(quiz.quiz_questions);
-        console.log(savedQuiz);
-        console.log(savedQuiz.quiz_questions);
-
         $.ajax({
             url: '/save-quiz',
             type: 'POST',
@@ -1065,7 +990,6 @@ function saveQuiz() {
                 ori_quiz = deepCopy(quiz);
                 console.log('Quiz saved successfully:', response);
                 window.location.href = "/quiz-index-own-quiz";
-                // history.back();
             },
             error: function (xhr, status, error) {
                 console.error('Error saving form:', error);
@@ -1074,12 +998,6 @@ function saveQuiz() {
         });
     }
 }
-
-// // Event listener for the "Save Form" button click
-// document.getElementById('save-quiz-btn').addEventListener('click', function() {
-//     saveQuiz(); 
-// });
-
 
 function compareObject(obj1, obj2) {
     // Check if both inputs are objects

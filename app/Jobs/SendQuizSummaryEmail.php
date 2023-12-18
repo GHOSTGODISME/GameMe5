@@ -65,7 +65,6 @@ class SendQuizSummaryEmail implements ShouldQueue
         $dompdf->render();
 
         // Output PDF
-        // return $dompdf->stream("quiz_summary_{$generatedDate}.pdf");
         return $dompdf;
     }
 

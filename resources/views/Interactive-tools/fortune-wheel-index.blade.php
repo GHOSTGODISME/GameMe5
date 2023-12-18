@@ -4,8 +4,8 @@
 
     <div class = "title_bar">
         <div>
-            <a href="{{ route('create-fortune-wheel') }}" class="btn btn-dark add-btn"><i class="fa-solid fa-plus"></i>Add
-                Wheel</a>
+            <a href="{{ route('create-fortune-wheel') }}" class="btn btn-dark add-btn"><i class="fa-solid fa-plus">
+                </i>Add Wheel</a>
         </div>
         <form action="{{ route('search-fortune-wheel') }}" method="GET" class="search-form">
             <img class="search_icon" src="img/search_icon.png" alt="search_favicon">

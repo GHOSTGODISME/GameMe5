@@ -2,7 +2,6 @@
     <div class="header-container">
         <img src="img/logo_header.png" alt="Logo">
         <span class="header-quiz-title">{{quizTitle}}</span>
-        <a class="header-setting"><i class="fa-solid fa-gear"></i></a>
     </div>
 </template>
 
