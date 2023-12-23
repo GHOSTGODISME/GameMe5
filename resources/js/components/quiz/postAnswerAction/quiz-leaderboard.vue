@@ -105,9 +105,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.highlighted-row {
-    background-color: #0195ff;
-}
-</style>

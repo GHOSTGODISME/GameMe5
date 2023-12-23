@@ -67,13 +67,3 @@ export default {
     },
 };
 </script>
-<style>
-#answer-explaination-container {
-    background-color: whitesmoke;
-    border: 1px solid black;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 30px;
-    min-height: 250px;
-}
-</style>

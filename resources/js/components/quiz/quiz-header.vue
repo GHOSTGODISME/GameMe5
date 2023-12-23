@@ -20,27 +20,3 @@ export default {
     },
 };
 </script>
-
-<style>
-.header-container {
-    width: 100%;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(to right, #00c6ff, #0082ff, #0072ff);
-    color: white;
-    padding: 30px;
-    flex-wrap: wrap;
-}
-
-.header-quiz-title {
-    font-weight: bold;
-    font-size: 32px;
-}
-
-.header-setting {
-    font-size: 24px;
-    color: white;
-}
-</style>

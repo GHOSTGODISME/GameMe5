@@ -74,9 +74,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.progress-bar {
-    transition: width 0.5s ease;
-}
-</style>

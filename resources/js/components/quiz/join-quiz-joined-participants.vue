@@ -28,7 +28,6 @@ export default {
 </script>
 
 <style>
-/* CSS for fade animation */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s ease-in-out;
