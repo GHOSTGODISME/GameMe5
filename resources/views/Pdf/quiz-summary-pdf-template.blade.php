@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>GameMe5</title>
 
     <style>
         body {
@@ -161,12 +161,12 @@
                 <tr>
                     <td>Correct Answers</td>
                     <td>:</td>
-                    <td>{{ $data->quizResponse->correct_answer_count }}</td>
+                    <td>{{ $data->quizResponse->correct_answer_count }} / {{ $data->quizResponse->correct_answer_count + $data->quizResponse->incorrect_answer_count }}</td>
                 </tr>
                 <tr>
                     <td>Incorrect Answers</td>
                     <td>:</td>
-                    <td>{{ $data->quizResponse->incorrect_answer_count }}</td>
+                    <td>{{ $data->quizResponse->incorrect_answer_count }} / {{ $data->quizResponse->correct_answer_count + $data->quizResponse->incorrect_answer_count }}</td>
                 </tr>
                 <tr>
                     <td>Average Time</td>

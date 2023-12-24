@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GameMe5</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -215,7 +215,7 @@
 <body>
     <div class="header-container">
         <img src="/img/logo_header.png" alt="Logo">
-        <span class="header-quiz-title">{{$quizTitle}}</span>
+        <span class="header-quiz-title">{{ $quizTitle }}</span>
     </div>
 
     <div class="quiz-body">
@@ -254,19 +254,9 @@
                     </div>
                 </div>
 
-                {{-- <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;align-items: center;">
-                    <div class="submit-button-container">
-                        <button id="play-again-button" class="btn btn-primary button-style">Play again</button>
-                    </div>
-
-                    <div class="submit-button-container">
-                        <button id="find-new-quiz-button" class="btn btn-primary button-style">Find new quiz</button>
-                    </div>
-                </div> --}}
-
                 <div>
                     <hr>
-                    <p>This summary has already been sent to your email. Please Wait for a moment.</p>
+                    <p>This summary has already been sent to your email. Please wait for a moment.</p>
                     <a href="{{ route('generate-pdf', ['userId' => $userId, 'sessionId' => $sessionId, 'quizId' => $quizId]) }}"
                         class="btn btn-primary">
                         Haven't received? Download it now</a>
@@ -315,9 +305,7 @@
         clearLocalStorageWithPrefix('quiz:');
 
         let questionsData = [];
-
         let userResponseDetails = [];
-
         let userResponses = {};
         let correctness = {};
 
@@ -343,8 +331,6 @@
             const quizId = @json($quizId);
             const quizDetails = await fetchQuizDetails(userId, sessionId, quizId);
 
-            console.log(@json($quizTitle));
-
             if (quizDetails) {
                 const {
                     quiz,
@@ -367,8 +353,10 @@
                 document.getElementById('quiz-rank').textContent = `${rank}/${totalParticipants}`;
                 document.getElementById('quiz-score').textContent = total_points;
                 document.getElementById('quiz-accuracy').textContent = `${accuracy}%`;
-                document.getElementById('quiz-correct').textContent = `${correct_answer_count}/${correct_answer_count + incorrect_answer_count}`;
-                document.getElementById('quiz-incorrect').textContent = `${incorrect_answer_count}/${correct_answer_count + incorrect_answer_count}`;
+                document.getElementById('quiz-correct').textContent =
+                    `${correct_answer_count}/${correct_answer_count + incorrect_answer_count}`;
+                document.getElementById('quiz-incorrect').textContent =
+                    `${incorrect_answer_count}/${correct_answer_count + incorrect_answer_count}`;
                 document.getElementById('quiz-avg-time').textContent = `${average_time}`;
 
 
@@ -427,16 +415,12 @@
 
 
                 let userAnswers = userResponses[id] || null; // User's selected answers (array)
-                console.log(userAnswers);
                 if (userAnswers != null) {
                     userAnswers = JSON.parse(userAnswers);
-                    console.log(userAnswers);
                 }
 
 
                 const isCorrect = correctness[id];
-                console.log(userAnswers);
-                console.log(options);
 
                 const titleBgClass = isCorrect ? "correct-ans-title-bg" : "incorrect-ans-title-bg";
                 const optionsBgClass = isCorrect ? "correct-ans-options-bg" : "incorrect-ans-options-bg";
@@ -455,7 +439,6 @@
             ${options.map((option) => {
               const optionLowerCase = option.toLowerCase();
               const isChecked = userAnswers?.map(ans => ans?.toLowerCase()).includes(optionLowerCase);
-              console.log(isChecked);
               const isOptionCorrect = correct_ans.map(ans => ans.toLowerCase()).includes(optionLowerCase);
               return generateInputHTML(single_ans_flag, option, isChecked, isOptionCorrect, type);
             }).join("")}

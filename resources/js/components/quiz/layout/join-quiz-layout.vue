@@ -17,7 +17,6 @@
                         placeholder="Player's name"
                         required
                     />
-                    <!-- <span v-if="showErrorMessage" class="input-fails-text">Username has been used</span> -->
                     <span v-if="emptyUserNameMsg" class="input-fails-text"
                         >Please enter a username</span
                     >
@@ -27,7 +26,6 @@
                     </p>
 
                     <div class="button-container">
-                        <!-- <button class="btn btn-dark button-style" @click="validateUsername">Confirm</button> -->
                         <button
                             class="btn btn-dark button-style"
                             @click="validateUsername"
@@ -97,7 +95,6 @@ export default {
         if (this.socket) {
             this.socket.emit("exitRoom", this.store.sessionCode);
         }
-        // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
     },
     computed: {
         inputStyle() {
@@ -117,7 +114,13 @@ export default {
             );
 
             this.socket.on("initial participants", (participants) => {
-                console.log(participants);
+                if (
+                    !participants.find(
+                        (participant) => participant.id === this.store.userId
+                    )
+                ) {
+                    this.clearLocalStorageWithPrefix("quiz:");
+                }
                 this.participantList = participants.map(
                     (participant) => participant.username
                 );
@@ -150,7 +153,6 @@ export default {
                     })
                     .then((response) => {
                         const hasCompletedQuiz = response.data;
-                        console.log(hasCompletedQuiz);
                         if (hasCompletedQuiz) {
                             this.store.clearPinialocalStorage();
                             alert(
@@ -230,6 +232,19 @@ export default {
                         );
                     });
             }
+        },
+        clearLocalStorageWithPrefix(prefix) {
+            let localStorageKeysToRemove = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith(prefix)) {
+                    localStorageKeysToRemove.push(key);
+                }
+            }
+
+            localStorageKeysToRemove.forEach((key) => {
+                localStorage.removeItem(key);
+            });
         },
     },
 };

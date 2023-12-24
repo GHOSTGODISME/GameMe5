@@ -23,12 +23,19 @@ class InteractiveSessionController extends Controller
 
     public function createInteractiveSession(Request $request)
     {
+
+        $request->validate([
+            'title' => [
+                'required',
+            ],
+        ]);
+
         $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();
 
         $title = $request->input('title');
-        
+
         $sessionCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
         $session = InteractiveSession::create([
@@ -44,11 +51,11 @@ class InteractiveSessionController extends Controller
             'sessionCode' => $sessionCode,
             'sessionId' => $session->id,
         ]);
-        
     }
 
-    public function showInteractiveSessionLecturer(Request $request){
-                return view("Interactive-Sessions.interactiveSession-lecturer", [
+    public function showInteractiveSessionLecturer(Request $request)
+    {
+        return view("Interactive-Sessions.interactiveSession-lecturer", [
             "title" => $request->input('title'),
             "sessionCode" => $request->input('sessionCode'),
             "sessionId" => $request->input('sessionId'),
@@ -61,7 +68,7 @@ class InteractiveSessionController extends Controller
 
         try {
             $session = InteractiveSession::where('code', $code)->firstOrFail();
-    
+
             if ($session->status !== 'ended') {
                 return view("Interactive-Sessions.interactiveSession-student", [
                     "title" => $session->title,
@@ -69,11 +76,9 @@ class InteractiveSessionController extends Controller
                 ]);
             } else {
                 return redirect()->back()->withErrors(['code' => 'Session has already ended.']);
-
             }
         } catch (ModelNotFoundException $exception) {
             return redirect()->back()->withErrors(['code' => 'Invalid session code.']);
-
         }
     }
 
@@ -81,15 +86,15 @@ class InteractiveSessionController extends Controller
     {
         $sessionId = $request->input('sessionId');
         $session = InteractiveSession::find($sessionId);
-    
+
         if ($session) {
             $session->status = 'ended';
             $session->messages = $request->input('messages');
             $session->save();
-    
+
             return response()->json(['message' => 'Interactive session ended successfully']);
         }
-    
+
         return response()->json(['message' => 'Interactive session not found'], 404);
     }
 }

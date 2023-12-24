@@ -35,17 +35,12 @@
 
 <body style="background: whitesmoke;">
     <div class="header-container">
-        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
-        <!-- <div class="favicon-with-text">
-            <i class="fas fa-chevron-left"></i>
-            <span>Back</span>
-        </div> -->
+        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}"
+                alt="Logo"></a>
 
         <div class="">
-            <!-- <h2 >Quiz Title</h2> -->
             <div class="surveyDetailsContainer" id="">
                 <span id="surveyDetailsTrigger" style="cursor: pointer;">
-                    <!-- Added this span for styling and cursor -->
                     <span id="quizDetailsTitle" style="cursor: pointer;"
                         class="title-style-header h2 quiz-title-display survey-title-text"
                         id="survey_title_header">Title</span>
@@ -54,7 +49,7 @@
             </div>
         </div>
 
-        <button class="btn btn-dark header-save-btn" id="save-survey-form" type="button">Save Survey</button>
+        <button class="btn btn-dark header-save-btn" id="save-survey-form" type="button">Save & Exit</button>
     </div>
 
 
@@ -89,14 +84,10 @@
                                                 class="input-fields form-control survey-title-input" type="text"
                                                 title="Survey Title" placeholder="Your Survey Title"
                                                 value="{{ $survey->title }}" />
-                                            {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                                             <b>Description</b>
                                             <label for="survey_description"></label>
                                             <textarea id="survey_description" class="input-fields form-control survey-description-input" title="Survey Description"
                                                 placeholder="(Optional)">{{ $survey->description }}</textarea>
-                                            {{-- <span id="description_char_counter"
-                                                class="char_count description_cc">0/0</span> --}}
-
                                             <b>Visibility</b>
                                             <label for="visibility"></label>
                                             <select id="visibility" name="visibility"
@@ -113,22 +104,17 @@
                                             @if (isset($survey->id))
                                                 <b style="display: block;">Survey Link</b>
                                                 <span id="copyLink" style="cursor: pointer;">
-                                                    {{-- <p style="display: inline;">randome link </p> --}}
                                                     <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}"
                                                         id="surveyLink" target="_blank"
                                                         style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
-
-
                                                     <i class="fa fa-copy"></i>
                                                 </span>
-                                                
-                                             
-                                                    <b style="display: block;margin-top:10px;">Assign Class</b>
-                                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal" style="margin-top:5px;">
-                                                        Assign to Class
-                                                    </button>
-                                              
 
+                                                <b style="display: block;margin-top:10px;">Assign Class</b>
+                                                <button class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#assignClassModal" style="margin-top:5px;">
+                                                    Assign to Class
+                                                </button>
                                             @endif
                                         </div>
                                     </div>
@@ -178,7 +164,6 @@
                                                 Add Block</button>
                                         </h2>
                                         <div class="accordion-collapse collapse item-1 show" role="tabpanel">
-                                            <!-- <div class="accordion-collapse collapse item-1 show" role="tabpanel"> -->
                                             <div class="accordion-body">
                                                 <p class="fw-bold">Input block</p>
                                                 <div id="form-builder">
@@ -193,9 +178,6 @@
                                                     <button class="btn btn-secondary "
                                                         onclick="addQuestion(QUESTION_TYPES.CHECKBOX.value)"><i
                                                             class="far fa-check-square favicon-with-btn"></i>Checkbox</button>
-                                                    <!-- <button class="btn btn-secondary d-none"
-                                                        onclick="addQuestion(QUESTION_TYPE_INT.DROPDOWN)">Dropdown
-                                                        List</button> -->
                                                     <button class="btn btn-secondary"
                                                         onclick="addQuestion(QUESTION_TYPES.SCALE.value)"><i
                                                             class="fas fa-exchange-alt favicon-with-btn"></i>Scale</button>
@@ -205,9 +187,6 @@
                                     </div>
                                     <div class="accordion-item" id="edit_block_section">
                                         <h2 class="accordion-header" role="tab">
-                                            <!-- <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#accordion-1-action-block .item-2" aria-expanded="false"
-                                                aria-controls="accordion-1-action-block .item-2"> -->
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#accordion-1-action-block .item-2"
                                                 aria-expanded="true" aria-controls="accordion-1-action-block .item-2">
@@ -216,23 +195,15 @@
                                         <div class="accordion-collapse collapse item-2 show" role="tabpanel">
                                             <div class="accordion-body">
 
-                                                <p class="fw-bold">Remove & Duplicate Block</p>
+                                                <p class="fw-bold">Duplicate & Remove Block</p>
                                                 <div class="remove_duplicate_row">
-                                                    <button id="remove_block" class="btn btn-secondary"><i
-                                                            class="far fa-trash-alt favicon-with-btn"></i>Remove</button>
                                                     <button id="duplicate_block" class="btn btn-secondary"><i
                                                             class="far fa-copy favicon-with-btn"></i>Duplicate</button>
+                                                    <button id="remove_block" class="btn btn-secondary"><i
+                                                            class="far fa-trash-alt favicon-with-btn"></i>Remove</button>
                                                 </div>
 
                                                 <hr>
-
-                                                <!-- {{-- <div>
-                                                    <b>Question Properties</b>
-                                                    <label for="question_properties"></label>
-                                                    <select id="question_properties" name="question_properties"
-                                                        class="input-fields text-capitalize" title="Question Properties">
-                                                    </select>
-                                                </div> --}} -->
 
                                                 <div id="compoenent_edit">
 
@@ -264,21 +235,9 @@
                                                     <!-- reserve for other possible usage -->
                                                     <div id="input_option_container">
                                                         <b>Input Option</b>
-                                                        <!-- <textarea id="question_input_option" class="input-fields form-control" title="Input Option"
-                                                            placeholder="Input Option"></textarea> -->
-
-                                                        <!-- <label for="input_option_contentholder"></label> -->
                                                         <textarea id="input_option_contentholder" class="input-fields form-control" title="Input Option"
                                                             placeholder="Input Option"></textarea>
                                                     </div>
-
-                                                    <!-- <div id="input_option_container">
-                                                        <b>Input Options</b>
-                                                        <div id="input_options">
-                                                            <!== Input options will be added dynamically here ==>
-                                                        </div>
-                                                        <!== <button id="add_input_option">Add Option</button> ==>
-                                                    </div> -->
 
                                                     <div id="scale-container">
                                                         <b>Scale Edit</b>
@@ -327,8 +286,6 @@
 
             @if (isset($survey->id))
                 <div id="tab-2" class="tab-pane" role="tabpanel">
-                    <!-- Display all survey responses in a scrollable table -->
-
                     @if (count($surveyResponses) > 0)
                         <div class="row justify-content-center ">
                             <p>Number of response: {{ $surveyResponses->count() }}</p>
@@ -363,20 +320,18 @@
                                                         @endif
                                                     </td>
                                                 @endforeach
-
-                                                <!-- Add other response details as needed -->
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        
+
                         <div style="margin: 50px 0; display: flex; justify-content: flex-end;">
-                            <a href="{{ url('/export-survey-response/' . $survey->id) }}" class="btn btn-dark">Export to Excel</a>
+                            <a href="{{ url('/export-survey-response/' . $survey->id) }}" class="btn btn-dark">Export
+                                to Excel</a>
 
                         </div>
-
                     @else
                         <p>No records found.</p>
                     @endif
@@ -406,14 +361,12 @@
                         <input id="survey_title_modal" class="input-fields form-control survey-title-input"
                             type="text" title="Survey Title" placeholder="Your Survey Title"
                             value="{{ $survey->title }}" />
-                        {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Description</b>
                         <label for="survey_description"></label>
                         <textarea id="survey_description_modal" class="input-fields form-control survey-description-input"
                             title="Survey Description" placeholder="(Optional)">{{ $survey->description }}</textarea>
-                        {{-- <span id="description_char_counter" class="char_count description_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Visibility</b>
@@ -426,16 +379,6 @@
                                 Private (Not receive response)</option>
                         </select>
                     </div>
-                    @if (isset($survey->id))
-                        <p class="m-0"><b>Survey Link</b></p>
-                        <span id="copyLink" style="cursor: pointer;">
-                            {{-- <p style="display: inline;">randome link </p> --}}
-                            <a href="{{ route('get-survey-response', ['id' => $survey->id]) }}" id="surveyLink"
-                                target="_blank"
-                                style="word-wrap: break-word">{{ route('get-survey-response', ['id' => $survey->id]) }}</a>
-                            <i class="fa fa-copy"></i>
-                        </span>
-                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -447,36 +390,37 @@
 
 
 
-      <!-- assign class Modal -->
-<div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog" aria-labelledby="assignClassModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="assignClassForm" action="{{ route('assign_class_survey') }}" method="post">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="class">Select Class:</label>
-                        <select class="form-control" id="class" name="class_id" required>
-                            <!-- Options will be dynamically added using JavaScript -->
-                        </select>
-                    </div>
+    <!-- assign class Modal -->
+    <div class="modal fade" id="assignClassModal" tabindex="-1" role="dialog"
+        aria-labelledby="assignClassModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignClassModalLabel">Assign to Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="assignClassForm" action="{{ route('assign_class_survey') }}" method="post">
+                        @csrf
 
-                     <!-- Your input field -->
-                    <input type="hidden" name="survey_id" id="survey_id" value={{$survey->id}}>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Assign Class</button>
-                    </div>
-                </form>
-                
+                        <div class="form-group">
+                            <label for="class">Select Class:</label>
+                            <select class="form-control" id="class" name="class_id" required>
+                                <!-- Options will be dynamically added using JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- Your input field -->
+                        <input type="hidden" name="survey_id" id="survey_id" value={{ $survey->id }}>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Assign Class</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 
@@ -498,7 +442,6 @@
 
     <script>
         const surveyFromDB = @json($survey);
-        console.log(surveyFromDB);
     </script>
     <script src="{{ asset('js/survey_utility.js') }}"></script>
     <script src="{{ asset('js/survey_form.js') }}"></script>
@@ -535,7 +478,6 @@
             survey.title = surveyTitle;
             survey.description = surveyDescription;
             survey.visibility = visibility;
-            console.log("visibility " + visibility);
         }
 
         function validateSurveyDetails(survey) {
@@ -552,10 +494,7 @@
 
         // jQuery to handle click event on the span
         $('#copyLink').click(function() {
-            // Get the text within the <p> tag
-            // var linkText = $(this).find('p').text().trim();
             var linkText = $('#surveyLink').text();
-            // Create a temporary input element to copy the text
             var tempInput = $('<input>');
             $('body').append(tempInput);
 
@@ -568,41 +507,34 @@
             // Remove the temporary input
             tempInput.remove();
 
-            // Add some visual feedback or a message to indicate the text has been copied
-            // For example, change the text or style of the span to show it's copied
-            // $(this).find('p').text('Link copied!');
-            // Additionally, you can change the icon or add a tooltip to indicate the copy action
-            $(this).find('i').removeClass('fa-copy').addClass('fa-check'); // Example: Changing icon to checkmark
             // Reset the text and icon after a short delay (optional)
             setTimeout(function() {
-                // $('#copyLink').find('p').text('random link');
                 $('#copyLink').find('i').removeClass('fa-check').addClass('fa-copy');
             }, 2000); // Change back to original text after 2 seconds (adjust as needed)
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
 
-// Fetch lecturerClasses using AJAX
-fetch('{{ route('get_lecturer_classes') }}')
-    .then(response => response.json())
-    .then(data => {
-        // Populate options in the class selection dropdown
-        const classSelect = document.getElementById('class');
-       
-        if (classSelect) {
-            data.lecturerClasses.forEach(classDetail => {
-                const option = document.createElement('option');
-                option.value = classDetail.class.id;
-                option.textContent = classDetail.class.name;
-                classSelect.appendChild(option);
-            });
-            
-        }
-    })
+            // Fetch lecturerClasses using AJAX
+            fetch('{{ route('get_lecturer_classes') }}')
+                .then(response => response.json())
+                .then(data => {
+                    // Populate options in the class selection dropdown
+                    const classSelect = document.getElementById('class');
 
-    .catch(error => console.error('Error fetching lecturerClasses:', error));
-});
+                    if (classSelect) {
+                        data.lecturerClasses.forEach(classDetail => {
+                            const option = document.createElement('option');
+                            option.value = classDetail.class.id;
+                            option.textContent = classDetail.class.name;
+                            classSelect.appendChild(option);
+                        });
 
+                    }
+                })
+
+                .catch(error => console.error('Error fetching lecturerClasses:', error));
+        });
     </script>
 </body>
 

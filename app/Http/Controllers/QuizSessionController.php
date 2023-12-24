@@ -73,7 +73,7 @@ class QuizSessionController extends Controller
         }
         $qrCodeContent = QrCode::size(150)->generate('localhost:8000/join-quiz?code=' . $session->code);
 
-        return view('quiz.quiz-session-lecturer', ['qrCodeContent' => $qrCodeContent]);
+        return view('Quiz.quiz-session-lecturer', ['qrCodeContent' => $qrCodeContent]);
     }
 
     public function endSession($sessionId)
@@ -94,7 +94,7 @@ class QuizSessionController extends Controller
 
     public function getLeaderboard()
     {
-        return view('quiz.leaderboard-lecturer');
+        return view('Quiz.leaderboard-lecturer');
     }
 
     public function getQuizSessionSettings($sessionId)
@@ -107,7 +107,7 @@ class QuizSessionController extends Controller
     public function getQuizQuestionsBySessionId($sessionId)
     {
         // Retrieve the session based on the session ID
-        $session = Session::with('quiz.quiz_questions')->find($sessionId);
+        $session = Session::with('Quiz.quiz_questions')->find($sessionId);
 
         if (!$session) {
             return response()->json(['message' => 'Session not found'], 404);
@@ -160,15 +160,12 @@ class QuizSessionController extends Controller
                 LaravelSession::flash('error', 'The session has ended.');
                 return response()->json(['message' => 'Session has ended']);
             } else {
-                // If the session is active, load the quiz.spa view
-                return view('quiz.spa', ['sessionCode' => $code]);
+                // If the session is active, load the Quiz.spa view
+                return view('Quiz.spa', ['sessionCode' => $code]);
             }
         } else {
-            // If no session or an invalid code is provided, return an error message
             LaravelSession::flash('error', 'Please enter a valid session code.');
             return response()->json(['message' => 'Invalid code']);
-            // Alternatively, you can redirect the user to the homepage or another route
-            // return redirect()->to('/');
         }
     }
     
@@ -431,7 +428,7 @@ class QuizSessionController extends Controller
         $quiz = Quiz::find($quizId);
         $quizTitle = $quiz->title;
 
-        return view('quiz.quiz-summary', compact('userId', 'sessionId', 'quizId', 'quizTitle'));
+        return view('Quiz.quiz-summary', compact('userId', 'sessionId', 'quizId', 'quizTitle'));
     }
 
     public function generatePDF(Request $request, $userId, $sessionId, $quizId)
@@ -471,7 +468,6 @@ class QuizSessionController extends Controller
 
         // Output PDF
         return $dompdf->stream("quiz_summary_{$generatedDate}.pdf");
-        // return $dompdf;
     }
 
     public function sendEmail(Request $request, $userId, $sessionId, $quizId)
@@ -487,8 +483,6 @@ class QuizSessionController extends Controller
         $user = User::find($userId);
         if ($user) {
             SendQuizSummaryEmail::dispatch($user->email, $pdfContent);
-        }else{
-            SendQuizSummaryEmail::dispatch("ming.fai2002@gmail.com", $pdfContent);      
         }
     }
 }

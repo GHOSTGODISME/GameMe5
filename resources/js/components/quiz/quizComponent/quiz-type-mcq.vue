@@ -1,12 +1,6 @@
 <template>
     <div id="quiz-options-container" class="container">
         <div class="row" id="mcq-question-container" @keydown="handleKeyPress">
-            <!-- <div v-for="(option, index) in options" :key="index" class="col-10 col-md-5 format-option" :class="{
-                'option-not-selected': isNotSelected(option),
-                'format-option-selected': isOptionSelected(option),
-                'option-correct': isCorrectOption(option),
-                'option-incorrect': isIncorrectOption(option),
-            }" @click="selectOption(option)"> -->
             <div
                 v-for="(option, index) in options"
                 :key="index"
@@ -44,7 +38,7 @@ export default {
             type: Array,
             required: true,
         },
-        singleSelectFlag:{
+        singleSelectFlag: {
             type: Number,
             required: true,
         },
@@ -68,15 +62,6 @@ export default {
     },
     methods: {
         selectOption(option) {
-            // if (!this.submitted) {
-            //     const index = this.selectedOptions.indexOf(option);
-            //     if (index !== -1) {
-            //         this.selectedOptions.splice(index, 1);
-            //     } else {
-            //         this.selectedOptions.push(option);
-            //     }
-            // }
-
             if (!this.submitted) {
                 if (this.singleSelectFlag === 1) {
                     // Clear selectedOptions if singleSelectFlag is 1 (single answer mode)
@@ -91,7 +76,6 @@ export default {
                     }
                 }
             }
-
         },
         optionClasses(option) {
             return {
@@ -146,7 +130,7 @@ export default {
     watch: {
         timeRemaining(newTimeRemaining, oldTimeRemaining) {
             if (newTimeRemaining === 0 && !this.submitted) {
-                this.selectedOptions=[];
+                this.selectedOptions = [];
                 this.submitInput();
             }
         },
@@ -154,51 +138,4 @@ export default {
 };
 </script>
 
-<style scoped>
-#mcq-question-container {
-    display: flex;
-    justify-content: space-evenly;
-    margin: auto;
-}
 
-.format-option {
-    border-radius: 10px;
-    /* border: solid 1px black; */
-    background-color: #0195ff;
-
-    margin: 20px;
-    padding: 40px 20px;
-
-    font-size: 20px;
-    /* for text */
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    transition: box-shadow 0.25s, background-color 0.5s;
-}
-
-.format-option:hover {
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-    background-color: #00c6ff;
-    cursor: pointer;
-}
-
-.format-option-selected {
-    border: 5px solid #232946;
-    background-color: #00c6ff;
-}
-
-.option-correct {
-    background: #76c893;
-}
-
-.option-incorrect {
-    background: #ac4d58;
-}
-
-.option-not-selected {
-    background: #ccc;
-}
-</style>

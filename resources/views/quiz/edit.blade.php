@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Document</title>
+    <title>GameMe5</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -88,22 +88,16 @@
         .live-session-section-style div:first-child {
             font-weight: bold;
         }
-
- 
- 
-
     </style>
 </head>
 
 <body>
     <div class="header-container">
-        <img src="{{ asset('img/logo_header.png')}}" alt="Logo">
+        <img src="{{ asset('img/logo_header.png') }}" alt="Logo">
 
         <div class="">
-            <!-- <h2 >Quiz Title</h2> -->
             <div class="" id="quizDetailsContainer">
                 <span id="quizDetailsTrigger" style="cursor: pointer;">
-                    <!-- Added this span for styling and cursor -->
                     <span id="quizDetailsTitle" style="cursor: pointer;display: inline;text-align: center;"
                         class="title-style-header h2 quiz-title-display" id="quiz_title_header">Quiz Title</span>
                     <a><i class="fa-regular fa-pen-to-square" style="font-size: 22px; margin-left: 10px;"></i></a>
@@ -112,11 +106,11 @@
         </div>
 
         @if ($mode == 'edit' || $mode == 'create')
-            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save Quiz</button>
+            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save &
+                Exit</button>
         @elseif($mode == 'view')
             <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
                 Edit</a>
-            {{-- <button class="btn btn-dark header-edit-btn" id="edit-quiz-btn" type="button">Edit</button> --}}
         @endif
 
     </div>
@@ -132,14 +126,12 @@
                             <p class="quiz-description-container"><b>Description: </b><span
                                     class="quiz-description-display"></span></p>
                             <p><b>Visibility: </b><span class="quiz-visibility-display"></span></p>
-
-                            {{-- @if (isset($quiz->id))
-                                <small class="text-black-50"><span class="num-of-plays">0</span> plays</small>
-                            @endif --}}
                         </div>
                         @if ($mode == 'view' || $mode == 'viewWithRestriction')
                             <div class="quiz-details-button">
-                                <button class="btn btn-primary" style="   width: 300px;
+                                <button class="btn btn-primary"
+                                    style="   
+                                width: 300px;
                                 height: 45px;
                                 margin-top:40px;
                                 flex-shrink: 0;
@@ -152,10 +144,8 @@
                                 font-weight: 500;
                                 line-height: normal;
                                 border:none;"
-                                
-                                data-bs-toggle="modal"
-                                data-bs-target="#liveSessionModal">Start
-                                Live Session </button>
+                                    data-bs-toggle="modal" data-bs-target="#liveSessionModal">Start Live Session
+                                </button>
                             </div>
                         @endif
                     </div>
@@ -238,7 +228,7 @@
             <div class="modal-content" style="padding: 25px;">
                 <!-- Modal header -->
                 <div class="modal-header">
-                    <h5 class="modal-title">Modify Question</h5>
+                    <h5 class="modal-title" id="modal_title">Add Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <!-- Modal body -->
@@ -354,7 +344,8 @@
                         <div>Details</div>
                         <hr>
                         <p><b>Title: </b><span id="session-title">{{ $quiz->title }}</span></p>
-                        <p><small><b>Number of Questions: </b><span id="question-count">{{$quiz->quiz_questions->count()}}</span></small>
+                        <p><small><b>Number of Questions: </b><span
+                                    id="question-count">{{ $quiz->quiz_questions->count() }}</span></small>
                         </p>
                     </div>
 
@@ -391,7 +382,7 @@
         </div>
     </div>
 
-    
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -403,9 +394,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
     </script>
-        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
         integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous">
-</script>
+    </script>
 
     <script>
         class QuizSessionSetting {
@@ -418,16 +409,13 @@
         const quizFromDB = @json($quiz);
         const quizQuestionFromDB = @json($questions);
         const mode = @json($mode);
-        console.log(quizFromDB);
-        console.log(quizQuestionFromDB);
 
         $(document).ready(function() {
             $('#continueBtn').click(function() {
                 // Get settings from the checkboxes
                 const quizSessionSetting = new QuizSessionSetting();
-                quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked')? 1 : 0;
-                quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked')? 1 : 0;
-                console.log(quizSessionSetting);
+                quizSessionSetting.shuffleOptions = $('#shuffleSwitch').is(':checked') ? 1 : 0;
+                quizSessionSetting.showLeaderboard = $('#leaderboardSwitch').is(':checked') ? 1 : 0;
                 const quizId = quizFromDB.id;
                 // AJAX request to store the new quiz session
                 $.ajax({
@@ -439,22 +427,18 @@
                         quizId
                     }),
                     success: function(response) {
-                        // Handle success, e.g., display a success message or redirect
-                        console.log('Quiz session created successfully!');
-                        // Assuming you have the URL stored in a variable called 'redirectUrl'
-                        console.log(response.sessionCode);
                         if (response.sessionCode) {
                             sessionStorage.setItem("sessionId", response.sessionId);
                             sessionStorage.setItem("sessionCode", response.sessionCode);
                             // Redirect to the specified URL with the sessionCode as a query parameter
-                            
+
                             socket = io("http://localhost:3000");
                             socket.emit("createSession", response.sessionCode.toString());
 
-                            socket.on('session created',()=>{
+                            socket.on('session created', () => {
                                 window.location.href =
-                                "{{ route('quiz-session-lecturer', ['sessionId' => ':sessionId']) }}"
-                                .replace(':sessionId', response.sessionId);
+                                    "{{ route('quiz-session-lecturer', ['sessionId' => ':sessionId']) }}"
+                                    .replace(':sessionId', response.sessionId);
                                 socket.close();
                             })
 

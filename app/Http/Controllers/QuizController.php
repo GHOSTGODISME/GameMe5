@@ -7,8 +7,6 @@ use App\Models\Quiz;
 use App\Models\User;
 use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
-use App\Models\Classlecturer;
-use Illuminate\Support\Facades\Log;
 
 class QuizController extends Controller
 {
@@ -17,8 +15,6 @@ class QuizController extends Controller
         $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();
-        Log::info($lecturer);
-
 
         $quizzes = Quiz::where('id_lecturer', $lecturer->id);
         $search = $request->input('search');
@@ -27,7 +23,7 @@ class QuizController extends Controller
         }
 
         $quizzes = $quizzes->get();
-        return view('quiz.index-own-quiz', ['quizzes' => $quizzes]);
+        return view('Quiz.index-own-quiz', ['quizzes' => $quizzes]);
     }
 
     public function index_all_quiz(Request $request)
@@ -41,7 +37,7 @@ class QuizController extends Controller
             })->get();
         }
 
-        return view('quiz.index-all-quiz', ['quizzes' => $quizzes]);
+        return view('Quiz.index-all-quiz', ['quizzes' => $quizzes]);
     }
 
     public function create(Request $request)
@@ -50,7 +46,7 @@ class QuizController extends Controller
         $mode = 'create';
         $questions = $quiz->quiz_questions;
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function view(Request $request, $id)
@@ -58,17 +54,16 @@ class QuizController extends Controller
         $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();
-        Log::info($lecturer);
 
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
-        if($quiz->id_lecturer === $lecturer->id) {
+        if ($quiz->id_lecturer === $lecturer->id) {
             $mode = 'view';
-        }else{
+        } else {
             $mode = 'viewWithRestriction';
         }
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function edit(Request $request, $id)
@@ -76,7 +71,7 @@ class QuizController extends Controller
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'edit';
         $questions = $quiz->quiz_questions; // Retrieve the related question
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function store(Request $request)
@@ -85,8 +80,6 @@ class QuizController extends Controller
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();
 
-        Log::info('Request Data: ' . json_encode($request->all()));
-
         $data = $request->validate([
             'id' => 'nullable|integer',
             'title' => 'required|string',
@@ -94,24 +87,19 @@ class QuizController extends Controller
             'visibility' => 'required|string',
         ]);
 
-        Log::info('data: ' . json_encode($data));
-
         if (isset($data['id'])) {
             $quiz = Quiz::find($data['id']);
             $quiz->update($data);
-            Log::info('updated: ' . $quiz);
         } else {
             $quiz = Quiz::create([
                 'title' => $data['title'],
                 'description' => $data['description'] ?? null,
-                'visibility' =>$data['visibility'],
+                'visibility' => $data['visibility'],
                 'id_lecturer' => $lecturer->id,
             ]);
-            Log::info('created: ' . $quiz);
         }
 
         $questionsData = collect($request->input('quiz_questions'));
-        Log::info('questionsData: ' . $questionsData);
 
         // Get IDs of the received questions
         $receivedQuestionIds = $questionsData->pluck('id')->toArray();
@@ -130,7 +118,6 @@ class QuizController extends Controller
             $existingQuestion = QuizQuestion::find($questionData['id']);
 
             if ($existingQuestion) {
-                Log::info('existing: ');
                 // Update the existing question
                 $existingQuestion->update([
                     'title' => $questionData['title'],
@@ -145,7 +132,6 @@ class QuizController extends Controller
                     'id_lecturer' => $lecturer->id,
                 ]);
             } else {
-                Log::info('not existing: ');
                 // Create a new question
                 $question = new QuizQuestion([
                     'title' => $questionData['title'],
@@ -160,7 +146,6 @@ class QuizController extends Controller
                     'id_lecturer' => $lecturer->id,
                 ]);
 
-                Log::info('question: ' . json_encode($question));
                 $quiz->quiz_questions()->save($question);
             }
         }
@@ -168,10 +153,8 @@ class QuizController extends Controller
 
     public function delete($id)
     {
-        // Find the quiz by ID
         $quiz = Quiz::find($id);
 
-        // Check if the fortune wheel exists
         if (!$quiz) {
             return response()->json(['message' => 'Quiz not found.'], 404);
         }

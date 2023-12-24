@@ -50,7 +50,7 @@ function initializePollVotes(sessionCode, pollId, options) {
 
   interactiveSession.votes[pollId] = {};
   options.forEach((option) => {
-    interactiveSession.votes[pollId][option] = 0;
+    interactiveSession.votes[pollId][option.toLowerCase()] = 0;
   });
 }
 
@@ -58,9 +58,7 @@ function voteForPollOption(sessionCode, pollId, optionSelected) {
   const interactiveSession = interactiveSessions.get(sessionCode);
 
   if (interactiveSession && interactiveSession.votes[pollId]) {
-    console.log("pass1");
-    if (interactiveSession.votes[pollId][optionSelected] !== undefined) {
-      console.log("pass2");
+    if (interactiveSession.votes[pollId][optionSelected.toLowerCase()] !== undefined) {
 
       interactiveSession.votes[pollId][optionSelected]++;
       io.to(sessionCode).emit('pollVoteReceived', {
@@ -69,7 +67,6 @@ function voteForPollOption(sessionCode, pollId, optionSelected) {
         votes: interactiveSession.votes[pollId],
       });
     }
-    console.log(interactiveSession.votes);
 
   }
 }
@@ -121,8 +118,6 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('A user connected');
-
   handleJoinEvents(socket);
   handleScoreUpdates(socket);
   handleSessionEvents(socket);
@@ -137,21 +132,17 @@ io.on('connection', (socket) => {
 
 function handleSession(socket) {
   socket.on('createSession', (sessionCode) => {
-    console.log(sessionCode);
     initializeSessionData(sessionCode);
     initializeConnection(sessionCode);
-    console.log("session created for " + sessionCode);
     io.to(socket.id).emit('session created');
   });
 
   socket.on('joinSession', (sessionCode) => {
-    console.log(sessionCode);
     if (sessions.get(sessionCode)) {
       const leaderboard = sessions.get(sessionCode).leaderboard;
       const participants = sessions.get(sessionCode).participants;
 
       socket.join(sessionCode); // Participant joins the room with session code
-      console.log("joined " + sessionCode);
       socket.to(sessionCode).emit("get leaderboard");
       io.to(sessionCode).emit('initial leaderboard', Object.values(leaderboard));
       io.to(sessionCode).emit('initial participants', participants);
@@ -167,7 +158,6 @@ function handleSession(socket) {
   socket.on('exitRoom', (sessionCode) => {
     if (sessions.get(sessionCode)) {
       socket.leave(sessionCode);
-      console.log('user leave the room');
     }
   })
 }
@@ -177,7 +167,6 @@ function handleInteractiveSession(socket) {
     const { sessionCode, id, username } = data;
 
     if (!interactiveSessions.get(sessionCode)) {
-      console.log(sessionCode + " - interactive session created");
       initializeInteractiveSessionData(sessionCode);
     }
     const participants = interactiveSessions.get(sessionCode).participants;
@@ -188,7 +177,6 @@ function handleInteractiveSession(socket) {
     }
 
     socket.join(sessionCode);
-    console.log(sessionCode + " - interactive session joined");
     broadcastAllIS(sessionCode)
   })
 
@@ -197,7 +185,6 @@ function handleInteractiveSession(socket) {
     if (interactiveSessions.get(sessionCode)) {
       const messages = interactiveSessions.get(sessionCode).messages;
       const msg = buildMsg(id, username, message);
-      console.log(msg);
       messages.push(msg);
 
       io.to(sessionCode).emit('chatMessageReceived', msg);
@@ -205,11 +192,8 @@ function handleInteractiveSession(socket) {
   });
 
   socket.on('createPoll', (data) => {
-    console.log("triggered createPolls");
     const { pollId, sessionCode, pollTitle, options } = data;
-    console.log(data);
     if (interactiveSessions.get(sessionCode)) {
-      console.log(data);
       io.to(sessionCode).emit('newPollCreated', { pollId, pollTitle, options });
       initializePollVotes(sessionCode, pollId, options);
     }
@@ -217,10 +201,8 @@ function handleInteractiveSession(socket) {
 
   socket.on('voteForPoll', (data) => {
     const { sessionCode, pollId, optionSelected, userId } = data;
-    console.log(data);
     if (interactiveSessions.get(sessionCode)) {
       voteForPollOption(sessionCode, pollId, optionSelected);
-      // io.to(sessionCode).emit('pollVoteReceived', { pollId, optionSelected, userId });
     }
   });
 
@@ -239,16 +221,12 @@ function handleInteractiveSession(socket) {
   })
 
   socket.on('leaveInteractiveSession', (data) => {
-    console.log('triggered leave');
     const { sessionCode, id } = data;
     if (interactiveSessions.get(sessionCode)) {
       const participants = interactiveSessions.get(sessionCode).participants;
       interactiveSessions.get(sessionCode).participants =
         participants.filter((participant) => participant.id !== id);
 
-      console.log(id);
-      console.log(participants);
-      console.log(participants.filter((participant) => participant.id !== id));
       broadcastAllIS(sessionCode);
     }
   });
@@ -293,19 +271,15 @@ function handleJoinEvents(socket) {
       const participants = sessions.get(sessionCode).participants;
       const existingUser = participants.find((participant) => participant.id === id);
 
-      // if (existingUser) {
-        io.to(sessionCode).emit('same participants', existingUser);
-      // }
+      io.to(sessionCode).emit('same participants', existingUser);
     }
   });
 
 
   socket.on('getSessionParticipants', (sessionCode) => {
-    console.log("getSessionParticipants");
     socket.join(sessionCode);
 
     const participants = sessions.get(sessionCode).participants;
-    console.log(participants);
     io.to(sessionCode).emit('initial participants', participants);
   });
 
@@ -317,10 +291,7 @@ function handleJoinEvents(socket) {
       const participants = sessions.get(sessionCode).participants;
       const leaderboard = sessions.get(sessionCode).leaderboard;
 
-      //sessions.get(sessionCode).add(socket.id); // Add participant to the room
       socket.join(sessionCode);
-
-      console.log(sessionCode + 'adding participants');
 
       const existingUser = participants.find((participant) => participant.id === id);
 
@@ -334,29 +305,19 @@ function handleJoinEvents(socket) {
       } else {
         io.to(sessionCode).emit('same participants');
       }
-
-      console.log("start " + sessionCode);
-      console.log(participants);
-      console.log(leaderboard);
-      console.log("end " + sessionCode);
     }
   });
 
   socket.on('endInteractiveSession', (sessionCode) => {
     if (interactiveSessions.get(sessionCode)) {
-      console.log(interactiveSessions.get(sessionCode));
 
       io.to(sessionCode).emit('interactiveSessionEnded');
       interactiveSessions.delete(sessionCode);
-      console.log(interactiveSessions.get(sessionCode));
     }
   });
 
   socket.on('joinInteractiveSession', (data) => {
     const { sessionCode, id, username } = data;
-    console.log("sessionCode " + sessionCode);
-    console.log("sessions " + sessions);
-    console.log(sessions);
     if (interactiveSessions.get(sessionCode)) {
       const participants = interactiveSessions.get(sessionCode).participants;
 
@@ -368,12 +329,7 @@ function handleJoinEvents(socket) {
         participants.push({ id, username });
       }
 
-      console.log("start " + sessionCode);
-      console.log(participants);
-      console.log("end " + sessionCode);
       broadcastAllIS(sessionCode);
-    } else {
-      console.log("not joined");
     }
   });
 }
@@ -398,8 +354,6 @@ function handleSessionEvents(socket) {
   socket.on('get status', (sessionCode) => {
     if (sessions.get(sessionCode)) {
       const sessionStatus = sessions.get(sessionCode).sessionStatus;
-      console.log("get status");
-      console.log(sessionStatus);
       io.to(sessionCode).emit('session status', sessionStatus);
     }
   });
@@ -410,7 +364,6 @@ function handleScoreUpdates(socket) {
     const { sessionCode, userId, newScore } = data;
 
     if (sessions.get(sessionCode)) {
-      console.log('updating score');
       updateLeaderboardEntry(userId, newScore, sessionCode);
     }
   });
@@ -428,8 +381,6 @@ function handleUserResponse(socket) {
   socket.on('userData', (data) => {
     const { sessionCode, userData } = data;
     if (sessions.get(sessionCode)) {
-      console.log("received");
-      console.log(userData);
       io.to(sessionCode).emit('updateResponse', userData);
     }
   });
@@ -446,8 +397,6 @@ function handleLeaderboardEvents(socket) {
 
 function handleDisconnect(socket) {
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
-
     sessions.forEach((sessionData, sessionCode) => {
       const participants = sessionData.participants;
       sessionData.participants = participants.filter((participant) => participant.id !== socket.id);

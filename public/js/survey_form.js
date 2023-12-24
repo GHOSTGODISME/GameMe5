@@ -1,5 +1,5 @@
-class SurveyResponse{
-    constructor(){
+class SurveyResponse {
+    constructor() {
         this.id = "";
         this.survey_id = "";
         this.user_id = "";
@@ -7,8 +7,8 @@ class SurveyResponse{
     }
 }
 
-class SurveyQuestionResponse{
-    constructor(){
+class SurveyQuestionResponse {
+    constructor() {
         this.id = "";
         this.question_id = "";
         this.answer = [];
@@ -59,7 +59,8 @@ function updateQuestionPreview(question) {
 
     questionContainer.innerHTML = `
     <p class="question-title text-break" id="${question.id}-questionTitle">${question.title}</p>
-    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">${question.description}</p>
+    <p class="form-text text-muted text-break" id="${question.id}-questionDescription" style="display: none;">
+    ${question.description}</p>
     `;
 
     const inputContainer = document.createElement("div");
@@ -67,44 +68,11 @@ function updateQuestionPreview(question) {
 
     recreateQuestionTypeBlock(question, inputContainer);
 
-    // initializeQuestionOnClickStudent(questionContainer);
-
     // Append the input container to the question container
     questionContainer.appendChild(inputContainer);
 
-    // const questionTitleElement = questionContainer.querySelector(".question-title");
-    // const questionInput = questionContainer.querySelector(".question-input");
-    // applyQuestionProperty(question, questionTitleElement,questionInput);
-
     return questionContainer;
 }
-
-// function applyQuestionProperty(question, questionTitleElement, questionInput) {
-//     console.log(question.properties.toLowerCase());
-//     switch (question.properties.toLowerCase()) {
-//         case QUESTION_PROPERTIES[0]: // Default
-//             console.log(QUESTION_PROPERTIES[0]);
-//             questionTitleElement.classList.remove("required");
-//             // questionInput.required = false;
-//             // questionInput.readOnly = false;
-
-//             break;
-//         case QUESTION_PROPERTIES[1]: // Required
-//             console.log(QUESTION_PROPERTIES[1]);
-//             questionTitleElement.classList.add("required");
-//             // questionInput.required = true;
-//             // questionInput.readOnly = false;
-//             break;
-//         case QUESTION_PROPERTIES[2]: // Disabled
-//             console.log(QUESTION_PROPERTIES[2]);
-//             questionTitleElement.classList.remove("required");
-//             // questionInput.required = false;
-//             // questionInput.readOnly = true;
-//             break;
-//         default:
-//             break;
-//     }
-// }
 
 function initializeQuestionOnClickStudent(questionBlock) {
     questionBlock.addEventListener('click', () => {
@@ -125,7 +93,7 @@ function initializeQuestionOnClickStudent(questionBlock) {
                     storeResponse(question.id, selectedRadioValue);
                 } else {
                     console.log("No option selected for multiple-choice question.");
-                }               
+                }
                 break;
             case QUESTION_TYPES.CHECKBOX.value:
                 const selectedCheckboxes = document.querySelectorAll(`input[name='${question.id}[]']:checked`);
@@ -159,7 +127,7 @@ function storeResponse(questionID, answer) {
     console.log("Survey Response:", surveyResponse);
 }
 
-function storeResponseOnSubmit(){
+function storeResponseOnSubmit() {
     surveyQuestions.forEach(question => {
         switch (parseInt(question.type)) {
             case QUESTION_TYPES.TEXT_INPUT.value:
@@ -181,8 +149,8 @@ function storeResponseOnSubmit(){
                 if (selectedCheckboxes) {
                     const checkboxValues = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
                     storeResponse(question.id ?? question.id, checkboxValues);
-    
-                }else{
+
+                } else {
                     console.log("No option selected for checkbox question.");
                     storeResponse(question.id ?? question.id, null);
                 }
@@ -234,12 +202,12 @@ function validateSurvey() {
     return allQuestionsAnswered;
 }
 function initializeSurveySubmitBtn_student() {
-    $('#survey-form').on('submit', function(event) {
+    $('#survey-form').on('submit', function (event) {
         event.preventDefault();
 
         const allQuestionsAnswered = validateSurvey();
 
-        convertImage().then(function(imageData) {
+        convertImage().then(function (imageData) {
             if (allQuestionsAnswered) {
                 storeResponseOnSubmit();
 
@@ -253,13 +221,14 @@ function initializeSurveySubmitBtn_student() {
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(dataToSend),
-                    success: function(response) {
+                    success: function (response) {
                         console.log('Form saved successfully:', response);
                         $('#form-preview').html(
-                            '<p class="not-receive-response-text">Response has been submitted successfully!</p>' + 
-                            '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >Back to Homepage</a></p>');
+                            '<p class="not-receive-response-text">Response has been submitted successfully!</p>' +
+                            '<p style="margin: 50px; text-align:center;"><a href="/" class="btn btn-primary" >' +
+                            'Back to Homepage</a></p>');
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         console.error('Error saving form:', error);
                         console.log('Response Text:', xhr.responseText);
                     }
@@ -268,7 +237,7 @@ function initializeSurveySubmitBtn_student() {
                 alert('Please answer all questions before submitting the survey.');
                 scrollToUnansweredQuestion();
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error('Error converting image:', error);
         });
     });
@@ -280,16 +249,11 @@ function convertImage() {
         scale: 2
     };
 
-    return new Promise(function(resolve, reject) {
-        html2canvas(container, options).then(function(canvas) {
+    return new Promise(function (resolve, reject) {
+        html2canvas(container, options).then(function (canvas) {
             const imageData = canvas.toDataURL('image/jpeg', 1);
-
-        //             var imageWindow = window.open('');
-        // imageWindow.document.write('<img src="' + imageData + '" style="width:100%;">');
-
-        //     console.log(imageData);
             resolve(imageData);
-        }).catch(function(error) {
+        }).catch(function (error) {
             reject(error);
         });
     });

@@ -1,8 +1,8 @@
 
-import {createApp } from 'vue';
+import { createApp } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import App from './components/App.vue';
-import {useQuizStore} from './store.js';
+import { useQuizStore } from './store.js';
 import { createPinia } from 'pinia'
 
 // Import your Vue components
@@ -42,14 +42,14 @@ const routes = [
   { path: '/quiz/quiz-type-truefalse', component: QuizTypeTrueFalse },
 
   { path: '/quiz/quiz-explaination', component: QuizExplaination },
-  { path: '/quiz/quiz-leaderboard', component: QuizLeaderboard},
+  { path: '/quiz/quiz-leaderboard', component: QuizLeaderboard },
 
   { path: '/quiz/quiz-closure', component: QuizClosure },
 ];
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(),
+  routes
 });
 
 
@@ -58,7 +58,6 @@ const pinia = createPinia();
 
 app.use(router);
 app.use(pinia);
-// app.use(VueSession);
 
 const store = useQuizStore();
 app.use(store)

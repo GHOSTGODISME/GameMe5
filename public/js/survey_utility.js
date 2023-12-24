@@ -21,8 +21,8 @@ const QUESTION_TYPES = {
     }
 };
 
-class Survey{
-    constructor(){
+class Survey {
+    constructor() {
         this.id = "";
         this.title = "";
         this.description = "";
@@ -33,7 +33,7 @@ class Survey{
 
 class SurveyQuestion {
     constructor(id, type, title, description) {
-        this.id = id || generateUniqueID(); 
+        this.id = id || generateUniqueID();
         this.type = parseInt(type); // Question type (e.g., text input, multiple-choice, etc.)
         this.title = title; // Question title
         this.description = description ?? ""; // Question description
@@ -45,12 +45,12 @@ class SurveyQuestion {
 
         this.scale_min_label = "";
         this.scale_max_label = "";
-        this.scale_min_value = ""; 
-        this.scale_max_value = ""; 
+        this.scale_min_value = "";
+        this.scale_max_value = "";
 
         this.index = 0;
     }
-    
+
     updateOptions(options) {
         this.options = [];
         for (let option of options) {
@@ -92,8 +92,8 @@ let surveyQuestions = survey.questions;
 
 // Function to generate a unique ID for unsaved questions
 function generateUniqueID() {
-    const timestamp = new Date().getTime().toString(16); 
-    const randomString = Math.random().toString(16).slice(2); 
+    const timestamp = new Date().getTime().toString(16);
+    const randomString = Math.random().toString(16).slice(2);
     return `temp-${timestamp}-${randomString}`;
 }
 
@@ -139,7 +139,7 @@ function mapSurveyDataToInstance(fetchedSurveyData) {
 
 function deepCopy(obj) {
     if (typeof obj !== 'object' || obj === null) {
-        return obj; 
+        return obj;
     }
 
     let copiedObj = Array.isArray(obj) ? [] : {};
@@ -155,7 +155,7 @@ function deepCopy(obj) {
 
 function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key].value === value);
-  }
+}
 
 function createScaleInput(question) {
     const scaleContainer = document.createElement("div");
@@ -193,14 +193,14 @@ function createSlider(question) {
             format: wNumb({ decimals: 0 })
         });
 
-        // Add an event listener to the slider
-        slider.noUiSlider.on('update', function (values, handle) {
-            console.log("noUiSlider " + values[handle]);
-        });
+        // // Add an event listener to the slider
+        // slider.noUiSlider.on('update', function (values, handle) {
+        //     console.log("noUiSlider " + values[handle]);
+        // });
     });
 }
 
-function createQuestionTypeBlock(type, question, inputContainer){
+function createQuestionTypeBlock(type, question, inputContainer) {
     switch (type) {
         case QUESTION_TYPES.TEXT_INPUT.value:
             inputContainer.innerHTML = `
@@ -238,7 +238,7 @@ function createQuestionTypeBlock(type, question, inputContainer){
     }
 }
 
-function recreateQuestionTypeBlock(question, inputContainer){
+function recreateQuestionTypeBlock(question, inputContainer) {
     switch (parseInt(question.type)) {
         case QUESTION_TYPES.TEXT_INPUT.value:
             inputContainer.innerHTML = `
@@ -283,7 +283,7 @@ function recreateQuestionTypeBlock(question, inputContainer){
             const scaleInput = createScaleInput(question);
             inputContainer.append(scaleInput);
             break;
-            default:
-                console.log("none triggered");
+        default:
+            console.log("none triggered");
     }
 }

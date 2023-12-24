@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Document</title>
+    <title>GameMe5</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -13,13 +13,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 
     <style>
-          .header_container{
-        width:100%;
-        height:100px;
-        display:flex;
-        justify-content: space-between;
-        background: linear-gradient(to right, #13C1B7, #87DFA8);
-    } 
+        .header_container {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, #13C1B7, #87DFA8);
+        }
 
         .reply-container {
             margin: 40px 0;
@@ -68,7 +68,6 @@
         .session-content-container .session-single-message:last-child {
             border-bottom: none;
         }
-
         .session-polls-container {
             height: 600px;
             max-height: 600px;
@@ -89,140 +88,43 @@
             flex-wrap: wrap;
             align-content: center;
         }
-        .logo{
-        width: 180px;
-        height: 50px;
-        flex-shrink: 0;
-        margin-top:25px;
-        margin-left:50px;
-    }
 
-    .hamburger{
-        width: 25px;
-        height: 25px;
-        flex-shrink: 0;
-        margin-top:40px;  
-        margin-right:30px;
-        cursor: pointer; /* Add cursor style to indicate it's clickable */
-    }
+        .logo {
+            width: 180px;
+            height: 50px;
+            flex-shrink: 0;
+            margin-top: 25px;
+            margin-left: 50px;
+        }
 
-    #code-copy-container{
-        margin:0;
-        padding: 0;
-        margin-top:20px;
-    }
+        .hamburger {
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            margin-top: 40px;
+            margin-right: 30px;
+            cursor: pointer;
+        }
 
-       /* Navigation panel styles */
-       .navigation-panel {
-     
-     position: fixed;
-     top: 0;
-     right: -300px; /* Initially off-screen */
-     width: 300px;
-     height: 100%;
-     background: #3CCBC3;
-     transition: right 0.3s ease;
-     z-index: 1000; /* Set a higher z-index value */
-
- }
-
- .nav-link {
-     padding: 15px 15px 0 15px;
-     color: #ffffff;
-     text-decoration: none;
-     display: block;
-     font-family: 'Roboto';
-     font-size: 30px;
-     font-style: normal;
-     font-weight: 400;
-     line-height: normal;
-     
- }
-
-
- .nav-link:hover {
-     padding: 15px 15px 0 15px;
-     color: #ffffff;
-     text-decoration: none;
-     display: block;
-     font-family: 'Roboto';
-     font-size: 30px;
-     font-style: normal;
-     font-weight: 400;
-     line-height: normal;
-     
- }
-
- .close-icon {
-     position: absolute;
-     top: 25px;
-     right: 20px;
-     width: 35px;
-     height: 35px;
-     cursor: pointer;
- 
- }
- .nav_row{
-     display: flex;
-     flex-direction: row;
-     padding-left:20px;
-     padding-right:10px;
-     align-items: flex-end;
-     margin-top:40px;
- }
-
- 
- .menu_icons{
-     width:60px;
-     height:60px;
- }
-
+        #code-copy-container {
+            margin: 0;
+            padding: 0;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div class="header_container">
-        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}"
+                alt="Logo"></a>
         <div id="code-copy-container" style="cursor: pointer;">
             <span id="codePlaceholder">{{ $sessionCode }}</span>
             <span id="codeCopyIcon" class="fas fa-copy"></span>
         </div>
-        <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()">
+        <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon" onclick="toggleNavigation()">
     </div>
-    <div class="navigation-panel">
-        <div class="nav_row">
-            <img src="{{ asset('img/close_icon.png') }}" alt="Close" class="close-icon" onclick="toggleNavigation()"><br>
-        </div>
-        <div class="nav_row">
-            <img  class="menu_icons" src="{{ asset('img/profile_icon.png') }}" alt="profile_icon">
-            <a href="{{ route('lect_profile') }}" class="nav-link">Profile</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/quiz_icon.png') }}" alt="quiz_icon">
-           <a href="{{ route('own-quiz') }}" class="nav-link">Quiz</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/classroom_icon.png') }}" alt="classroom_icon">
-            <a href="{{ route('classroom_lect_home') }}" class="nav-link">Classroom</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/feedback_icon.png') }}" alt="feedback_icon">
-            <a href="{{ route('survey-index') }}" class="nav-link">Survey</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/session_icon.png') }}" alt="session_icon">
-            <a href="{{ route('interactive-session-index') }}" class="nav-link">Session</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/tools_icon.png') }}" alt="tools_icon">
-            <a href="{{ route('fortune-wheel-index') }}" class="nav-link">Tools</a>
-        </div>
-        <div class="nav_row">
-            <img class="menu_icons" src="{{ asset('img/report_icon.png') }}" alt="report_icon">
-            <a href="{{ route('report_home') }}" class="nav-link">Report</a>
-        </div>
-        <!-- Add more navigation links as needed -->
-    </div>
+    @include('Layout/lect_header_nav')
     <div class="main-body">
         <div class="session-body-header">
             <div>
@@ -259,8 +161,7 @@
                         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pollModal"><i
                                 class="fa fa-solid fa-plus"></i> New Poll</a>
                     </div>
-                    <div class="big-polls-container">
-                    </div>
+                    <div class="big-polls-container"></div>
 
                 </div>
             </div>
@@ -301,7 +202,8 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
@@ -312,363 +214,18 @@
     </script>
 
     <script>
-        //         console.log(@{$title});
-        // console.log(@{$sessionCode});
-        function toggleNavigation() {
-        var navigationPanel = document.querySelector('.navigation-panel');
-        navigationPanel.style.right = navigationPanel.style.right === '0px' ? '-300px' : '0px';
-    }
-        function generateUniqueID() {
-            const timestamp = new Date().getTime().toString(16); // Timestamp converted to hexadecimal
-            const randomString = Math.random().toString(16).slice(2); // Random string
-            return `poll-${timestamp}-${randomString}`;
-        }
-
-        console.log(@json($title));
-        console.log(@json($sessionCode));
-        socket = io("http://localhost:3000");
         const sessionCode = @json($sessionCode);
         sessionStorage.setItem("interactiveSessionCode", sessionCode);
         sessionStorage.setItem("lect_id", @json(session('lect_id')));
         sessionStorage.setItem("lect_name", @json(session('lect_name')));
 
-        let pollIdCounter = generateUniqueID();
         const sessionId = @json($sessionId);
         const id = `l-${@json(session('lect_id'))}`;
         const username = @json(session('lect_name'));
-
-        console.log(sessionCode);
-        socket.emit("createInteractiveSession", {
-            sessionCode,
-            id,
-            username
-        });
-
-        socket.on('chatMessageReceived', (data) => {
-            const {
-                id,
-                username,
-                message,
-                time
-            } = data;
-            console.log(data);
-            displayMessage(id, username, message, time);
-        });
-
-        socket.on('pollVoteReceived', (data) => {
-            const {
-                pollId,
-                optionSelected,
-                votes
-            } = data;
-            console.log(data);
-            updatePollResult(pollId, optionSelected, votes);
-        });
-
-        socket.on('is-participants-length', (data) => {
-            const concurrentUser = document.getElementById('concurrentUser');
-            concurrentUser.innerText = data;
-        });
-
-        socket.on('returnChatMessage', (messages) => {
-            const formattedData = messages.map(entry => `${entry.username} ${entry.time}\n${entry.message}`).join(
-                '\n\n');
-            const blob = new Blob([formattedData], {
-                type: 'text/plain'
-            });
-
-            const url = URL.createObjectURL(blob);
-
-            const currentDate = new Date().toISOString().split('T')[0];
-
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = `${@json($title)}_messsage_${currentDate}.txt`;
-            downloadLink.click();
-        })
-
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-            const codeCopyIcon = document.getElementById('codeCopyIcon');
-            const codePlaceholder = document.getElementById('codePlaceholder');
-
-            function handleCopyClick(element, iconElement) {
-                const text = element.innerText;
-
-                const dummyElement = document.createElement('textarea');
-                dummyElement.value = text;
-                document.body.appendChild(dummyElement);
-                dummyElement.select();
-                document.execCommand('copy');
-                document.body.removeChild(dummyElement);
-
-                iconElement.className = 'fas fa-check';
-
-                setTimeout(() => {
-                    iconElement.className = 'fas fa-copy';
-                    iconElement.style.color = '';
-                    element.innerText = text;
-                }, 2000);
-            }
-
-            document.getElementById('messageInput').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-
-            document.getElementById('code-copy-container').addEventListener('click', function(event) {
-                handleCopyClick(codePlaceholder, codeCopyIcon);
-            });
-
-            $('#exportChat').click(function() {
-                socket.emit("exportChatMessage", sessionCode);
-            });
-
-            $('#endBtn').click(function() {
-                if (sessionId) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    });
-
-                    socket.emit("saveChatMessage", sessionCode);
-                    socket.on('returnChatMessageSave', message => {
-                        $.ajax({
-                            url: '/end-interactive-session',
-                            type: 'POST',
-                            data: {
-                                messages: message,
-                                sessionId: sessionId
-                            },
-                            success: function(response) {
-                                console.log(response);
-                                socket.emit("endInteractiveSession", sessionCode);
-                                console.log('Session ended successfully');
-                                window.location.href = "/lect_homepage";
-
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Failed to end session:', error);
-                            }
-                        });
-                    });
-
-                } else {
-                    console.error('Session ID not found');
-                }
-            });
-        });
-
-        function updatePollResult(pollId, optionSelected, votes) {
-            const pollContainer = document.querySelector(`[data-poll-id="${pollId}"]`);
-            if (pollContainer) {
-                const pollOptions = pollContainer.querySelectorAll('.polls-options');
-
-                const totalVotes = Object.values(votes).reduce((acc, curr) => acc + curr, 0);
-                const selectedOptionVotes = votes[optionSelected];
-
-                // Update progress bars for all options within the poll
-                pollOptions.forEach((optionElement) => {
-                    const optionTextContainer = optionElement.querySelector('.option-text');
-                    const optionText = optionTextContainer.textContent.trim();
-
-                    const progressContainer = optionElement.querySelector('.progress');
-                    const progressBar = progressContainer.querySelector('.progress-bar');
-
-                    const optionVotes = votes[optionText];
-                    const votesPercentage = totalVotes > 0 ? (optionVotes / totalVotes) * 100 : 0;
-                    progressBar.style.width = `${votesPercentage}%`;
-                    progressBar.textContent = `${optionVotes}`;
-                });
-            }
-        }
-
-
-        function sendMessage() {
-            const messageInput = document.getElementById('messageInput');
-            const message = messageInput.value.trim();
-
-            if (message !== '') {
-                socket.emit('sendChatMessage', {
-                    sessionCode,
-                    id,
-                    username,
-                    message
-                });
-                messageInput.value = '';
-            }
-        }
-
-        function displayMessage(userId, username, message, time) {
-            console.log("userid " + userId);
-            console.log("id " + id);
-            const sessionContent = document.querySelector('.session-content-container');
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('session-single-message');
-
-            const messageInfo = document.createElement('div');
-            messageInfo.innerHTML = `<b>${username}${userId === id ? ' (You)' : ''}</b> <span>${time}</span>`;
-            const messageText = document.createElement('div');
-            messageText.textContent = message;
-
-            messageDiv.appendChild(messageInfo);
-            messageDiv.appendChild(messageText);
-            sessionContent.appendChild(messageDiv);
-        }
-
-        function submitVote(element) {
-            const form = document.getElementById('pollForm');
-            const radioInputs = form.querySelectorAll('input[name="pollOption"]');
-            radioInputs.forEach(input => {
-                input.disabled = true;
-            });
-            element.style.display = 'none';
-        }
-
-        function addOption(element) {
-            const optionsContainer = document.getElementById('optionsContainer');
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.classList.add('form-control');
-            newInput.placeholder = `Option ${optionsContainer.childElementCount}`;
-
-            const newInputGroup = document.createElement('div');
-            newInputGroup.classList.add('input-group', 'mt-2');
-            newInputGroup.appendChild(newInput);
-
-            const removeButton = document.createElement('button');
-            removeButton.classList.add('btn', 'btn-danger');
-            removeButton.textContent = 'Remove';
-            removeButton.onclick = function() {
-                removeOption(this);
-            };
-
-            newInputGroup.appendChild(removeButton);
-
-            element.parentElement.replaceWith(newInputGroup);
-
-            const newInputGroup2 = document.createElement('div');
-            newInputGroup2.classList.add('input-group', 'mt-2');
-
-            const placeholderInput = document.createElement('input');
-            placeholderInput.type = 'text';
-            placeholderInput.classList.add('form-control');
-            placeholderInput.placeholder = 'Click to add option';
-            placeholderInput.readOnly = true;
-            placeholderInput.onclick = function() {
-                addOption(this);
-            };
-            newInputGroup2.appendChild(placeholderInput);
-            optionsContainer.appendChild(newInputGroup2);
-
-            newInput.focus();
-        }
-
-        function removeOption(button) {
-            const optionsContainer = document.getElementById('optionsContainer');
-            const inputGroupToRemove = button.parentElement;
-            const nextInputGroup = inputGroupToRemove.nextElementSibling;
-
-            optionsContainer.removeChild(inputGroupToRemove);
-            if (nextInputGroup) {
-                nextInputGroup.firstChild.focus();
-            }
-        }
-
-        function createNewPollContainer(pollId, pollTitle, pollOptions) {
-            const bigPollsContainer = document.querySelector('.big-polls-container');
-
-            const newPollsContainer = document.createElement('div');
-            newPollsContainer.dataset.pollId = pollId;
-            newPollsContainer.classList = 'polls-container polls-container-style';
-            const pollsTitle = document.createElement('div');
-            pollsTitle.classList = 'polls-title h5';
-            pollsTitle.textContent = `Poll: ${pollTitle}`;
-
-            const hrElement = document.createElement('hr');
-
-            newPollsContainer.appendChild(pollsTitle);
-            newPollsContainer.appendChild(hrElement);
-
-            pollOptions.forEach(option => {
-                const pollsOption = document.createElement('div');
-                pollsOption.classList.add('polls-options');
-
-                const progressContainer = document.createElement('div');
-                progressContainer.classList.add('progress');
-
-                const progressBar = document.createElement('div');
-                progressBar.classList.add('progress-bar');
-                progressBar.setAttribute('role', 'progressbar');
-                progressBar.setAttribute('aria-valuemin', '0');
-                progressBar.setAttribute('aria-valuemax', '100');
-
-                progressBar.style.width = `0%`;
-                progressBar.textContent = `0`;
-
-                progressContainer.appendChild(progressBar);
-
-                const optionTextContainer = document.createElement('span');
-                optionTextContainer.classList.add('option-text');
-                optionTextContainer.textContent = option;
-
-                pollsOption.appendChild(optionTextContainer);
-                pollsOption.appendChild(progressContainer);
-
-                newPollsContainer.appendChild(pollsOption);
-            });
-
-            bigPollsContainer.appendChild(newPollsContainer);
-        }
-
-
-        function savePoll() {
-            const pollTitle = document.getElementById('pollTitle').value;
-            const options = [];
-            const optionInputs = document.querySelectorAll('#optionsContainer input:not([readonly])');
-            optionInputs.forEach(input => {
-                if (input.value.trim() !== '' && input.value !== null) {
-                    options.push(input.value.trim());
-                }
-            });
-
-            // check if there are duplicated option
-            const uniqueOptions = Array.from(new Set(options));
-            if (uniqueOptions.length !== options.length) {
-                alert('Duplicate options are not allowed. Please enter unique options for the poll.');
-                return;
-            }
-
-            if (options.length < 2) {
-                alert('Please enter at least two options for the poll.');
-                return;
-            }
-
-            const pollId = `${generateUniqueID()}`;
-            createNewPollContainer(pollId, pollTitle, options);
-
-            socket.emit('createPoll', {
-                sessionCode,
-                pollId,
-                pollTitle,
-                options
-            });
-            console.log('Poll Title:', pollTitle);
-            console.log('Poll Options:', options);
-
-            // Add the new poll container only when the user confirms to save
-            // if (confirm('Do you want to save this poll?')) {
-            // Close the modal after saving the poll
-            $('#pollModal').modal('hide');
-            // }
-        }
+        const sessionTitle = @json($title);
     </script>
 
-
+    <script src="{{ asset('js/interactive_session_educator.js') }}"></script>
 
 </body>
 

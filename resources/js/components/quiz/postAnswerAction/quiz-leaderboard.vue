@@ -19,8 +19,9 @@
                     <tr
                         v-for="(player, index) in leaderboardData"
                         :key="player.id"
-                        :class="{ 'highlighted-row': player.id === $pinia.state.userId }"
-
+                        :class="{
+                            'highlighted-row': player.id === store.userId,
+                        }"
                     >
                         <th scope="row">{{ index + 1 }}</th>
                         <td>{{ player.username }}</td>
@@ -57,20 +58,19 @@ export default {
         this.initializeSocket();
         this.startTimer();
     },
+    created() {
+        this.socket = io("http://localhost:3000");
+        this.store = useQuizStore();
+        document.body.className = "play-quiz-body";
+    },
     methods: {
         initializeSocket() {
-            this.socket = io("http://localhost:3000");
-            const store = useQuizStore();
-
-            this.socket.emit("rejoinRoom", store.sessionCode);
-            this.socket.emit("get leaderboard", store.sessionCode);
-
-            console.log("triggered get leaderboard");
+            this.socket.emit("rejoinRoom", this.store.sessionCode);
+            this.socket.emit("get leaderboard", this.store.sessionCode);
 
             this.socket.on("update leaderboard", (leaderboard) => {
-                console.log("Received updated leaderboard:", leaderboard);
                 this.leaderboardData = leaderboard;
-                store.updateUserRank(this.leaderboardData);
+                this.store.updateUserRank(this.leaderboardData);
             });
         },
         startTimer() {
@@ -88,11 +88,11 @@ export default {
         },
         handleTimeUp() {
             clearInterval(this.timerInterval);
-            const store = useQuizStore();
-            // store.currentQuestionIndex += 1;
-            store.setCurrentQuestionIndex(store.currentQuestionIndex+1);
+            this.store.setCurrentQuestionIndex(
+                this.store.currentQuestionIndex + 1
+            );
 
-            if (store.currentQuestionIndex < store.questions.length) {
+            if (this.store.currentQuestionIndex < this.store.questions.length) {
                 this.$router.push("/quiz/quiz-page-layout");
             } else {
                 this.$router.push("/quiz/quiz-closure");
@@ -100,16 +100,8 @@ export default {
         },
     },
     beforeUnmount() {
-        const store = useQuizStore();
-        this.socket.emit("exitRoom", store.sessionCode);
-        // sessionStorage.setItem('quizStore', JSON.stringify(this.store));
+        this.socket.emit("exitRoom", this.store.sessionCode);
         clearInterval(this.timerInterval);
     },
 };
 </script>
-
-<style scoped>
-.highlighted-row {
-    background-color: yellow; /* Change this to your preferred highlight color */
-}
-</style>

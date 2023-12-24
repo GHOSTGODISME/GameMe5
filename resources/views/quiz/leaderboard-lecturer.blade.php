@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GameMe5</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
@@ -341,8 +341,10 @@
                     </div>
                     <div>
                         <div class="progress" style="border-radius: 10px;">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: ${correctPercentage}%" aria-valuenow="${correctPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
-                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${incorrectPercentage}%" aria-valuenow="${incorrectPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: ${correctPercentage}%" 
+                        aria-valuenow="${correctPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-danger" role="progressbar" style="width: ${incorrectPercentage}%" 
+                        aria-valuenow="${incorrectPercentage}" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div><span class="total-correct">${totalCorrect}</span> correct, <span class="total-incorrect">${totalIncorrect}</span> incorrect</div>
                     </div>
@@ -373,8 +375,7 @@
         function updateQuestionStatus(questionId, studentResponses) {
             const questionElement = document.getElementById(`ques-${questionId}`);
             const questionStats = calculateQuestionStats(questionId, studentResponses);
-            // console.log("questionStats");
-            console.log(questionStats);
+
             if (questionElement && questionStats) {
                 const {
                     totalResponses,
@@ -450,13 +451,10 @@
                         answeredOptions = response.answeredOption;
                     }
 
-                    console.log("answeredOptions");
-                    console.log(answeredOptions);
                     if (!answeredOptions || answeredOptions[0] == null) {
                         blankCount++; // Increment blank count for each empty or null response
                     } else if (Array.isArray(answeredOptions)) {
                         answeredOptions.forEach(option => {
-                            console.log(answeredOptions);
                             selectedOptions[option] = (selectedOptions[option] || 0) + 1;
                         });
                     }
@@ -525,12 +523,10 @@
                     } catch (error) {
                         answeredOption = studentAnswer.answeredOption;
                     }
-                   console.log(answeredOption);
 
                     const answerText = answeredOption && answeredOption[0] !== null ?
                         answeredOption[0] : 'No answer provided';
 
-                    console.log(answerText);
                     const textColor = answeredOption && answeredOption[0] !== null ?
                         'black' : 'grey';
 
@@ -563,7 +559,6 @@
 
                     const optionNumPlayer = document.createElement('div');
                     optionNumPlayer.classList.add('option-num-player');
-                    console.log(questionStats.selectedOptions);
                     const selectedOptionCount = questionStats.selectedOptions[option] || 0;
                     optionNumPlayer.textContent = `${selectedOptionCount} players`;
 
@@ -600,9 +595,6 @@
                 success: function(response) {
                     const quizQuestions = response.quizQuestions;
                     const userResponses = response.userResponses;
-
-                    console.log(quizQuestions);
-                    console.log(userResponses);
 
                     quizQuestions.forEach((question, index) => {
                         if (!studentResponses[question.id]) {
@@ -685,7 +677,6 @@
                         type: 'PUT',
                         success: function(response) {
                             socket.emit("endSession", sessionCode);
-                            console.log('Session ended successfully');
                             window.location.href = '/lect_homepage';
                         },
                         error: function(xhr, status, error) {
@@ -716,7 +707,6 @@
                     if (existingRow) {
                         // Update existing row content
                         const cells = existingRow.querySelectorAll('td');
-                        console.log(cells);
                         if (cells.length >= 3) {
                             cells[0].textContent = username;
                             cells[1].textContent = score;
@@ -736,18 +726,9 @@
                         tableBody.appendChild(newRow);
                     }
                 });
-
-                // Remove extra rows if there are more existing rows than entries
-                // if (existingRows.length > leaderboardData.length) {
-                //     for (let i = leaderboardData.length; i < existingRows.length; i++) {
-                //         tableBody.removeChild(existingRows[i]);
-                //     }
-                // }
             };
 
             socket.on('updateResponse', (data) => {
-                console.log("testtttttttt");
-                console.log(data);
                 if (data) {
                     const questionId = data.questionId;
 
@@ -756,15 +737,11 @@
                     }
 
                     studentResponses[questionId].push(data);
-                    console.log("here");
-                    console.log(studentResponses);
                     updateQuestionStatus(questionId, studentResponses[questionId]);
                 }
             });
 
             socket.on('initial leaderboard', function(leaderboardData) {
-                console.log('trigger initial');
-                console.log(leaderboardData);
                 updateLeaderboardRow(leaderboardData);
 
                 const participantCount = leaderboardData.length;
@@ -773,8 +750,6 @@
             });
 
             socket.on('update leaderboard', function(leaderboardData) {
-                console.log('trigger update');
-                console.log(leaderboardData);
                 updateLeaderboardRow(leaderboardData);
 
                 const participantCount = leaderboardData.length;

@@ -9,16 +9,11 @@ use App\Models\Student;
 use App\Models\Survey;
 use App\Models\SurveyQuestion;
 use App\Models\SurveyResponse;
-use App\Models\SurveyResponseEmail;
 use App\Models\SurveyResponseQuestion;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Mail;
-use League\Flysystem\Visibility;
 use Maatwebsite\Excel\Facades\Excel;
-use Spatie\Browsershot\Browsershot;
 
 
 class SurveyController extends Controller
@@ -28,24 +23,24 @@ class SurveyController extends Controller
         $email = $request->session()->get('email');
         $user = User::where('email', $email)->first();
         $lecturer = Lecturer::where('iduser', $user->id)->first();
-        
+
         $surveys = Survey::where('id_lecturer', $lecturer->id)->get();
-        return view('survey.index', ['surveys' => $surveys]);
+        return view('Survey.index', ['surveys' => $surveys]);
     }
 
     public function create()
     {
         $survey = new Survey();
         $mode = 'create';
-        return view('survey.edit', compact('survey', 'mode'));
+        return view('Survey.edit', compact('survey', 'mode'));
     }
 
     public function view($id)
     {
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
-        
+
         $mode = 'view';
-        return view('survey.edit', compact('survey', 'mode'));
+        return view('Survey.edit', compact('survey', 'mode'));
     }
 
 
@@ -67,21 +62,21 @@ class SurveyController extends Controller
         $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
 
         // Pass the survey and its responses data to the view for rendering
-        return view('survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions', 'mode'));
+        return view('Survey.edit', compact('survey', 'surveyResponses', 'uniqueQuestions', 'mode'));
     }
 
     public function delete($id)
     {
-        // Find the fortune wheel by ID
+        // Find the survey by ID
         $survey = Survey::find($id);
 
-        // Check if the fortune wheel exists
+        // Check if the survey exists
         if (!$survey) {
             return response()->json(['message' => 'Survey not found.'], 404);
         }
 
-        // Delete the fortune wheel
-        $survey->surveyQuestions()->delete(); // Assuming 'questions()' defines the relationship
+        // Delete the survey
+        $survey->surveyQuestions()->delete();
 
         $survey->delete();
 
@@ -115,7 +110,7 @@ class SurveyController extends Controller
             $survey = Survey::create([
                 'title' => $data['title'],
                 'description' => $data['description'] ?? null,
-                'visibility' =>$data['visibility'],
+                'visibility' => $data['visibility'],
                 'id_lecturer' => $lecturer->id,
             ]);
         }
@@ -199,7 +194,7 @@ class SurveyController extends Controller
         }
 
         $surveys = $surveys->get();
-        return view('survey.index', ['surveys' => $surveys]);
+        return view('Survey.index', ['surveys' => $surveys]);
     }
 
     public function getSurvey($id)
@@ -217,9 +212,8 @@ class SurveyController extends Controller
 
     public function studentResponse(Request $request, $id)
     {
-        $email = $request->session()->get('email');
         $survey = Survey::with('surveyQuestions')->findOrFail($id);
-        return view('survey.student-view', ['survey' => $survey]);
+        return view('Survey.student-view', ['survey' => $survey]);
     }
 
     public function storeResponse(Request $request)
@@ -228,9 +222,7 @@ class SurveyController extends Controller
         $user = User::where('email', $email)->first();
         $stud = Student::where('iduser', $user->id)->first();
         $student = Student::with('classrooms')->find($stud->id);
-        
-        
-        Log::info('Request Data: ' . json_encode($request->all()));
+
         try {
             // Validate incoming request data
             $data = $request->validate([
@@ -239,13 +231,10 @@ class SurveyController extends Controller
                 'surveyResponse.user_id' => 'nullable|integer',
                 'surveyResponse.question_response' => 'required|array',
                 'surveyResponse.question_response.*.question_id' => 'required|integer',
-                'surveyResponse.question_response.*.answer' => 'required', // Add necessary validation rules for the answer
+                'surveyResponse.question_response.*.answer' => 'required',
                 'imageData' => 'required',
             ]);
 
-            // Log::info('data: ' . json_encode($data));
-            // $imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['imageData']));
-            // $this->returnSurvey($data['surveyResponse']['user_id'], $imageData);
             $this->returnSurvey($student->id, $data['imageData']);
 
             $survey = Survey::findOrFail($data['surveyResponse']['survey_id']);
@@ -257,14 +246,13 @@ class SurveyController extends Controller
             // Loop through each question response and save it
             foreach ($data['surveyResponse']['question_response'] as $questionResponse) {
                 $savedResponse = $survey->surveyResponses()->save($response);
-                Log::info('questionResponse: ' . json_encode($questionResponse));
 
                 $savedResponse->surveyResponseQuestions()->create([
                     'survey_question_id' => $questionResponse['question_id'],
                     'answers' => $questionResponse['answer'],
                 ]);
             }
-            // Optionally return a success response or redirect
+            // Return a success response or redirect
             return response()->json(['message' => 'Survey response saved']);
         } catch (\Exception $e) {
             // Return an error response if an exception occurs
@@ -280,7 +268,7 @@ class SurveyController extends Controller
             ->get();
 
         // Pass the $surveyResponses data to the view for rendering
-        return view('survey.show-responses', ['surveyResponses' => $surveyResponses]);
+        return view('Survey.show-responses', ['surveyResponses' => $surveyResponses]);
     }
 
 
@@ -290,50 +278,46 @@ class SurveyController extends Controller
         $user = User::find($userId);
         if ($user) {
             SendSurveyResponseEmail::dispatch($user->email, $imageData);
-        }else{
-            SendSurveyResponseEmail::dispatch("ming.fai2002@gmail.com", $imageData);      
-        }
+        } 
     }
 
     public function exportSurveyResponses($surveyId)
-{
-    $surveyResponses = SurveyResponse::where('survey_id', $surveyId)->get();
-    
-    $uniqueTitles = SurveyResponseQuestion::whereIn('survey_response_id', $surveyResponses->pluck('id'))
-    ->distinct('survey_question_id')
-    ->pluck('survey_question_id');
-    $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
+    {
+        $surveyResponses = SurveyResponse::where('survey_id', $surveyId)->get();
+
+        $uniqueTitles = SurveyResponseQuestion::whereIn('survey_response_id', $surveyResponses->pluck('id'))
+            ->distinct('survey_question_id')
+            ->pluck('survey_question_id');
+        $uniqueQuestions = SurveyQuestion::whereIn('id', $uniqueTitles)->get(['id', 'title']);
 
 
-    $headings = ['Response ID', 'Survey ID', 'User ID', 'Responded Time'];
-    foreach ($uniqueQuestions as $question) {
-        $headings[] = $question->title; 
-    }
-
-    $data = []; 
-
-    foreach ($surveyResponses as $response) {
-
-        $responseData = [
-            'Response ID' => $response->id,
-            'Survey ID' => $response->survey_id,
-            'User ID' => $response->user_id,
-            'Responded Time' => $response->created_at,
-        ];
-
-        foreach($response->surveyResponseQuestions as $questionResponse){
-            if (is_array($questionResponse->answers)) {
-                $responseData[] = implode(', ', $questionResponse->answers);
-            } else {
-                $responseData[] = $questionResponse->answers;
-            }
+        $headings = ['No', 'Name', 'Email', 'Responded Time'];
+        foreach ($uniqueQuestions as $question) {
+            $headings[] = $question->title;
         }
-        $data[] = $responseData;
+
+        $data = [];
+
+        foreach ($surveyResponses as $index => $response) {
+
+            $responseData = [
+                'No' => $index + 1,
+                'Name' => $response->user->name,
+                'Email' => $response->user->email,
+                'Responded Time' => $response->created_at,
+            ];
+
+            foreach ($response->surveyResponseQuestions as $questionResponse) {
+                if (is_array($questionResponse->answers)) {
+                    $responseData[] = implode(', ', $questionResponse->answers);
+                } else {
+                    $responseData[] = $questionResponse->answers;
+                }
+            }
+            $data[] = $responseData;
+        }
+
+        // Export data to Excel using Maatwebsite\Excel package
+        return Excel::download(new SurveyResponsesExport($data, $headings), 'survey_responses.xlsx');
     }
-
-    // Export data to Excel using Maatwebsite\Excel package
-    return Excel::download(new SurveyResponsesExport($data, $headings), 'survey_responses.xlsx');
-}
-
-    
 }

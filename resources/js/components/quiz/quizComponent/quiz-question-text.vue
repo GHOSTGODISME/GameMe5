@@ -1,17 +1,16 @@
 <template>
     <div id="quiz-title-container" class="">
-      {{ title }}
+        {{ title }}
     </div>
-  </template>
-  
-  <script>
-  export default {
+</template>
+
+<script>
+export default {
     props: {
-      title: {
-        type: String,
-        required: true,
-      },
+        title: {
+            type: String,
+            required: true,
+        },
     },
-  };
-  </script>
-  
+};
+</script>
