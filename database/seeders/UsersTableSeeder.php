@@ -43,7 +43,7 @@ class UsersTableSeeder extends Seeder
         // Create a lecturer account
         User::create([
             'name' => 'Shoong Wai Kin',
-            'email' => 'lecturer1@tarc.edu.my.com',
+            'email' => 'lecturer1@tarc.edu.my',
             'password' => Hash::make('L123456.a'),
             'accountType' => 'lecturer',
             'gender' => 'male',
@@ -56,7 +56,7 @@ class UsersTableSeeder extends Seeder
         // Create a lecturer account
         User::create([
             'name' => 'Wong Kah Ming',
-            'email' => 'lecturer2@tarc.edu.my.com',
+            'email' => 'lecturer2@tarc.edu.my',
             'password' => Hash::make('L123456.b'),
             'accountType' => 'lecturer',
             'gender' => 'male',

@@ -53,21 +53,20 @@
     line-height: normal;
     text-decoration-line: underline; 
     }
-
-.button_general{
-    width: 300px;
-    height: 45px;
-    margin-top:40px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: var(--Button, #2A2A2A);
-    color: #FEFEFE;
-    font-family: 'Roboto';
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;  
-}
+    .button_general{
+        width: 300px;
+        height: 45px;
+        margin-top:40px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        background: var(--Button, #2A2A2A);
+        color: #FEFEFE;
+        font-family: 'Roboto';
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;  
+    }
 
 </style>
 <body>
@@ -78,3 +77,4 @@
 </div>
 </body>
 </html>
+

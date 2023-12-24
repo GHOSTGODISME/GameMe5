@@ -73,8 +73,6 @@ border:2px white solid;
     </div>
     
 
-    
-   <!-- Add an identifier (e.g., data-field="email") to each profile data span -->
 <div class="profile-data">
     <label class="profile-label">Email</label>
     <div class= "profile_output_email">

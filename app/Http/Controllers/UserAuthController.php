@@ -189,7 +189,7 @@ class UserAuthController extends Controller
         // Merge data from all steps
         $data = array_merge($step1Data, $step2Data, $request->all());
 
-        // Additional data modifications
+    
         $data['password'] = Hash::make($request->password);
 
         // Create user with all data
