@@ -23,7 +23,7 @@ class QuizController extends Controller
         }
 
         $quizzes = $quizzes->get();
-        return view('quiz.index-own-quiz', ['quizzes' => $quizzes]);
+        return view('Quiz.index-own-quiz', ['quizzes' => $quizzes]);
     }
 
     public function index_all_quiz(Request $request)
@@ -37,7 +37,7 @@ class QuizController extends Controller
             })->get();
         }
 
-        return view('quiz.index-all-quiz', ['quizzes' => $quizzes]);
+        return view('Quiz.index-all-quiz', ['quizzes' => $quizzes]);
     }
 
     public function create(Request $request)
@@ -46,7 +46,7 @@ class QuizController extends Controller
         $mode = 'create';
         $questions = $quiz->quiz_questions;
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function view(Request $request, $id)
@@ -63,7 +63,7 @@ class QuizController extends Controller
         }
         $questions = $quiz->quiz_questions; // Retrieve the related questions
 
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function edit(Request $request, $id)
@@ -71,7 +71,7 @@ class QuizController extends Controller
         $quiz = Quiz::with('quiz_questions')->findOrFail($id);
         $mode = 'edit';
         $questions = $quiz->quiz_questions; // Retrieve the related question
-        return view('quiz.edit', compact('quiz', 'questions', 'mode'));
+        return view('Quiz.edit', compact('quiz', 'questions', 'mode'));
     }
 
     public function store(Request $request)

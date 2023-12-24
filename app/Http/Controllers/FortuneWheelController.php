@@ -17,12 +17,12 @@ class FortuneWheelController extends Controller
         $lecturer = Lecturer::where('iduser', $user->id)->first();
 
         $fortuneWheels = FortuneWheel::where('id_lecturer', $lecturer->id)->get();
-        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
+        return view('Interactive-Tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
     }
     public function createFortuneWheel()
     {
         $fortuneWheel = new FortuneWheel();
-        return view('Interactive-tools.fortune-wheel-edit', compact('fortuneWheel'));
+        return view('Interactive-Tools.fortune-wheel-edit', compact('fortuneWheel'));
     }
 
     public function updateFortuneWheel(Request $request)
@@ -70,7 +70,7 @@ class FortuneWheelController extends Controller
         $fortuneWheel = FortuneWheel::findOrFail($id);
 
         // Return the createFortuneWheel view with the Fortune Wheel data
-        return view('Interactive-tools.fortune-wheel-edit', compact('fortuneWheel'));
+        return view('Interactive-Tools.fortune-wheel-edit', compact('fortuneWheel'));
     }
 
     public function deleteFortuneWheel($id)
@@ -97,6 +97,6 @@ class FortuneWheelController extends Controller
             return $query->where('title', 'like', '%' . $search . '%');
         })->get();
 
-        return view('Interactive-tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
+        return view('Interactive-Tools.fortune-wheel-index', ['fortuneWheels' => $fortuneWheels]);
     }
 }

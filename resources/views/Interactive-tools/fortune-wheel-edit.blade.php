@@ -1,44 +1,11 @@
 @extends('Layout/interactive_tools_master')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-{{-- <link rel="stylesheet" href="{{ asset('css/interactive_tools_style.css') }}"> --}}
 
 <script type="text/javascript" src="{{ asset('js/Winwheel.js') }}"></script>
-
-
 <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
 
 
 @section('content')
-    <style scoped>
-        .the_wheel {
-            position: relative;
-            width: max-content;
-        }
-
-        .pointer {
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 50px solid black;
-            position: absolute;
-            top: 20px;
-            left: calc(50% - 10px);
-            z-index: 999;
-            transform-origin: bottom center;
-        }
-
-        .head-fw-1 {
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .head-fw-1 #modeSelectorContainer {
-            font-size: 18px;
-            margin: 10px 20px;
-        }
-    </style>
-
     <div class="save-btn-container">
         <button id="save-wheel-button" class="btn btn-dark">Save & Exit</button>
     </div>
@@ -50,7 +17,7 @@
     <div class="container ">
         <div class="input-group head-fw-1">
             <span class="edit-icon" style="cursor: pointer;">
-                <div style="display: flex; align-items: center; justify-content: center; gap:20px;">
+                <div class="fw-title-style">
                     <input type="text" class="form-control" id="fortune-wheel-title" name="fortuneWheel[title]"
                         placeholder="Fortune Wheel Title" value="{{ $fortuneWheel->title ?? '' }}" readonly required>
                     <button class="btn btn-dark" style="font-size: 18px; padding: 10px" type="button"
@@ -90,11 +57,11 @@
                 <div class="card fortune_wheel_card"></div>
                 <div>
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item" role="presentation"><a class="nav-link active" role="tab"
-                                data-bs-toggle="tab" href="#tab-1" style="font-size:16px; color: rgb(33, 37, 41);">Entries
-                                (<span id="entries_count" style="color: rgb(33, 37, 41);"></span>)</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link active fw-tab-header" role="tab"
+                                data-bs-toggle="tab" href="#tab-1"><span class="fw-tab-header">Entries
+                                    (<span id="entries_count" style="color: rgb(33, 37, 41);"></span>)</span></a></li>
                         <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab"
-                                href="#tab-2" style="font-size:16px;"><span style="color: rgb(33, 37, 41);">Results (<span
+                                href="#tab-2"><span class="fw-tab-header">Results (<span
                                         id="results_count"></span>)</span></a></li>
                     </ul>
                     <div class="tab-content">

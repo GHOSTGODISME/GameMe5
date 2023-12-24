@@ -205,14 +205,6 @@
 
                                                 <hr>
 
-                                                <!-- {{-- <div>
-                                                    <b>Question Properties</b>
-                                                    <label for="question_properties"></label>
-                                                    <select id="question_properties" name="question_properties"
-                                                        class="input-fields text-capitalize" title="Question Properties">
-                                                    </select>
-                                                </div> --}} -->
-
                                                 <div id="compoenent_edit">
 
                                                     <div id="question_title_container">
@@ -243,21 +235,9 @@
                                                     <!-- reserve for other possible usage -->
                                                     <div id="input_option_container">
                                                         <b>Input Option</b>
-                                                        <!-- <textarea id="question_input_option" class="input-fields form-control" title="Input Option"
-                                                            placeholder="Input Option"></textarea> -->
-
-                                                        <!-- <label for="input_option_contentholder"></label> -->
                                                         <textarea id="input_option_contentholder" class="input-fields form-control" title="Input Option"
                                                             placeholder="Input Option"></textarea>
                                                     </div>
-
-                                                    <!-- <div id="input_option_container">
-                                                        <b>Input Options</b>
-                                                        <div id="input_options">
-                                                            <!== Input options will be added dynamically here ==>
-                                                        </div>
-                                                        <!== <button id="add_input_option">Add Option</button> ==>
-                                                    </div> -->
 
                                                     <div id="scale-container">
                                                         <b>Scale Edit</b>
@@ -381,14 +361,12 @@
                         <input id="survey_title_modal" class="input-fields form-control survey-title-input"
                             type="text" title="Survey Title" placeholder="Your Survey Title"
                             value="{{ $survey->title }}" />
-                        {{-- <span id="title_char_counter" class="char_count title_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Description</b>
                         <label for="survey_description"></label>
                         <textarea id="survey_description_modal" class="input-fields form-control survey-description-input"
                             title="Survey Description" placeholder="(Optional)">{{ $survey->description }}</textarea>
-                        {{-- <span id="description_char_counter" class="char_count description_cc">0/0</span> --}}
                     </div>
                     <div>
                         <b>Visibility</b>
@@ -516,9 +494,7 @@
 
         // jQuery to handle click event on the span
         $('#copyLink').click(function() {
-            // Get the text within the <p> tag
             var linkText = $('#surveyLink').text();
-            // Create a temporary input element to copy the text
             var tempInput = $('<input>');
             $('body').append(tempInput);
 

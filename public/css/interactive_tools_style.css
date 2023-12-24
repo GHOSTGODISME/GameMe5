@@ -227,3 +227,46 @@ input[type=file]::file-selector-button:hover {
   color: #b0b0b0;
   margin: 30px;
 }
+
+
+
+
+/* fortune wheel */
+.the_wheel {
+  position: relative;
+  width: max-content;
+}
+
+.pointer {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 50px solid black;
+  position: absolute;
+  top: 20px;
+  left: calc(50% - 10px);
+  z-index: 999;
+  transform-origin: bottom center;
+}
+
+.head-fw-1 {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.head-fw-1 #modeSelectorContainer {
+  font-size: 18px;
+  margin: 10px 20px;
+}
+
+.fw-tab-header {
+  font-size: 16px;
+  color: black;
+}
+.fw-title-style {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}

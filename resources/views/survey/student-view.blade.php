@@ -27,10 +27,6 @@
         }
 
         #form-preview {
-            /* width: 80%;
-            padding: 50px 80px;
-            margin: 50px auto;
-            border-radius: 10px; */
             min-width: 400px;
         }
 
@@ -98,10 +94,6 @@
     </script>
     <script src="{{ asset('js/survey_utility.js') }}"></script>
     <script src="{{ asset('js/survey_form.js') }}"></script>
-    {{-- <script  src="{{ asset('js/survey_admin.js') }}"></script> --}}
-
-    <script></script>
-
 </body>
 
 </html>
