@@ -16,6 +16,7 @@ use App\Models\Classlecturer;
 use App\Jobs\SendQuizSummaryEmail;
 use App\Models\QuizResponseDetails;
 use App\Models\Student;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Session as LaravelSession;
@@ -71,7 +72,8 @@ class QuizSessionController extends Controller
             $session->status = 'started';
             $session->save();
         }
-        $qrCodeContent = QrCode::size(150)->generate('localhost:8000/join-quiz?code=' . $session->code);
+        $baseUrl = Config::get('app.url');
+        $qrCodeContent = QrCode::size(150)->generate("$baseUrl/join-quiz?code=" . $session->code);
 
         return view('Quiz.quiz-session-lecturer', ['qrCodeContent' => $qrCodeContent]);
     }
