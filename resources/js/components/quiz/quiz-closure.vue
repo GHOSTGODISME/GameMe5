@@ -19,7 +19,9 @@
                     type="submit"
                     @click="continueClicked"
                 >
-                    Continue
+                    Continue 
+                    <br />
+                    (You will be directed to summary page in {{ this.countdown }}...)
                 </button>
             </div>
         </div>
@@ -30,11 +32,32 @@
 import { useQuizStore } from "../../store.js";
 
 export default {
+    data(){
+        return{
+            countdown:5,
+        };
+    },  
     created() {
         this.storeQuizResponse();
         document.body.className = "closure-body";
+
+        this.startCountdown();
     },
     methods: {
+        startCountdown() {
+            // Use setTimeout to trigger the continue button after 5 seconds
+            setTimeout(() => {
+                this.continueClicked();
+            }, this.countdown*1000);
+
+            // Update the countdown every second
+            const countdownInterval = setInterval(() => {
+                this.countdown--;
+                if (this.countdown <= 0) {
+                    clearInterval(countdownInterval); // Stop the interval when countdown reaches 0
+                }
+            }, 1000);
+        },
         async storeQuizResponse() {
             try {
                 const store = useQuizStore();
