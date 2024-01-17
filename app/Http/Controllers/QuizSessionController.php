@@ -16,6 +16,7 @@ use App\Models\Classlecturer;
 use App\Jobs\SendQuizSummaryEmail;
 use App\Models\QuizResponseDetails;
 use App\Models\Student;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Session as LaravelSession;
@@ -71,7 +72,10 @@ class QuizSessionController extends Controller
             $session->status = 'started';
             $session->save();
         }
-        // $qrCodeContent = QrCode::size(150)->generate('localhost:8000/join-quiz?code=' . $session->code);
+        $baseUrl = Config::get('app.url');
+        $qrCodeContent = QrCode::size(150)->generate("$baseUrl/join-quiz?code=" . $session->code);
+
+        // $qrCodeContent = QrCode::size(150)->generate("$baseUrl/join-quiz?code=" . $session->code);
         $qrCodeContent = QrCode::size(150)->generate('
         http://localhost:4001?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiNmQ0YmJjZTktMDhkYS00M2I3LWE1ZTQtZWVlNWIyZWQ5ZTlkIiwgInNlcnZpY2VFbmRwb2ludCI6ICJodHRwOi8vbG9jYWxob3N0OjQwMDEiLCAicmVjaXBpZW50S2V5cyI6IFsiMkhyQnFySkVuYndOVlNiVkdOUEJyWVdnTGFGWEJ2QXoxMUxzZXlVTkJlekUiXSwgImxhYmVsIjogIkthaG9vdCBWZW5kb3IifQ==
         ');
