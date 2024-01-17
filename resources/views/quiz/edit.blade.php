@@ -93,8 +93,8 @@
 
 <body>
     <div class="header-container">
-        <img src="{{ asset('img/logo_header.png') }}" alt="Logo">
-
+        <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+        
         <div class="">
             <div class="" id="quizDetailsContainer">
                 <span id="quizDetailsTrigger" style="cursor: pointer;">

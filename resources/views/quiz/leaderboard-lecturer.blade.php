@@ -209,7 +209,9 @@
 <body>
     <!-- header -->
     <div class="header-style">
-        <div><img src="{{ asset('img/logo_header.png') }}" /></div>
+        <div>        
+            <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+        </div>
         <div id="code-copy-container" style="cursor: pointer;">
             <span id="codePlaceholder"></span>
             <span id="codeCopyIcon" class="fas fa-copy"></span>

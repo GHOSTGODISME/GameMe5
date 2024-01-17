@@ -2,7 +2,7 @@
     <div class="container">
         <div class="closure-container-bg">
             <div class="closure-container">
-                <img src="/img/logo_header.png" alt="img" />
+                <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
 
                 <p class="closure-title">Congratulation!</p>
 
