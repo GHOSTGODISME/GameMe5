@@ -709,7 +709,7 @@
                         score
                     } = entry;
 
-                    userIDList.push(id);
+                    
                     const existingRow = existingRows[index];
                     const scoreValue = score !== undefined ? score : 0;
 
@@ -724,6 +724,7 @@
                             console.error('Not enough cells in the row.');
                         }
                     } else {
+                        userIDList.push(id);
                         // Create a new row for the entry
                         const newRow = document.createElement('tr');
                         newRow.innerHTML = `
@@ -792,15 +793,16 @@
             const quizTitle = sessionStorage.getItem('quizTitle');
 
             for (const id of userIDList) {
-                const individualData = await fetchIndividualData(Number.parseInt(id), sessionId);
-                sendCredential(quizTitle,individualData.data, "");
+                const individualData = await fetchIndividualData(id, sessionId);
+                console.log(individualData.data);
+                // sendCredential(quizTitle,individualData.data, "");
             }
         });
 
         function sendCredential(quiz_title, {
             user_id,
             completed_time,
-            username,
+            updated_at,
             accuracy,
             correct_answer_count,
             incorrect_answer_count,
@@ -829,7 +831,7 @@
                         },
                         {
                             "name": "completed_time",
-                            "value": `${completed_time}`
+                            "value": `${updated_at}`
                         },
                         {
                             "name": "username",

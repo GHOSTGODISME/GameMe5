@@ -1,6 +1,6 @@
 <template>
     <div class="header-container">
-        <img src="{{ asset('img/logo_header.png') }}" alt="Logo">
+        <img src="img/logo_header.png" alt="Logo">
         <span class="header-quiz-title">{{ quizTitle }}</span>
     </div>
 </template>
