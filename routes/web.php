@@ -229,6 +229,7 @@ Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizSessionController::
 Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'generatePDF'])->name("generate-pdf");
 Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class, 'getQuizQuestionsBySessionId']);
 Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
+Route::get('/sessions/getIndividualData/{sessionId}/{userId}',  [QuizSessionController::class, 'getIndividualData']);
 
 
 // interactive session related

@@ -2,8 +2,8 @@
     <div class="container">
         <div class="closure-container-bg">
             <div class="closure-container">
-                <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
-
+                <img src="/img/logo_header.png" alt="img" />
+                
                 <p class="closure-title">Congratulation!</p>
 
                 <p class="closure-description">

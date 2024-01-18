@@ -430,6 +430,7 @@
                         if (response.sessionCode) {
                             sessionStorage.setItem("sessionId", response.sessionId);
                             sessionStorage.setItem("sessionCode", response.sessionCode);
+                            sessionStorage.setItem("quizTitle", response.quizTitle);
                             // Redirect to the specified URL with the sessionCode as a query parameter
 
                             socket = io("http://localhost:3000");

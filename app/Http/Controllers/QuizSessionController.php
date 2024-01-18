@@ -10,9 +10,9 @@ use App\Models\User;
 use App\Models\Session;
 use App\Models\Lecturer;
 use App\Models\QuizQuestion;
-use App\Models\QuizResponse;
 use Illuminate\Http\Request;
 use App\Models\Classlecturer;
+use App\Models\QuizResponse;
 use App\Jobs\SendQuizSummaryEmail;
 use App\Models\QuizResponseDetails;
 use App\Models\Student;
@@ -50,8 +50,11 @@ class QuizSessionController extends Controller
             'show_leaderboard_flag' => $data['quizSessionSetting']['showLeaderboard'],
             'shuffle_option_flag' => $data['quizSessionSetting']['shuffleOptions'],
         ]);
+
+        $quiz = Quiz::find($data['quizId']);
+        
         // Handle response
-        return response()->json(['sessionCode' => $session->code, 'sessionId' => $session->id]);
+        return response()->json(['sessionCode' => $session->code, 'sessionId' => $session->id, 'quizTitle'=> $quiz->title]);
     }
 
 
@@ -73,12 +76,10 @@ class QuizSessionController extends Controller
             $session->save();
         }
         $baseUrl = Config::get('app.url');
-        $qrCodeContent = QrCode::size(150)->generate("$baseUrl/join-quiz?code=" . $session->code);
-
         // $qrCodeContent = QrCode::size(150)->generate("$baseUrl/join-quiz?code=" . $session->code);
-        $qrCodeContent = QrCode::size(150)->generate('
-        http://localhost:4001?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiNmQ0YmJjZTktMDhkYS00M2I3LWE1ZTQtZWVlNWIyZWQ5ZTlkIiwgInNlcnZpY2VFbmRwb2ludCI6ICJodHRwOi8vbG9jYWxob3N0OjQwMDEiLCAicmVjaXBpZW50S2V5cyI6IFsiMkhyQnFySkVuYndOVlNiVkdOUEJyWVdnTGFGWEJ2QXoxMUxzZXlVTkJlekUiXSwgImxhYmVsIjogIkthaG9vdCBWZW5kb3IifQ==
-        ');
+        $qrCodeContent = QrCode::size(150)->generate("
+        http://$baseUrl:4001?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiNmQ0YmJjZTktMDhkYS00M2I3LWE1ZTQtZWVlNWIyZWQ5ZTlkIiwgInNlcnZpY2VFbmRwb2ludCI6ICJodHRwOi8vbG9jYWxob3N0OjQwMDEiLCAicmVjaXBpZW50S2V5cyI6IFsiMkhyQnFySkVuYndOVlNiVkdOUEJyWVdnTGFGWEJ2QXoxMUxzZXlVTkJlekUiXSwgImxhYmVsIjogIkthaG9vdCBWZW5kb3IifQ==
+        ");
 
         return view('Quiz.quiz-session-lecturer', ['qrCodeContent' => $qrCodeContent]);
     }
@@ -380,6 +381,22 @@ class QuizSessionController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to store full responses'], 500);
         }
+    }
+    
+
+    public function getIndividualData(Request $request, $sessionId, $userId){
+        try {
+            $session = Session::find($sessionId);
+            // $quizResponse = $session->quizResponses()->where(['user_id' => $userId]);
+            // $quizResponse = $session->quizResponses()->where(['user_id' => $userId]);
+            $quizResponse = QuizResponse::where(['user_id' => $userId])->where(['session_id'=>$sessionId])->get();
+            Log::info('Individual Data: ' . $quizResponse);
+
+            return response()->json(['message' => 'Individual responses fetched successfully', 'data' => $quizResponse]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch individual responses'], 500);
+        }
+
     }
 
     public function fetchData(Request $request, $userId, $sessionId, $quizId)

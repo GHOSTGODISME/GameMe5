@@ -314,7 +314,6 @@
                     rank
                 } = quizDetails;
 
-
                 userResponseDetails = quizResponse.quiz_response_details;
                 const {
                     accuracy,
