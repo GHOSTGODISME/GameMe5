@@ -2,6 +2,7 @@
     <QuizHeaderWithProgressBar
         :timeRemaining="timeRemaining"
         :progressBarValue="progressBarValue"
+        :score="score"
     />
 
     <div id="quiz-title-container">{{ question.title }}</div>
@@ -63,6 +64,7 @@ export default {
             defaultTime: 10,
             socket: null,
             store: null,
+            score:0,
         };
     },
     mounted() {

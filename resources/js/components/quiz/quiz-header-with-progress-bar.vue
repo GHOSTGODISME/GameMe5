@@ -49,6 +49,10 @@ export default {
             type: Number,
             default: 0,
         },
+        score:{
+            type: Number,
+            default: 0,
+        }
     },
     data() {
         return {
@@ -68,7 +72,7 @@ export default {
             this.questionsRemaining = `${store.currentQuestionIndex + 1}/${
                 store.quizTotalQuestion
             }`;
-            this.score = store.totalPoints;
+            //this.score = store.totalPoints;
             this.ranking = store.userRank;
         },
     },
