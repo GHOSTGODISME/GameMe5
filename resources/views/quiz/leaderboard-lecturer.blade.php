@@ -794,14 +794,18 @@
 
             for (const id of userIDList) {
                 const individualData = await fetchIndividualData(id, sessionId);
-                console.log(individualData.data);
-                // sendCredential(quizTitle,individualData.data, "");
+                console.log(`Big Object ` + JSON.stringify(individualData));
+                console.log(`Connection_ID ` + individualData.user_data);
+                const firstObject = individualData.data[0]; 
+                console.log(firstObject);
+
+
+                if(individualData.user_data != null)
+                    sendCredential(quizTitle,firstObject, individualData.user_data);
             }
         });
 
         function sendCredential(quiz_title, {
-            user_id,
-            completed_time,
             updated_at,
             accuracy,
             correct_answer_count,
@@ -809,8 +813,8 @@
             total_points,
             average_time
         }, connection_id) {
-            console.log('Fetching now')
-
+            console.log('Fetching now');
+            const formattedDate = new Date(updated_at).toLocaleString();
 
             const url = 'http://10.123.10.106:4001/issue-credential-2.0/send-offer';
 
@@ -826,16 +830,8 @@
                             "value": `${quiz_title}`
                         },
                         {
-                            "name": "user_id",
-                            "value": `${user_id}`
-                        },
-                        {
                             "name": "completed_time",
-                            "value": `${updated_at}`
-                        },
-                        {
-                            "name": "username",
-                            "value": `${username}`
+                            "value": `${formattedDate}`
                         },
                         {
                             "name": "accuracy",
@@ -861,12 +857,12 @@
                 },
                 "filter": {
                     "indy": {
-                        "cred_def_id": "NypRCRGykSwKUuRBQx2b9o:3:CL:74:Quiz_Result",
+                        "cred_def_id": "NypRCRGykSwKUuRBQx2b9o:3:CL:92:Quiz_Result",
                         "issuer_did": "NypRCRGykSwKUuRBQx2b9o",
-                        "schema_id": "NypRCRGykSwKUuRBQx2b9o:2:Quiz_Result:1.0",
+                        "schema_id": "NypRCRGykSwKUuRBQx2b9o:2:Quiz_Result:2.0",
                         "schema_issuer_did": "NypRCRGykSwKUuRBQx2b9o",
                         "schema_name": "Quiz_Result",
-                        "schema_version": "1.0"
+                        "schema_version": "2.0"
                     }
                 },
                 "trace": true

@@ -184,14 +184,20 @@ class QuizSessionController extends Controller
         // $stud = Student::where('iduser', $user->id)->first();
         // $student = Student::with('classrooms')->find($stud->id);
 
+        Log::info('request: ' . $request);
+
         $validatedData = $request->validate([
             'username' => 'required|string|max:255', // Validation rules for username
             'sessionId' => 'required|exists:sessions,id', // Validation for session existence
-            'userId' => 'required|exists:users,id'
+            'userId' => 'required|exists:student,id'
             // Add more validation rules if needed
         ]);
 
+        Log::info('The code has pass through the Request->Validate');
+        
         $session = Session::findOrFail($validatedData['sessionId']);
+        Log::info('session: ' . $session);
+
 
         $quizResponse = $session->quizResponses()->create([
             'username' => $validatedData['username'],
@@ -201,7 +207,7 @@ class QuizSessionController extends Controller
             'total_points' => null,
             'average_time' => null,
             // 'user_id' => $student->id,
-             'user_id' => $validatedData['userId'],
+            'user_id' => $validatedData['userId'],
         ]);
 
         return response()->json(['message' => 'Username registered successfully']);
@@ -384,19 +390,20 @@ class QuizSessionController extends Controller
     }
     
 
-    public function getIndividualData(Request $request, $sessionId, $userId){
+    public function getIndividualData(Request $request, $sessionId, $id){
         try {
             $session = Session::find($sessionId);
-            // $quizResponse = $session->quizResponses()->where(['user_id' => $userId]);
-            // $quizResponse = $session->quizResponses()->where(['user_id' => $userId]);
-            $quizResponse = QuizResponse::where(['user_id' => $userId])->where(['session_id'=>$sessionId])->get();
+            $stud = Student::where(['id' =>$id ])->first();
+            $user = User::where(['id' => $stud->iduser])->first();
+            $quizResponse = QuizResponse::where(['user_id' => $id])->where(['session_id'=>$sessionId])->get();
             Log::info('Individual Data: ' . $quizResponse);
 
-            return response()->json(['message' => 'Individual responses fetched successfully', 'data' => $quizResponse]);
+            Log::info('connection_id: ' . $user->connection_id);
+
+            return response()->json(['message' => 'Individual responses fetched successfully', 'data' => $quizResponse, 'user_data' => $user->connection_id]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to fetch individual responses'], 500);
         }
-
     }
 
     public function fetchData(Request $request, $userId, $sessionId, $quizId)

@@ -42,6 +42,7 @@ class UserAuthController extends Controller
                     $user = User::where('email', $email)->first();
                     $stud = Student::where('iduser', $user->id)->first();
 
+                    //Email + Student_id + Student_Name
                     $request->session()->put('stud_id', $stud->id);
                     $request->session()->put('stud_name', $user->name);
                     return redirect()->intended(route('stud_homepage'));
@@ -70,6 +71,34 @@ class UserAuthController extends Controller
         }
     }
 
+    function login_ssi(Request $request){
+        $data = $request->all();
+        $password = Hash::make('S123456a.');
+
+        $user = User::create([
+            'accountType' => 'student',
+            'email' => $data['email'],
+            'name' => $data['name'],
+            'gender' => $data['gender'],
+            'dob' => $data['dob'],
+            'password' => $password,
+            'verification_code' => 0,
+            'profile_picture' => null,
+            'connection_id' => $data['connection_id'],
+        ]);
+
+        Student::create(['iduser' => $user->id]);
+
+        $stud = Student::where('iduser', $user->id)->first();
+        $request->session()->put('stud_id', $stud->id);
+
+        $request->session()->put('email', $user->email);
+        $request->session()->put('stud_name', $user->name);
+
+        return response()->json(['message' => 'Success']);
+
+        // return redirect()->intended(route('stud_homepage'));
+    }
 
     function signup()
     {

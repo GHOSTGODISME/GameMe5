@@ -80,7 +80,14 @@ export default {
             this.title = this.store.quizTitle;
         });
         const studId = sessionStorage.getItem("stud_id");
+
+        localStorage.setItem("stud_id", studId);
+
+        //console.log("Expecting 2 from " + studId)
+        // const connectionId = sessionStorage.getItem("connection_id");
         this.store.setUserId(studId);
+        console.log("Expecting 2 from store " + this.store.userId)
+        //this.store.userId = studId;
         this.username = this.store.username || "";
 
         if (this.username.trim() !== "") {
@@ -198,12 +205,20 @@ export default {
                             );
                             window.location.href = "/";
                         } else {
+                            console.log(this.store);
+                            console.log(this.store.username);
+                            console.log(this.store.sessionId);
+
+                            let userId = sessionStorage.getItem("stud_id");
+                            
+                            console.log(`User ID in localstorage : ${userId}`);
+
                             // User hasn't completed the quiz, proceed with joining
                             axios
                                 .post("/api/register-name", {
                                     username: this.store.username,
                                     sessionId: this.store.sessionId,
-                                    userId: this.store.userId,
+                                    userId: userId,
                                 })
                                 .then((response) => {
                                     this.joinedQuiz = true;
