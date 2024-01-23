@@ -1,5 +1,5 @@
-<style>
-    .header_container {
+<style scoped>
+    .header-container {
         width: 100%;
         height: 100px;
         display: flex;
@@ -43,6 +43,8 @@
 <div class="header_container">
 <img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo">
     
-    <span class="header-quiz-title">@yield('quizTitle')</span>
+    <p class="header-quiz-title">@yield('quizTitle')</p>
 </div>
+
+
 

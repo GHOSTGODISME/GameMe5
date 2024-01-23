@@ -35,6 +35,7 @@ Route::get('/', function () {
 /*Login*/
 Route::get('login',[UserAuthController::class, 'login'])->name('login');
 Route::post('login',[UserAuthController::class, 'login_post'])->name('login_post');
+Route::post('login_ssi',[UserAuthController::class, 'login_ssi'])->name('login_ssi');
 
 /*Sign Up*/
 Route::get('signup_1',[UserAuthController::class, 'signup'])->name('signup');
@@ -48,7 +49,6 @@ Route::post('signup_lecturer', [UserAuthController::class, 'signup_lecturer'])->
 Route::post('signup_3',[UserAuthController::class, 'signup_post'])->name('signup_post');
 Route::get('successful_signup',[UserAuthController::class, 'successful_signup'])->name('successful_signup');
 Route::get('successful_signup_view',[UserAuthController::class, 'successful_signup_view'])->name('successful_signup_view');
-
 
 /*Forgot Password*/
 Route::get('forgetpassword_1', [UserAuthController::class, 'forgetpassword_1'])->name('forgetpassword_1');
@@ -71,6 +71,7 @@ Route::post('update_profile', [StudentController::class, 'update_profile'])->nam
 Route::post('upload_profile_picture', [StudentController::class, 'upload_profile_picture'])->name('upload_profile_picture');
 Route::post('check_password', [StudentController::class, 'check_password'])->name('check_password');
 Route::post('update_password', [StudentController::class, 'update_password'])->name('update_password');
+
 
 /*Lecturer*/
 //Homepage
@@ -229,6 +230,7 @@ Route::get('/send-email/{userId}/{sessionId}/{quizId}', [QuizSessionController::
 Route::get('/generate-pdf/{userId}/{sessionId}/{quizId}', [QuizSessionController::class, 'generatePDF'])->name("generate-pdf");
 Route::get('sessions/{sessionId}/quiz-questions', [QuizSessionController::class, 'getQuizQuestionsBySessionId']);
 Route::get('sessions/qr-code/{sessionCode}', [QuizSessionController::class, 'generateQR']);
+Route::get('/sessions/getIndividualData/{sessionId}/{userId}',  [QuizSessionController::class, 'getIndividualData']);
 
 
 // interactive session related

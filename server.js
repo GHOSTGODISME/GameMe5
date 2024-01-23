@@ -135,12 +135,17 @@ function handleSession(socket) {
     initializeSessionData(sessionCode);
     initializeConnection(sessionCode);
     io.to(socket.id).emit('session created');
+    console.log('session created');
   });
 
   socket.on('joinSession', (sessionCode) => {
     if (sessions.get(sessionCode)) {
+      console.log('joinSession');
+
       const leaderboard = sessions.get(sessionCode).leaderboard;
       const participants = sessions.get(sessionCode).participants;
+
+      console.log(`Participant ${socket.id} joined session ${sessionCode}`)
 
       socket.join(sessionCode); // Participant joins the room with session code
       socket.to(sessionCode).emit("get leaderboard");
@@ -277,15 +282,26 @@ function handleJoinEvents(socket) {
 
 
   socket.on('getSessionParticipants', (sessionCode) => {
+
     socket.join(sessionCode);
 
+    console.log("getSessionParticipants ", sessionCode);
     const participants = sessions.get(sessionCode).participants;
-    io.to(sessionCode).emit('initial participants', participants);
+
+    console.log(`participants ${participants}`);
+    if(participants){
+      io.to(sessionCode).emit('initial participants', participants);
+    }
+    else{
+      console.error("Empty participants")
+    }
+
   });
 
 
   socket.on('join', (data) => {
     const { sessionCode, id, username } = data;
+    console.log("join ", data);
 
     if (sessions.get(sessionCode)) {
       const participants = sessions.get(sessionCode).participants;

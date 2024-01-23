@@ -209,17 +209,21 @@
 <body>
     <!-- header -->
     <div class="header-style">
-        <div>        
-            <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+        <div>
+            <a href="{{ url('/lect_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}"
+                    alt="Logo"></a>
         </div>
         <div id="code-copy-container" style="cursor: pointer;">
             <span id="codePlaceholder"></span>
             <span id="codeCopyIcon" class="fas fa-copy"></span>
         </div>
+        <div><a id="issueResult" class="btn btn-dark">Issue Result</a></div>
+
         <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
     </div>
 
     <div>
+
         <div class="tab-container">
             <ul class="nav nav-tabs " role="tablist">
                 <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab"
@@ -307,7 +311,8 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
@@ -320,6 +325,7 @@
     <script>
         let studentResponses = {};
         let leaderboardData = {};
+        let userIDList = [];
         const socket = io("http://localhost:3000");
         const sessionCode = sessionStorage.getItem('sessionCode');
         socket.emit('joinSession', sessionCode.toString());
@@ -703,6 +709,7 @@
                         score
                     } = entry;
 
+                    
                     const existingRow = existingRows[index];
                     const scoreValue = score !== undefined ? score : 0;
 
@@ -717,6 +724,7 @@
                             console.error('Not enough cells in the row.');
                         }
                     } else {
+                        userIDList.push(id);
                         // Create a new row for the entry
                         const newRow = document.createElement('tr');
                         newRow.innerHTML = `
@@ -762,6 +770,131 @@
         window.addEventListener('beforeunload', function(event) {
             socket.close();
         });
+
+
+        const button = document.querySelector('#issueResult')
+
+        async function fetchIndividualData(userId, sessionId) {
+            try {
+                const response = await fetch(`/sessions/getIndividualData/${sessionId}/${userId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch individual data');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching quiz details:', error.message);
+                return null;
+            }
+        }
+
+        button.addEventListener('click', async () => {   
+            const sessionId = sessionStorage.getItem('sessionId');
+            const quizTitle = sessionStorage.getItem('quizTitle');
+
+            for (const id of userIDList) {
+                const individualData = await fetchIndividualData(id, sessionId);
+                console.log(`Big Object ` + JSON.stringify(individualData));
+                console.log(`Connection_ID ` + individualData.user_data);
+                const firstObject = individualData.data[0]; 
+                console.log(firstObject);
+
+
+                if(individualData.user_data != null)
+                    sendCredential(quizTitle,firstObject, individualData.user_data);
+            }
+        });
+
+        function sendCredential(quiz_title, {
+            updated_at,
+            accuracy,
+            correct_answer_count,
+            incorrect_answer_count,
+            total_points,
+            average_time
+        }, connection_id) {
+            console.log('Fetching now');
+            const formattedDate = new Date(updated_at).toLocaleString();
+
+            const url = 'http://10.123.10.106:4001/issue-credential-2.0/send-offer';
+
+            const data = {
+                "auto_issue": true,
+                "auto_remove": true,
+                "comment": "Thank you for your submission",
+                "connection_id": `${connection_id}`,
+                "credential_preview": {
+                    "@type": "issue-credential/2.0/credential-preview",
+                    "attributes": [{
+                            "name": "quiz_title",
+                            "value": `${quiz_title}`
+                        },
+                        {
+                            "name": "completed_time",
+                            "value": `${formattedDate}`
+                        },
+                        {
+                            "name": "accuracy",
+                            "value": `${accuracy + "%"}`
+                        },
+                        {
+                            "name": "correct_answer_count",
+                            "value": `${correct_answer_count}`
+                        },
+                        {
+                            "name": "incorrect_answer_count",
+                            "value": `${incorrect_answer_count}`
+                        },
+                        {
+                            "name": "total_points",
+                            "value": `${total_points}`
+                        },
+                        {
+                            "name": "average_time",
+                            "value": `${average_time}`
+                        }
+                    ]
+                },
+                "filter": {
+                    "indy": {
+                        "cred_def_id": "NypRCRGykSwKUuRBQx2b9o:3:CL:92:Quiz_Result",
+                        "issuer_did": "NypRCRGykSwKUuRBQx2b9o",
+                        "schema_id": "NypRCRGykSwKUuRBQx2b9o:2:Quiz_Result:2.0",
+                        "schema_issuer_did": "NypRCRGykSwKUuRBQx2b9o",
+                        "schema_name": "Quiz_Result",
+                        "schema_version": "2.0"
+                    }
+                },
+                "trace": true
+            }
+
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            };
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    mode: 'cors',
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(responseData => {
+                    console.log('POST request successful!');
+                    console.log('Response data:', responseData);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        }
     </script>
 </body>
 

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('dob')->default('2002-04-16');
             $table->integer('verification_code')->default(0);
             $table->string('profile_picture')->nullable()->default(NULL);
+            $table->string('connection_id')->nullable()->default(NULL);
             $table->timestamps();
         });
     }
