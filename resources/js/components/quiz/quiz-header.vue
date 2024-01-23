@@ -1,7 +1,6 @@
 <template>
     <div class="header-container">
-        <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
-
+        <img class="logo" src="img/logo_header.png" alt="Logo">
         <span class="header-quiz-title">{{ quizTitle }}</span>
     </div>
 </template>

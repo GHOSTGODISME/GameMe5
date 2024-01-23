@@ -2,8 +2,7 @@
     <div class="container">
         <div class="closure-container-bg">
             <div class="closure-container">
-                <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
-
+                <img class="logo" src="/img/logo_header.png" alt="Logo">
                 <p class="closure-title">Congratulation!</p>
 
                 <p class="closure-description">
@@ -15,14 +14,13 @@
                 </p>
 
                 <button
-                    class="btn button-style btn-dark"
+                    class="btn btn-primary"
                     type="submit"
                     @click="continueClicked"
                 >
                     Continue 
-                    <br />
-                    (You will be directed to summary page in {{ this.countdown }}...)
                 </button>
+                <p class="text-white"> (You will be directed to summary page in {{ this.countdown }}...) </p>
             </div>
         </div>
     </div>

@@ -21,6 +21,6 @@
 </style>
 <div class="fp_header">
     <a href="{{ route('login') }}">
-        <img class="logo" src="img/logo_header.png" alt="Logo">
+        <img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo">
     </a>
 </div>

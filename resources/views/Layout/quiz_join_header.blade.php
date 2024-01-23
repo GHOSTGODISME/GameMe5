@@ -22,7 +22,7 @@
 </style>
 
 <div class="header_container">
-    <img src="img/logo_header.png" alt="Logo">
+    <img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo">
     <span class="header-quiz-title">Basic Math</span>
     <a class="header-setting"><i class="fa-solid fa-gear"></i></a>
 </div>

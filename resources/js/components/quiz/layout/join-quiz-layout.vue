@@ -7,6 +7,9 @@
                 <div class="col-md-6 col-lg-5 p-5 join-quiz-title">
                     You have joined the "{{ title }}" Quiz!
                 </div>
+                <div class="col-md-6 col-lg-5 join-quiz-bar">
+                </div>
+
                 <div class="col-md-6 col-lg-7 p-5 join-quiz-details">
                     <p class="join-quiz-details-username">Username</p>
                     <input
@@ -36,7 +39,7 @@
                 </div>
             </div>
             <div v-else class="wait-start-screen">
-                <p style="font-size: 30px">
+                <p style="font-size: 20px">
                     Waiting for the host to start the quiz...
                 </p>
                 <span class="joined-participants-people">{{ username }}</span>

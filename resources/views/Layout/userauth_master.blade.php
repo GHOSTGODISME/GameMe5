@@ -5,36 +5,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <title>@yield('title', 'GameMe5')</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <script src="https://cdn.rawgit.com/cozmo/jsQR/master/dist/jsQR.js"></script>
 </head>
 <style>
     html,body{
         margin: 0;
         padding: 0;
-        height: 100%;
+        min-width: 320px; /* Set a minimum width for the body */
+        min-height: 480px; /* Set a minimum height for the body */
     }
-    body{
+   body {
     display: flex;
-    flex-direction:row;
-    background: #FAFAFA;    
+    flex-direction: row;
+    background: #FAFAFA;
+    font-family: 'Roboto', sans-serif;
+    height:100%;
     }
     .content{
-    width:20%;
     padding-top:50px;
-    margin-left: 50px;
-    margin-right: 80px;
+    margin-left: 5%;
+    margin-right: 5%;
     }
     body {
     font-family: 'Roboto', sans-serif;
     }
     
     .header{
-      font-size: 66px;  
+        font-size: 4.125em;
     }
 
     .help_txt{
     color: #000;
     font-family: 'Roboto';
-    font-size: 12px;
+    font-size: 0.75em;
     font-style: normal;
     font-weight: 300;
     line-height: normal;
@@ -47,7 +51,7 @@
     .hypertext{
     color: #000;
     font-family: 'Roboto';
-    font-size: 12px;
+    font-size: 0.85em;
     font-style: normal;
     font-weight: 300;
     line-height: normal;
@@ -62,11 +66,35 @@
         background: var(--Button, #2A2A2A);
         color: #FEFEFE;
         font-family: 'Roboto';
-        font-size: 24px;
+        font-size: 1.5em;
         font-style: normal;
         font-weight: 500;
         line-height: normal;  
     }
+
+    
+    @media only screen and (max-width: 768px) {
+    .header {
+        font-size: 1.5em; /* Adjust font size for small screens */
+    }
+
+    .button_general {
+        font-size: 1em; /* Adjust font size for small screens */
+    }
+    body {
+    display: flex;
+    flex-direction: column;
+    }
+    .content {
+        padding-top: 20px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+}
+
+
+
 
 </style>
 <body>

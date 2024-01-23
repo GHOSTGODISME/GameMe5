@@ -1,5 +1,6 @@
 body{
-    background: linear-gradient(90deg, #00C6FF 0%, #0082FF 80.73%, #0072FF 100%);
+    /* background: linear-gradient(90deg, #00C6FF 0%, #0082FF 80.73%, #0072FF 100%); */
+    background: #252525;
 }
 
 .join-quiz-bg{
@@ -24,11 +25,8 @@ body{
     border-left: 3px solid black;
 }
 
-@media (max-width: 767px){
-    .join-quiz-details{
-        border: none;
-        border-top: 3px solid black;
-}
+.join-quiz-bar{
+    display:none;
 }
 
 .join-quiz-details-username{
@@ -78,7 +76,7 @@ body{
 
 .joined-participants-people{
     border-radius: 10px;
-    background: #232946;
+    background: var(--Button, #4b4b4b);
     padding: 15px 40px;
     color: #FEFEFE;
     margin: 20px;
@@ -88,7 +86,6 @@ body{
     .joined-participants-people:hover{
         box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
 }
-
 
 .wait-start-screen{
     text-align: center;
@@ -131,19 +128,19 @@ body{
 
 @keyframes changeBackgroundColor {
     0% {
-        background-color: #01bcff;
+        background-color: rgb(0, 0, 0);
     }
 
     33% {
-        background-color: #019fff;
+        background-color: #343434;
     }
 
     66% {
-        background-color: #0179ff;
+        background-color: #626262;
     }
 
     100% {
-        background-color: #01bcff;
+        background-color: #b9b9b9;
     }
 }
 
@@ -155,11 +152,12 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to right, #00c6ff, #0082ff, #0072ff);
+    background: #252525;
     color: white;
     padding: 30px;
     flex-wrap: wrap;
 }
+
 
 .header {
     padding: 10px;
@@ -167,9 +165,13 @@ body{
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    background: linear-gradient(90deg, #00C6FF 0%, #0082FF 80.73%, #0072FF 100%);
+    background: #252525;
     width: 100%;
 
+}
+
+.play-quiz-body{
+    background: #252525;
 }
 
 .header-small-block-style {
@@ -187,14 +189,15 @@ body{
     font-weight: bold;
     font-size: 32px;
     color: white;
-    margin: auto;
+    margin-right:110px;
 }
 
 .header-time-remaining {
     color: white;
     font-size: 24px;
     display: inline-flex;
-    text-align: right;
+    margin-right:10px;
+
 
 }
 
@@ -227,9 +230,8 @@ body{
     padding: 20px 20px;
     font-size: 30px;
     color: #FAFAFF;
-
     border-radius: 10px;
-    background: #123956;
+    background: var(--Button, #2A2A2A);
     transition: background-color 0.25s;
 }
 
@@ -264,8 +266,10 @@ margin-top: 30px;
 font-size: 16px;
 padding: 10px 40px;
 display: flex;
-background: #123956;
+background: var(--Button, #0179FF);
+border:none;
 }
+
 
 /* leaderboard */
 .leaderboard-container{
@@ -356,7 +360,6 @@ th,td{
 .format-option {
     border-radius: 10px;
     background-color: #0195ff;
-
     margin: 20px;
     padding: 40px 20px;
     font-size: 20px;
@@ -365,7 +368,6 @@ th,td{
     display: flex;
     justify-content: center;
     align-items: center;
-
     transition: box-shadow 0.25s, background-color 0.5s;
 }
 
@@ -403,7 +405,7 @@ th,td{
 
 /* quiz type - text input style */
 .text-input-container {
-    background-color: whitesmoke;
+    background-color: rgb(255, 255, 255);
     padding: 20px;
     border-radius: 10px;
     width: 80%;
@@ -421,9 +423,9 @@ th,td{
     margin: 5px;
     padding: 5px;
     text-align: center;
-    border: 3px solid #0072ff;
+    border: 3px solid #000000;
     border-radius: 5px;
-    background-color: #00c6ff;
+    background-color: #d7d7d7;
     font-size: 20px;
 }
 
@@ -476,26 +478,147 @@ th,td{
     font-weight: 300;
     /* font-size: 32px; */
     font-size: 4vw;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 }
 
-
-
-
+.text-white{
+    margin-top: 10px;
+}
 
 /* overall bg */
 .closure-body {
-    background: linear-gradient(
+    background: #252525;
+    /* background: linear-gradient(
         90deg,
         #00c6ff 0%,
         #0082ff 80.73%,
         #0072ff 100%
-    );
+    ); */
 }
 
-.play-quiz-body {
-    background-image: url("/public/img/play-quiz-bg.png");
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
+@media (max-width: 767px){
+    .join-quiz-details{
+        border: none;
+    }
+    
+    .join-quiz-bar
+    {
+        display:block;
+        background-color: black;
+        max-width:250px;
+        margin:auto;
+        height:3px;
+    }
+    
+    .join-quiz-bg{
+        margin:50px;
+        padding: 0;
+        max-width:450px;
+    }
+    
+    .container{
+        width:auto;
+        height:auto;
+    }
+    
+    .logo{
+        width:30vw;
+    }
+    
+    span.header-quiz-title{
+        font-size: 18pt;
+        margin-right:0;
+    }
+    
+    .join-quiz-title{
+        font-size: 15pt;
+    
+    }
+    .join-quiz-details-username{
+        font-size: 13pt;
+    }
+    .join-quiz-details-input::placeholder{
+        font-size: 12pt;
+    }
+
+    .join-quiz-details-input{
+        font-size: 12pt;
+    }
+
+    .join-quiz-details-instruction{
+        font-size:8pt;
+    }
+    .button-style{
+    font-size: 14px;
+    padding: 8px 20px;
+    }
+
+    .joined-participants-text{
+        font-size: 14pt;
+    }
+ 
+    .header-small-block-style {
+        background: #606060;
+        padding: 5px 15px;
+        font-size: 12px;
+        margin-top:5px;
+        margin-bottom:15px;
+        margin-right:15px;
+    }
+
+    .header-quiz-title{
+        font-size: 15pt;
+    }
+    .header-time-remaining{
+        font-size:15pt;
+    }
+
+    #quiz-title-container{
+        font-size: 15pt;
+    }
+
+    .leaderboard-container h1{
+        font-size: 15px;
+    }
+    
+    thead {
+        font-size: 10px;
+    }
+    
+    tbody tr {
+        font-size: 10px;
+        
+    }
+    
+    tbody tr:hover {
+        font-size: 10px;
+    }
+
+    .format-option{
+        padding: 15px 5px;
+        font-size: 15px;
+        margin:10px;
+    }
+
+    
+.closure-title {
+    color: white;
+    text-shadow: 8px 8px 4px rgba(0, 0, 0, 0.25);
+    /* font-size: 58px; */
+    font-size: 8vw;
+    font-weight: bold;
+}
+.closure-description {
+    font-size: 16pt;
+    margin-bottom: 10px;
+}
+
+.text-white{
+    font-size: 10pt;
+    margin-top: 10px;
+}
+.header-small-block-cont{
+    margin-right:100px;
+}
+
 }

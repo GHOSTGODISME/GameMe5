@@ -14,7 +14,7 @@
         height:100px;
         display:flex;
         justify-content: space-between;
-        background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);
+        background: #252525;
     }    
 
     .logo{
@@ -98,8 +98,8 @@
 </style>
 
 <div class="header_container">
-    <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a> 
-    <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()">
+    {{-- <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>  --}}
+    {{-- <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()"> --}}
 </div>
 
 <div class="navigation-panel">

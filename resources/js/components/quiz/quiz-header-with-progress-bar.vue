@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <div>
+        <div class="header-small-block-cont">
             <div class="header-small-block-style">
                 <i class="fa-solid fa-ranking-star"></i>
                 <span class="ranking-text">{{ ranking }}</span>
@@ -26,7 +26,7 @@
     <div class="progress">
         <div
             id="time-progress"
-            class="progress-bar progress-bar-striped bg-black"
+            class="progress-bar bg-info"
             role="progressbar"
             :style="{ width: progressBarValue + '%', transition: 'width 0.5s' }"
             :aria-valuenow="progressBarValue"

@@ -9,7 +9,7 @@
 <style>
 
 body{
-    background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);  
+    background: #252525;
 }
 
 .stud_big_cont{
@@ -211,6 +211,37 @@ text-decoration: none;
     /* Add any other content styles you want */
 }
 
+@media (max-width: 767px){
+    .logo{
+        width:300px;
+    }
+
+#txt_game_code{
+    padding: 14px;
+    max-width: 200px;
+    margin-top:20px;
+    height:18px;
+    font-size: 12px; /* Adjust the font size as needed */
+}
+
+#txt_game_code::placeholder{
+    font-size: 12px;
+}
+
+.stud_sub_header{
+    color: var(--Logo-Secondary, #FAFAFA);
+    font-family: 'Bubblegum Sans';
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration: none;
+}
+
+
+
+}
+
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -218,7 +249,7 @@ text-decoration: none;
 <form action="{{ route('join-quiz') }}" method="GET">
     @csrf
 <div class="stud_big_cont">
-    <img src="img/logo_stud.png" alt="logo">
+    <img class="logo" src="img/logo_stud.png" alt="logo">
     <input type="text" id="txt_game_code" name="code" placeholder="Game Code">
     <button type="submit" class="button_general">Enter</button>
 </div>
@@ -239,7 +270,7 @@ text-decoration: none;
 </script>
 @enderror
 
-
+{{-- 
 <div class="stud_sub_cont">
 <a href="{{ route('classroom_stud_home') }}" class="stud_sub_header">Classroom</a>
 <div class="stud_small_cont">
@@ -266,7 +297,7 @@ text-decoration: none;
     </div>
 @endforeach
 </div>
-</div>
+</div> --}}
 
 <script>
     function confirmAndSubmit(classroomId) {

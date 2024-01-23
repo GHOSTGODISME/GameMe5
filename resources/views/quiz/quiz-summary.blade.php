@@ -10,9 +10,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
+        body{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         .quiz-body {
-            background-image: url('/img/play-quiz-bg.png');
-            background-repeat: repeat;
+            background: #252525;
         }
 
         #summary-container {
@@ -37,6 +41,7 @@
             font-size: 18px;
             color: white;
             background: #0195FF;
+            border-radius:8px;
         }
 
         .summary-color-block {
@@ -185,14 +190,86 @@
             display: flex;
             background: #123956;
         }
+
+        @media (max-width: 767px){
+        .quiz-body{
+        width:100%;
+        }
+        #summary-container{
+            margin:auto;
+            max-width:80vw;
+        }
+        #summary-general-container{
+            margin:auto;
+        }
+
+        .summary-container-row {
+            padding: 8px 30px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            border-radius:8px;
+        }
+
+        .summary-container-block {
+            background: yellowgreen;
+            color: white;
+            width: 60px;
+            padding: 10px;
+            word-break: break-all;
+        }
+
+        .summary-container-block p:first-child {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 300;
+            margin: 0;
+        }
+
+        .summary-container-block p:nth-child(2) {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bolder;
+            margin: 0;
+            display: inline-block;
+        }
+
+        .summary-container-block span {
+            font-size: 14px;
+        }
+
+        .review-question-title {
+            font-size: 16px;
+        }
+
+        p{
+            font-size:12px;
+        }
+
+        .btn{
+            font-size: 12px;
+        }
+
+        .container-style{
+            font-size:12px;
+        }
+
+        .horizontal-line-with-text span{
+            font-size:10px;   
+        }
+
+        .horizontal-line-with-text {
+            width:100%;
+        }
+
+    }
     </style>
 
 </head>
 
 @section('quizTitle',$quizTitle)
+
 <body>
     @include('Layout/quiz_summary_header')
-    
     <div class="quiz-body">
         <div id="summary-container">
             <div id="summary-general-container">
@@ -240,7 +317,7 @@
                 </div>
 
                 <div>
-                    <a href="/" class="btn btn-primary">Back to Homepage</a>
+                    <a href="{{ url('/stud_homepage') }}" class="btn btn-primary">Back to Homepage</a>
                     <hr>
                 </div>
 

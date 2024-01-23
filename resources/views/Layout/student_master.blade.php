@@ -17,10 +17,10 @@
     }
 
     .content{
-        margin-left:90px;
+    margin-left:90px;
     margin-top:30px; 
     margin-right:90px; 
-    padding-bottom:50px;
+    padding-top:30vh;
     }
     
     .stud_title{
@@ -180,20 +180,29 @@
     margin-top:40px;
     flex-shrink: 0;
     border-radius: 8px;
-    background: var(--Button, #2A2A2A);
+    background: var(--Button, #0179FF);
     color: #FEFEFE;
     font-family: 'Roboto';
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;  
+    border:none;
 }
 
-   
+@media (max-width: 767px){
+
+    .button_general{
+        max-width:150px;
+        height: 25px;
+        margin-top:20px;
+        font-size: 12px;
+}
+}
 
 </style>
 <body>
-@include('Layout/student_header')
+{{-- @include('Layout/student_header') --}}
 <div class="content">
     <!-- Page Content -->
     @yield('content')
