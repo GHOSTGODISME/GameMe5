@@ -93,8 +93,7 @@ export default {
                 ? currentQuestion.duration
                 : this.defaultTime;
 
-                // this.timeRemaining = questionDuration;
-                this.timeRemaining = 1;
+            this.timeRemaining = questionDuration;
             this.progressBarValue = 100;
 
             this.timerInterval = setInterval(() => {
@@ -158,8 +157,7 @@ export default {
                 submitedAns,
                 answeredCorrectly
             );
-            // this.timeRemaining = 5;
-            this.timeRemaining = 1;
+            this.timeRemaining = 5;
             this.progressBarValue = 100;
             this.timerInterval = setInterval(() => {
                 if (this.timeRemaining > 0) {
