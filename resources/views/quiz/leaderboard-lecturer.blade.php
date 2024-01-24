@@ -13,7 +13,8 @@
 
     <style scoped>
         body {
-            background: linear-gradient(90deg, #13C1B7 0%, #87DFA8 100%);
+            background: #252525;
+            /* background: linear-gradient(90deg, #13C1B7 0%, #87DFA8 100%); */
         }
 
         table {
@@ -100,14 +101,6 @@
             padding: 10px 0;
         }
 
-        .question-summary-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            text-align: center;
-        }
 
         .question-summary-modal-text {
             display: flex;
@@ -194,6 +187,7 @@
             font-weight: bold;
             letter-spacing: 5px;
             text-align: center;
+            color:white;
         }
 
         .incorrect-option {
@@ -217,9 +211,9 @@
             <span id="codePlaceholder"></span>
             <span id="codeCopyIcon" class="fas fa-copy"></span>
         </div>
-        <div><a id="issueResult" class="btn btn-dark">Issue Result</a></div>
+        <div><a id="issueResult" class="btn btn-primary">Issue Result</a></div>
 
-        <div><a id="endBtn" class="btn btn-dark">End Session</a></div>
+        <div><a id="endBtn" class="btn btn-danger">End Session</a></div>
     </div>
 
     <div>

@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <style>
-
+.logo_header{
+    display: none;
+}
 body{
     background: #252525;
 }
@@ -51,6 +53,10 @@ body{
     font-weight: 400;
     line-height: normal;
     text-align: center;
+}
+
+.stud_sub_cont{
+    margin-top:50px;
 }
 
 .stud_sub_header{
@@ -185,6 +191,7 @@ text-decoration: none;
 .stud_small_cont {
     overflow: auto;
     max-height: 300px; /* Set your preferred height */
+    margin-top:20px;
 }
 
 .stud_small_cont::-webkit-scrollbar {
@@ -238,6 +245,60 @@ text-decoration: none;
     text-decoration: none;
 }
 
+.stud_sub_cont{
+    margin-top:40px;
+}
+
+.stud_sub_header{
+font-size: 25px;
+}
+
+.stud_small_cont{
+    margin-top:10px;
+}
+.classroom_container{
+    border-radius: 15px;
+    padding:0;
+    margin:0;
+    width:100%;
+    max-height: 150px;
+    font-size: 15px;
+    margin-bottom:50px;
+    }
+
+    .class_container_row1{
+        margin:10px 10px 5px 10px;
+        padding:0;
+        font-size: 12px;
+    }
+
+    .class_container_row2{
+        margin:10px 10px 5px 10px;
+        padding:0;
+       
+        font-size: 15px;
+    }
+
+    .class_container_row3{
+        margin:10px 10px 5px 10px;
+        padding:0;
+  
+        font-size: 12px;
+    }
+
+    .menu-icon{
+        padding:0;
+        margin-right:5px;
+        justify-content: flex-end;
+    }
+    .menu-icon img{
+        width:5px;
+        height:10px;
+    }
+
+    .button-container{
+        height:20px;
+    }
 
 
 }
@@ -270,7 +331,7 @@ text-decoration: none;
 </script>
 @enderror
 
-{{-- 
+
 <div class="stud_sub_cont">
 <a href="{{ route('classroom_stud_home') }}" class="stud_sub_header">Classroom</a>
 <div class="stud_small_cont">
@@ -297,7 +358,7 @@ text-decoration: none;
     </div>
 @endforeach
 </div>
-</div> --}}
+</div>
 
 <script>
     function confirmAndSubmit(classroomId) {

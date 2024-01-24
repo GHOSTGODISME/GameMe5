@@ -16,6 +16,10 @@
         padding: 0;
         height: 100%;
     }
+    body{
+        background: #404040;
+    }
+
 
     .content{
         margin-left:90px;
@@ -33,7 +37,7 @@
 
     
     .class_title{
-        color: var(--Button, #2A2A2A);
+        color: var(--Button, #ffffff);
         font-family: 'Roboto';
         font-size: 30px;
         font-style: normal;
@@ -42,13 +46,17 @@
     }
 
     .class_subtitle{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
         text-decoration:underline;
+    }
+
+    u{     
+        color: #ffffff;
     }
 
     .join-form {

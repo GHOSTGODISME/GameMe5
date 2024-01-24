@@ -11,18 +11,19 @@
     }
     .annQna{
         border-radius: 8px;
-        border: 1px solid #BFBFBF;
         background: #FFFFFF;
- 
+        border: 1px solid #353535;
+        margin-bottom:30px;
+
     }
 
     .ann_header{
         display: flex;
         flex-direction: row;
         border-radius: 8px 8px 0 0;
-        background: #0195FF;
+        border: 1px solid #353535;
         padding:20px 20px 5px 20px;
-
+        background: #252525;
     }
 
     .ann_header p, .ann_header h1{

@@ -2,7 +2,8 @@
 .half_logo{
 width:80%;
 height:100%;
-background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);
+background: #252525;
+/* background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF); */
 display: flex;
 justify-content: center;
 align-items: center;

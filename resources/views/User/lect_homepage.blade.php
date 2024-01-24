@@ -146,7 +146,7 @@
 
 
     .class_title{
-        color: var(--Button, #2A2A2A);
+        color: var(--Button, #ffffff);
         font-family: 'Roboto';
         font-size: 30px;
         font-style: normal;
@@ -158,7 +158,7 @@
     }
 
     .class_subtitle{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 14px;
         font-style: normal;
@@ -169,8 +169,12 @@
         align-self: flex-end;
       
     }
+
+    u{
+        color: #ffffff;  
+    }
     .class_subtitle:hover{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 14px;
         font-style: normal;
@@ -314,6 +318,11 @@
         background-color: #f2f2f2;
     }
 
+    .admin_table tr{
+        background-color: #f2f2f2;
+    }
+
+    
     .admin_table tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
@@ -378,6 +387,11 @@
         align-items: center;
     }
 
+    .btn{
+        width:50px;
+        height:30px;
+        display: inline;
+    }
  
 
 </style>

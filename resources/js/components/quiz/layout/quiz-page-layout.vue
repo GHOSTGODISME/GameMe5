@@ -2,7 +2,6 @@
     <QuizHeaderWithProgressBar
         :timeRemaining="timeRemaining"
         :progressBarValue="progressBarValue"
-        :score="score"
     />
 
     <div id="quiz-title-container">{{ question.title }}</div>
@@ -64,7 +63,7 @@ export default {
             defaultTime: 10,
             socket: null,
             store: null,
-            score:0,
+           
         };
     },
     mounted() {
@@ -131,8 +130,6 @@ export default {
             this.store.storeQuizResponse(questionId, submitedAns);
             this.store.storeCorrectness(questionId, answeredCorrectly);
             this.store.storeQuestionPoints(questionId, answeredCorrectly);
-
-            this.score = this.store.totalPoints;
 
             this.socket.emit("update score", {
                 sessionCode: this.store.sessionCode,

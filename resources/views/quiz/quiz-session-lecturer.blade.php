@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style scoped>
+        body{
+            background-color: #252525;
+        }
         .joined-participants-text {
             font-size: 24px;
 
@@ -23,7 +26,7 @@
             width: 90%;
             margin: auto;
             margin-top: 40px;
-            background-color: #13C1B7;
+            background-color: #464646;
             /* background-color: #1b4e42; */
 
         }
@@ -37,22 +40,22 @@
 
 
             border: 4px solid black;
-            background: #226755;
+            background: #252525;
             border-radius: 10px;
         }
 
         .joined-participants-people {
             border-radius: 10px;
-            background: #42c0a2;
+            background: #ffffff;
             padding: 15px 40px;
-            color: #FEFEFE;
+            color: #000000;
             margin: 20px;
             display: inline-block;
         }
 
         .joined-participants-people:hover {
             box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
-            background: #287462;
+            background: #ffffff;
         }
 
         .details-container {
@@ -68,11 +71,11 @@
 
         .details-container div:nth-child(2) {
             color: black;
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
             text-align: center;
             background: #f8f8f8;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             margin: auto;
             margin-top: 10px;
@@ -82,30 +85,36 @@
         .btn-container {
             margin-top: 20px;
             text-align: center;
+            width: 300px;
+            height: 60px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right:auto;
+            margin-left:auto;
         }
 
         .btn-container a {
-            width: 300px;
-            padding: 15px;
             font-size: 24px;
             font-weight: bold;
             color: #FEFEFE;
             font-family: 'Roboto';
-            background-color: #025551;
+       
         }
 
         .btn-container a:hover {
-            width: 300px;
-            padding: 15px;
+
             font-size: 24px;
             font-weight: bold;
             color: #FEFEFE;
             font-family: 'Roboto';
-            background-color: #1ca8a1;
+           
         }
 
         .btn-container button:hover {
-            background: #98ffc7;
+   
             color: black;
         }
 
@@ -164,35 +173,37 @@
                             </div>
                         </div>
 
-                        <div class="details-container">
-                            <div>Or scan the code below!!!</div>
-                            <div id="qrCode">{{ $qrCodeContent }}</div>
-                        </div>
-
+                        
                         <div class="details-container">
                             <div>3. Assign to Class</div>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignClassModal"
                                 style="   
                             width: 100%;
-                            height: 45px;
+                            height: 55px;
                             margin-top:20px;
                             flex-shrink: 0;
                             border-radius: 8px;
-                           background-color:#00a49c;
-                            color: #ffffff;
+                           background-color:#ffffff;
+                            color: #000000;
                             font-family: 'Roboto';
                             font-size: 20px;
                             font-style: normal;
-                            font-weight: 500;
+                            font-weight: bold;
                             line-height: normal;
                             border:none;">
                                 Assign to Class
                             </button>
                         </div>
 
+                        <div class="details-container">
+                            <div>Or scan the code below!!!</div>
+                            <div id="qrCode">{{ $qrCodeContent }}</div>
+                        </div>
+
+
                     </div>
 
-                    <div class="btn-container">
+                    <div class="btn btn-primary btn-container">
                         {{-- <a href="{{ route('leaderboard-lecturer') }}" class="btn">Start</a> --}}
                         <a onclick="startQuiz()" class="btn">Start</a>
 

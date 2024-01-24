@@ -6,7 +6,8 @@
         height:100px;
         display:flex;
         justify-content: space-between;
-        background: linear-gradient(to right, #13C1B7, #87DFA8);
+        background: #252525;
+        /* background: linear-gradient(to right, #13C1B7, #87DFA8); */
     } 
     
     .logo{
@@ -32,12 +33,12 @@
         position: fixed;
         top: 0;
         right: -300px; /* Initially off-screen */
-        width: 300px;
+        width: 200px;
         height: 100%;
-        background: #3CCBC3;
+        background: #313131;
         transition: right 0.3s ease;
         z-index: 1000; /* Set a higher z-index value */
-
+        border-radius:8px;
     }
 
     .nav-link {
@@ -46,7 +47,7 @@
         text-decoration: none;
         display: block;
         font-family: 'Roboto';
-        font-size: 30px;
+        font-size: 20px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -60,7 +61,7 @@
         text-decoration: none;
         display: block;
         font-family: 'Roboto';
-        font-size: 30px;
+        font-size: 22px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -71,8 +72,8 @@
         position: absolute;
         top: 25px;
         right: 20px;
-        width: 35px;
-        height: 35px;
+        width: 25px;
+        height: 25px;
         cursor: pointer;
     
     }
@@ -82,13 +83,13 @@
         padding-left:20px;
         padding-right:10px;
         align-items: flex-end;
-        margin-top:40px;
+        margin-top:30px;
     }
 
     
     .menu_icons{
-        width:60px;
-        height:60px;
+        width:40px;
+        height:40px;
     }
 
 

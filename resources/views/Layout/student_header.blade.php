@@ -15,15 +15,16 @@
         display:flex;
         justify-content: space-between;
         background: #252525;
+
     }    
 
-    .logo{
+   .logo_header{
         width: 180px;
         height: 50px;
         flex-shrink: 0;
         margin-top:25px;
         margin-left:50px;
-    }
+    } 
 
     .hamburger{
         width: 25px;
@@ -39,11 +40,12 @@
         position: fixed;
         top: 0;
         right: -300px; /* Initially off-screen */
-        width: 300px;
+        width: 200px;
         height: 100%;
-        background: #0195FF;
+        background: #313131;
         transition: right 0.3s ease;
         z-index: 1000; /* Set a higher z-index value */
+        border-radius:8px;
     }
 
     .nav-link {
@@ -52,7 +54,7 @@
         text-decoration: none;
         display: block;
         font-family: 'Roboto';
-        font-size: 30px;
+        font-size: 20px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -65,7 +67,7 @@
         text-decoration: none;
         display: block;
         font-family: 'Roboto';
-        font-size: 30px;
+        font-size: 22px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
@@ -76,8 +78,8 @@
         position: absolute;
         top: 25px;
         right: 20px;
-        width: 35px;
-        height: 35px;
+        width: 25px;
+        height: 25px;
         cursor: pointer;
     
     }
@@ -91,15 +93,15 @@
     }
 
     .menu_icons{
-        width:60px;
-        height:60px;
+        width:40px;
+        height:40px;
     }
 
 </style>
 
 <div class="header_container">
-    {{-- <a href="{{ url('/stud_homepage') }}"><img class="logo" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>  --}}
-    {{-- <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()"> --}}
+    <a href="{{ url('/stud_homepage') }}"><img class="logo_header" src="{{ asset('img/logo_header.png') }}" alt="Logo"></a>
+     <img class="hamburger" src ="{{ asset('img/hamburger.png') }}" alt="favicon"  onclick="toggleNavigation()">
 </div>
 
 <div class="navigation-panel">

@@ -12,7 +12,6 @@
     margin-bottom:50px;
     width:100%;
     height: 180px;
-
     color: #FFF;
     font-family: 'Roboto';
     font-size: 25px;

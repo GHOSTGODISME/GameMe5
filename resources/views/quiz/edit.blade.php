@@ -18,7 +18,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: linear-gradient(to right, #13C1B7, #87DFA8);
+            background-color: #252525;
+            /* background: linear-gradient(to right, #13C1B7, #87DFA8); */
             color: white;
             padding: 30px;
             flex-wrap: wrap;
@@ -34,7 +35,8 @@
         }
 
         body {
-            background: whitesmoke;
+            /* background: whitesmoke; */
+            background-color: #252525;
         }
 
         .quiz-details-container:first-child {
@@ -106,10 +108,10 @@
         </div>
 
         @if ($mode == 'edit' || $mode == 'create')
-            <button class="btn btn-dark header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save &
+            <button class="btn btn-primary header-save-btn" id="save-quiz-btn" type="button" onclick="saveQuiz()">Save &
                 Exit</button>
         @elseif($mode == 'view')
-            <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-dark header-edit-btn">
+            <a href="{{ route('edit-quiz', ['id' => $quiz->id]) }}" class="btn btn-primary header-edit-btn">
                 Edit</a>
         @endif
 

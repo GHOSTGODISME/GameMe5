@@ -26,6 +26,10 @@
         height: 100%;
     }
 
+    body{
+        background: #252525;
+    }
+
     .content{
     margin-left:90px;
     margin-top:30px; 

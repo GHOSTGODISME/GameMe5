@@ -12,9 +12,9 @@
 
     .annQuiz{
         border-radius: 8px;
-        border: 1px solid #BFBFBF;
+        border: 1px solid #353535;
         margin-bottom:30px;
-        background: #0195FF;
+        background: #252525;
     }
     .ann_header{
         display: flex;

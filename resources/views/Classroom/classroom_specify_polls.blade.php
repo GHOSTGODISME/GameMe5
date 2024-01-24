@@ -12,9 +12,9 @@
 
     .annPolls{
         border-radius: 8px;
-        border: 1px solid #BFBFBF;
         margin-bottom:30px;
         background: #FFFFFF;
+        border: 1px solid #353535;
     }
 
   
@@ -22,7 +22,7 @@
         display: flex;
         flex-direction: row;
         border-radius: 8px 8px 0 0;
-        background: #0195FF;
+        background: #252525;
         padding:20px 20px 5px 20px;
     }
 

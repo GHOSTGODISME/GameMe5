@@ -16,15 +16,20 @@
         height: 100%;
     }
 
+    body{
+        background: #404040;
+    }
+
     .content{
     margin-left:90px;
     margin-top:30px; 
     margin-right:90px; 
-    padding-top:30vh;
+    padding-top:50px;
+
     }
     
     .stud_title{
-        color: var(--Button, #2A2A2A);
+        color: var(--Button, #ffffff);
         font-family: 'Roboto';
         font-size: 30px;
         font-style: normal;
@@ -33,12 +38,15 @@
     }
 
     .stud_subtitle{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
         line-height: normal;
+    }
+    u{
+        color:white;
     }
     .profile-data_top{
         width: 666px;
@@ -46,7 +54,7 @@
         flex-shrink: 0;
         border-radius: 15px 15px 0px 0px;
         border: 1px solid #FFF;
-        background: #0195FF;
+        background: #252525;
         display: flex;
         align-items: center; /* Vertically center items */
         cursor: pointer;
@@ -57,7 +65,7 @@
         height: 70px;
         flex-shrink: 0;
         border: 1px solid #FFF;
-        background: #0195FF;
+        background: #252525;
         display: flex;
         align-items: center; /* Vertically center items */
         justify-content: space-between;
@@ -70,7 +78,7 @@
         flex-shrink: 0;
         border-radius: 0px 0px 15px 15px;
         border: 1px solid #FFF;
-        background: #0195FF;
+        background: #252525;
         display: flex;
         align-items: center; /* Vertically center items */
         cursor: pointer;
@@ -202,7 +210,7 @@
 
 </style>
 <body>
-{{-- @include('Layout/student_header') --}}
+ @include('Layout/student_header')
 <div class="content">
     <!-- Page Content -->
     @yield('content')

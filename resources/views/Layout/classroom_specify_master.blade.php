@@ -28,12 +28,18 @@
         height: 100%;
     }
 
+    body{
+        background: #404040;
+    }
+
+
     .content{
     margin-left:90px;
     margin-top:45px; 
     margin-right:90px; 
     padding-bottom:50px;
     }
+    
     .title_container{
         display:flex;
         flex-direction:row;
@@ -50,7 +56,7 @@
         font-style: normal;
         font-weight: 500;
         line-height: normal;    
-        color: #000;
+        color: #ffffff;
     
     }
 
@@ -60,7 +66,7 @@
     }
 
     .class_subtitle1{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 16px;
         font-style: normal;
@@ -69,7 +75,7 @@
         
     }
     .class_subtitle2,.class_subtitle3,.class_subtitle4,.class_subtitle5,.class_subtitle6{
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 16px;
         font-style: normal;
@@ -80,7 +86,7 @@
    
     .class_subtitle1 a,.class_subtitle2 a,.class_subtitle3 a,.class_subtitle4 a,.class_subtitle5 a,.class_subtitle6 a{
         text-decoration: none;
-        color: #5C5C5C;
+        color: #ffffff;
         font-family: 'Roboto';
         font-size: 16px;
         font-style: normal;

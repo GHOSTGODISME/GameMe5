@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <style scoped>
         body {
-            background: linear-gradient(to right, #00C6FF, #0082FF, #0072FF);
+            background: #252525;
             margin: 0;
             padding: 0;
         }
@@ -97,7 +97,8 @@
             height: 45px;
             flex-shrink: 0;
             border-radius: 8px;
-            background: var(--Button, #2A2A2A);
+            background: var(--Button, #0179FF);
+             border:none;
             color: #FEFEFE;
             font-family: 'Roboto';
             font-size: 24px;
