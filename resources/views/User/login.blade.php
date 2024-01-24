@@ -102,8 +102,9 @@
         margin-top:10px;
         font-size:12pt;
     }
-    .qrcode{
-
+    #qrcode{
+        margin-top:10px;
+        margin-bottom:50px;
     }
 
     @media only screen and (max-width: 768px) {
@@ -147,6 +148,12 @@
         .help_txt {
             width: 100%; /* Make the help text full width */
         }
+
+        #qrcode{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
     }
     
 
